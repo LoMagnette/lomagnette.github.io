@@ -67,11 +67,6 @@
         </dependency>
         <dependency>
             <groupId>io.quarkiverse.roq</groupId>
-            <artifactId>quarkus-roq-plugin-series</artifactId>
-            <version>1.10.3</version>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkiverse.roq</groupId>
             <artifactId>quarkus-roq-frontmatter</artifactId>
             <version>1.10.3</version>
         </dependency>

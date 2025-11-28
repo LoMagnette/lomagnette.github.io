@@ -1,22 +1,61 @@
 ---
 title: About
 description: |
-  Roq is a powerful static site generator that combines the best features of tools like Jekyll and Hugo, but within the Java ecosystem. It offers a modern approach with Quarkus at its core, requiring zero configuration to get started —ideal for developers who want to jump right in, while still being flexible enough for advanced users to hook into Java for deeper customization.
+  Loïc Magnette is a seasoned software developer with a strong background in consulting.
 layout: :theme/page
 ---
 
-# About Roq
+{#let author=cdi:authors.get('loic')}
 
-Roq is a powerful static site generator that combines the best features of tools like Jekyll and Hugo, but within the Java ecosystem. It offers a modern approach with Quarkus at its core, requiring zero configuration to get started —ideal for developers who want to jump right in, while still being flexible enough for advanced users to hook into Java for deeper customization.
+<div class="author-profile">
+  <div class="author-header">
+    <img src="{author.avatar}" alt="{author.name}" class="author-avatar-large" />
+    <div class="author-info">
+      <h1 class="author-name-large">{author.name}</h1>
+      <p class="author-job">{author.job}</p>
+      <div class="author-social-links">
+        <a href="https://github.com/lomagnette" target="_blank" rel="noopener noreferrer" class="author-social-link" aria-label="GitHub">
+          <i class="fa-brands fa-github"></i>
+          <span>GitHub</span>
+        </a>
+        <a href="https://twitter.com/lomagnette" target="_blank" rel="noopener noreferrer" class="author-social-link" aria-label="Twitter">
+          <i class="fa-brands fa-twitter"></i>
+          <span>Twitter</span>
+        </a>
+        <a href="https://linkedin.com/in/lomagnette" target="_blank" rel="noopener noreferrer" class="author-social-link" aria-label="LinkedIn">
+          <i class="fa-brands fa-linkedin"></i>
+          <span>LinkedIn</span>
+        </a>
+        <a href="https://bsky.app/profile/lomagnette.bsky.social" target="_blank" rel="noopener noreferrer" class="author-social-link" aria-label="Bluesky">
+          <i class="fa-brands fa-bluesky"></i>
+          <span>Bluesky</span>
+        </a>
+      </div>
+    </div>
+  </div>
 
-## Authors
+  <div class="author-bio">
+    <h2>About Me</h2>
+    <p>{author.bio}</p>
+  </div>
 
-<div class="authors">
-  <!-- authors.yml is in the data/ -->
-  {#for id in cdi:authors.fields}
-    {#let author=cdi:authors.get(id)}
-    <!-- the author-card tag is defined in the default Roq theme -->
-    {#author-card name=author.name avatar=author.avatar nickname=author.nickname profile=author.profile /}
-  {/for}
+  <div class="author-highlights">
+    <div class="highlight-card">
+      <i class="fa-solid fa-code"></i>
+      <h3>Expertise</h3>
+      <p>Java & Angular specialist with a focus on delivering innovative solutions</p>
+    </div>
+    <div class="highlight-card">
+      <i class="fa-solid fa-users"></i>
+      <h3>Community</h3>
+      <p>Co-organizer of BeJUG (Belgian Java User Group)</p>
+    </div>
+    <div class="highlight-card">
+      <i class="fa-solid fa-microphone"></i>
+      <h3>Speaker</h3>
+      <p>Sharing knowledge through talks and presentations</p>
+    </div>
+  </div>
 </div>
 
+{/let}

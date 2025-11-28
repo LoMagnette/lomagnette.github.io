@@ -1,0 +1,253 @@
+---
+title: Talks
+description: List of all the conference talks I've given.
+layout: :theme/page
+---
+
+<style>
+.talks-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem;
+}
+
+.talks-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.talks-header h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.talks-header p {
+    color: var(--text-secondary);
+}
+
+.year-section {
+    margin-bottom: 2.5rem;
+}
+
+.year-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    color: var(--text-primary);
+    border-left: 6px solid var(--color-primary);
+    padding-left: 1rem;
+}
+
+.events-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.event-card {
+    background: var(--card-gradient);
+    border-radius: 10px;
+    padding: 0.75rem;
+    box-shadow: var(--shadow-md);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid var(--border-color);
+}
+
+.event-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.event-header {
+    margin-bottom: 0.75rem;
+}
+
+.event-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.event-meta {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    color: var(--text-tertiary);
+    font-size: 0.9rem;
+    margin-bottom: 0;
+}
+
+.event-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.event-meta-item::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    background: var(--color-primary);
+    border-radius: 50%;
+}
+
+.talks-list {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 2px solid var(--border-color);
+}
+
+.talks-list-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.talk-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    margin-bottom: 0.35rem;
+    background: var(--card-bg);
+    border-radius: 6px;
+    transition: background 0.2s ease;
+}
+
+.talk-item:hover {
+    background: var(--hover-bg);
+}
+
+.talk-bullet {
+    flex-shrink: 0;
+    width: 6px;
+    height: 6px;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+    border-radius: 50%;
+    margin-top: 0.45rem;
+}
+
+.talk-content {
+    flex: 1;
+}
+
+.talk-title {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.35rem;
+    line-height: 1.4;
+}
+
+.talk-links {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.talk-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.65rem;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.talk-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(20, 184, 166, 0.4);
+    color: white;
+}
+
+.no-talks {
+    color: var(--text-muted);
+    font-style: italic;
+    padding: 0.75rem;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .talks-header h1 {
+        font-size: 2rem;
+    }
+
+    .year-title {
+        font-size: 1.75rem;
+    }
+
+    .event-meta {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+</style>
+
+<div class="talks-container">
+    <div class="talks-header">
+        <h1>Conference Talks</h1>
+        <p>Sharing knowledge and experiences with the developer community</p>
+    </div>
+
+    {#for year in cdi:talks.list}
+        <div class="year-section">
+            <h2 class="year-title">{year.year}</h2>
+
+            <div class="events-grid">
+                {#for event in year.events}
+                    <div class="event-card">
+                        <div class="event-header">
+                            <h3 class="event-name">{event.name}</h3>
+                            <div class="event-meta">
+                                <span class="event-meta-item">{event.date}</span>
+                                <span class="event-meta-item">{event.location}</span>
+                            </div>
+                        </div>
+
+                        {#if event.talks.size > 0}
+                            <div class="talks-list">
+                                {#for talk in event.talks}
+                                    <div class="talk-item">
+                                        <div class="talk-bullet"></div>
+                                        <div class="talk-content">
+                                            <div class="talk-title">{talk.title}</div>
+                                            {#if talk.slides || talk.recording}
+                                                <div class="talk-links">
+                                                    {#if talk.slides}
+                                                        <a href="{talk.slides}" target="_blank" class="talk-link">
+                                                            📊 Slides
+                                                        </a>
+                                                    {/if}
+                                                    {#if talk.recording}
+                                                        <a href="{talk.recording}" target="_blank" class="talk-link">
+                                                            🎥 Recording
+                                                        </a>
+                                                    {/if}
+                                                </div>
+                                            {/if}
+                                        </div>
+                                    </div>
+                                {/for}
+                            </div>
+                        {#else}
+                            <div class="no-talks">No talks listed for this event</div>
+                        {/if}
+                    </div>
+                {/for}
+            </div>
+        </div>
+    {/for}
+</div>
