@@ -1,11 +1,10 @@
 ---
 title: "Bridging the Gap: Full-Stack Development Without the Headaches"
-description: Bridging the Gap Full-Stack Development Without the Headaches
+description: "This article explores how Quarkus streamlines full-stack development by eliminating the traditional divide between frontend and backend. Discover how Quinoa enables seamless integration of modern JavaScript frameworks and hot-reloading workflows, while the Web Bundler offers a zero-Node.js approach using mvnpm and esbuild. Whether you’re building with React, Angular, or pure JS, learn how Quarkus makes full-stack development faster, simpler, and frustration-free."
 tags: [java, quarkus, fullstack, web-bundler, quinoa]
 author: Loïc
 image: 2025-03-10-fullstack-no-hassle-cover.png
 ---
-# Bridging the Gap: Full-Stack Development Without the Headaches
 
 Working on web projects often means dealing with two separate environments-one for the backend and another for the frontend-each with its own ecosystem. Developers frequently run into issues when dealing with the ecosystem of their counterpart, creating a needless wall between front-end and back-end developers. You have to use unfamiliar tools, follow API changes, create mocks, and have a hard time creating e2e tests. Overall, this makes development unnecessarily frustrating and a time-consuming process.
 

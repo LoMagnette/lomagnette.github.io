@@ -1,14 +1,10 @@
 ---
 title: "AI-Powered Form Wizards: Chat, Click, Done"
-description: AI-Powered Form Wizards Chat, Click, Done
+description: "Discover how AI-powered form wizards turn confusing forms into smooth, conversational experiences. This article walks you through building an intelligent assistant with Quarkus and LangChain4j—able to guide users, validate data, retrieve missing information with RAG, and even process uploaded documents. From structured output to multimodal inputs, learn how to transform traditional forms into smart, adaptive, user-friendly interactions."
 tags: [ai, chatbot, form, java, quarkus, langchain4j]
 author: Loïc
 image: form-wizard-cover.png
 ---
-##### Hand-Picked Top-Read Stories
-
-# AI-Powered Form Wizards: Chat, Click, Done
-
 ## Transforming Form Filling into a Conversational Experience
 
 Forms are everywhere-tax declarations, job applications, or even signing up for a new service. Although some forms are simple, many include ambiguous fields, complicated logic, or subpar design. This may frustrate users and make them more likely to make mistakes. Completing paperwork shouldn't be like solving a puzzle
