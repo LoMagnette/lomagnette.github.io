@@ -1,0 +1,61 @@
+{@io.quarkiverse.roq.frontmatter.runtime.model.Site site}
+{@java.util.List<io.vertx.core.json.JsonObject> menu}
+
+<header class="top-nav" role="banner">
+    <div class="nav-container">
+        <div class="nav-brand">
+            <a href="/" class="brand-link">
+                <span class="brand-name text-gradient">{site.data.get('simple-name') ?: 'Blog'}</span>
+            </a>
+        </div>
+
+        <nav class="nav-menu" role="navigation" aria-label="Main navigation">
+            <ul class="nav-links">
+                {#for item in menu}
+                <li class="nav-item">
+                    <a href="{site.url(item.path)}"
+                       {#if item.target??}target="{item.target}" rel="noopener noreferrer"{/if}
+                       class="nav-link">
+                        <i class="{item.icon}" aria-hidden="true"></i>
+                        <span>{item.title}</span>
+                    </a>
+                </li>
+                {/for}
+            </ul>
+        </nav>
+
+        <div class="nav-social">
+            <button class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+                <i class="fa-solid fa-sun sun-icon"></i>
+                <i class="fa-solid fa-moon moon-icon"></i>
+            </button>
+
+            {#if site.data.get('social-github')??}
+            <a href="https://github.com/{site.data.get('social-github')}" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="GitHub">
+                <i class="fa-brands fa-github"></i>
+            </a>
+            {/if}
+            {#if site.data.get('social-twitter')??}
+            <a href="https://twitter.com/{site.data.get('social-twitter')}" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Twitter">
+                <i class="fa-brands fa-twitter"></i>
+            </a>
+            {/if}
+            {#if site.data.get('social-linkedin')??}
+            <a href="https://linkedin.com/in/{site.data.get('social-linkedin')}" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn">
+                <i class="fa-brands fa-linkedin"></i>
+            </a>
+            {/if}
+            {#if site.data.get('social-bluesky')??}
+            <a href="https://bsky.app/profile/{site.data.get('social-bluesky')}" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Bluesky">
+                <i class="fa-brands fa-bluesky"></i>
+            </a>
+            {/if}
+        </div>
+
+        <button class="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+</header>

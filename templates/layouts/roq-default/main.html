@@ -1,0 +1,16 @@
+---
+layout: layouts/roq-default/default
+---
+{@io.quarkiverse.roq.frontmatter.runtime.model.Site site}
+
+{#include partials/navbar-menu menu=cdi:menu.items /}
+
+<div class="content-box clearfix">
+  {#insert /}
+</div>
+
+{#footer}
+<footer id="footer">
+    {#include partials/footer-copyright /}
+</footer>
+{/}
