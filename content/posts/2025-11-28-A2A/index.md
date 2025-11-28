@@ -1,6 +1,6 @@
 ---
 title: "From Lonely Agents to Talking Teams: An introduction to A2A"
-description: "From Lonely Agents to Talking Teams: An introduction to A2A"
+description: "This article introduces A2A, a protocol that lets AI agents stop working in isolation and start collaborating as real “teams.” You’ll learn how agents can discover each other via agent cards, exchange tasks and multimodal artifacts, handle errors and auth, and how A2A compares to MCP. With a practical Java + LangChain4j + Quarkus example (superhero-themed, of course), it shows how to build both an A2A server and client so your agents can coordinate, delegate, and actually work together."
 tags: [ai, chatbot, A2A, java, langchain4j]
 author: Loïc
 image: 2025-11-28-A2A-cover.png
@@ -8,7 +8,7 @@ image: 2025-11-28-A2A-cover.png
 
 ## Why agents need friends?
 
-We've recently seen a boom of AI "agents". AI Agents are usually described as a service that talk to an AI model to perform some kind of goal-based operation using tools and context it assumes.
+We've recently seen a boom of AI "agents". AI Agents are usually described as a service that talks to an AI model to perform some kind of goal-based operation using tools and context it assumes.
 
 But most of these agents are still working in an isolated environment. You build an agent into your application and it offers some capabilities, but that's it. You're basically building a monolith with AI in it.
 
@@ -16,7 +16,7 @@ But most of these agents are still working in an isolated environment. You build
 
 The initial concept is really simple, let agents talk to each other. 
 
-If we draw a quick parallel to how we work as humans, if tomorrow I want to build a house I will probably not try to do it by myself. I will call different experts with their own expertise and skills, and they will work together to build the house. Why your AI Agent should rely on a "do-everything" agent then ?
+If we draw a quick parallel to how we work as humans, if tomorrow I want to build a house I will probably not try to do it by myself. I will call different experts with their own expertise and skills, and they will work together to build the house. Why should your AI Agent rely on a "do-everything" agent then ?
 
 In the real world, collaboration is how things get done. A2A is exactly that. It allows specialized agents to communicate, coordinate and share work.
 
@@ -37,15 +37,15 @@ A2A is built using web standards that most developers already know. You can actu
 - JSON-RPC
 - gRPC
 
-This makes any kind of integration flexible and future-proof. The only issues with supporting different protocols is that all agents supporting A2A might not use the same one making it a bit more difficult to use.
+This makes any kind of integration flexible and future-proof. The only issue with supporting different protocols is that all agents supporting A2A might not use the same one, making it a bit more difficult to use.
 
 ### Secure by default
 
-We've all heard about the infamous "S" for security in MCP or more the lack of it. A2A is by default secure. It supports enterprise grade authentication and authorization, by being on par with OpenAPI's authentication schemes.
+We've all heard about the infamous lack of "S" for security in [MCP](TODO). A2A is by default secure. It supports enterprise grade authentication and authorization, by being on par with OpenAPI's authentication schemes.
 
 ### Discoverability
 
-To be able to communicate with each other, agents need to, first, be able to discover each other. To do so each agent will provide an Agent card.
+To be able to communicate with each other, agents need to, first, be able to discover each other. To do so, each agent will provide an Agent card.
 This card is really similar to a resume. It will contain the identity of the agent and its capabilities.
 
 The agent card describes the agent's name, version, capabilities (eg: streaming, notifications,...) and it's specific skills. The card is exposed at a well-known URL: `.well-known/agent.json`
@@ -53,25 +53,25 @@ The agent card describes the agent's name, version, capabilities (eg: streaming,
 ### to Task or not to Task?
 
 A2A introduces the concept of task. A task, as the name suggests, is a unit of work. A2A can work with or without tasks but I personally prefer to use them.
-A task can be synchronous or asynchronous. You probably don't want to block your agent while it's doing some heavy computation. A task as a state and we will see a bit further how this state can vary during the execution of the task.
+A task can be synchronous or asynchronous. You probably don't want to block your agent while it's doing some heavy computation. A task has a state and we will see a bit further how its state can vary during the execution of the task.
 
 //TODO feedback loop (sse, websockets, webhooks)
 
 ### Not only text
 
-AI model can handle a lot more than just text. We often talk about multi-modality where models, like Gemini from Google, support a large variety of inputs (text, images, audio, video,...).
-As you can imagine A2A supports multimodality out of the box for the inputs and outputs. It allows us to build very rich and capable agents that can interact with each others.
+AI models can handle a lot more than just text. We often talk about multi-modality where models, like Gemini from Google, support a large variety of inputs (text, images, audio, video,...).
+As you can imagine A2A supports multimodality out of the box for the inputs and outputs. It allows us to build very rich and capable agents that can interact with each other.
 
 ### Extensible
 
-A2A is built to be extended for specific use cases. A2A offers a lot of capabilities but for certain aspect we might need more specific features. 
-There's already some existing extensions for A2A such as [AP2](TODO) that offers a payment protocol over A2A.
+A2A is built to be extended for specific use cases. A2A offers a lot of capabilities, but for certain aspects we might need more specific features. 
+There are already some existing extensions for A2A, such as [AP2](TODO), that offer a payment protocol over A2A.
 
 ## How does it work?
 
 As discussed earlier, the first step is to discover other agents and get their agent cards. 
-Once it's done your agent will be able to communicate with other agents and create tasks.
-Those tasks will need to be managed by the agents and for that there's various status. 
+Once it's done, your agent will be able to communicate with other agents and create tasks.
+Those tasks will need to be managed by the agents and for that there are various statuses. 
 Let's see them in action. In the following step, it will be assumed to have 2 agents. 
 The first agent will be used a client and we will call it `Neo`.
 The second agent will be used as a server and we will call it `Smith`.
@@ -86,22 +86,22 @@ Once `Smith` receives the task and accepts it, it will set the status to `SUBMIT
 Once `Smith` starts working on the task, he will update the status to `WORKING`.
 
 At some point, `Smith` might realize he needs more information from `Neo` to complete the task. 
-In that case it will update the status to 'INPUT REQUIRED' and send a message to `Neo` asking for more information. 
+In that case, it will update the status to 'INPUT REQUIRED' and send a message to `Neo` asking for more information. 
 
 If `Neo` responds with the required information, `Smith` will update the status back to `WORKING` and continue working on the task.
 
 This interaction is key in the protocol since it shows that the agents are not working just as a client-server solution but can really interact and collaborate with each other.
 
 At some point, we can imagine that `Smith` will have completed his work, update the status to `COMPLETED` and send a message to `Neo` with the result of his work.
-This result is what A2A calls an Artifact. An artifact is the result of a task it might contains multiple parts with different type of data (text,audio,image,...) giving us multimodal returns.
+This result is what A2A calls an Artifact. An artifact is the result of a task it might contain multiple parts with different type of data (text,audio,image,...) giving us multimodal returns.
 
 ### What could go wrong?
 
 We all know that things don't always go as planned, to handle that A2A has a couple of useful statuses that we'll go through in the following sections.
 
-Let's imagine that `Smith` is working a task and for some reason fails at some point. In that case, the task status will be updated to `FAILED`. `Smith` will then send a message to `Neo` explaining what went wrong.
+Let's imagine that `Smith` is working on a task and for some reason fails at some point. In that case, the task status will be updated to `FAILED`. `Smith` will then send a message to `Neo` explaining what went wrong.
 
-Another case could be that `Neo` gave a task to `Smith` but after all realizes it doesn't need `Smith` to complete his work. In that case, `Neo` send a message to `Smith` to cancel the task and `Smith` will update the status to `CANCELED`.
+Another case could be that `Neo` gave a task to `Smith` but after all realizes it doesn't need `Smith` to complete his work. In that case, `Neo` sends a message to `Smith` to cancel the task and `Smith` will update the status to `CANCELED`.
 
 In the following scenario, `Neo` sends a task to `Smith`. But what `Neo` doesn't know is that `Smith` is already very busy and will not be able to work on it. 
 In that case, `Smith` will update the status to `REJECTED` and send a message to `Neo` explaining that he will not be able to work on the task.
@@ -112,6 +112,312 @@ Finally let's imagine that `Smith` is working on a task for `Neo` but at some po
 
 There's one last status supported by the protocol. This status is `unknown`. This status is used when the state of the task cannot be determined. For instance this could occur if a task has expired or the ID of the task is invalid.
 
-## What about MCP ?
+## What about MCP?
+
+One of the frequent questions I get is how A2A is different from MCP. 
+MCP is an open source standard introduced by Anthropic that allows AI systems to connect with external tools and data.
+It's frequently described as the USB for AI, since it allows AI systems to connect to external tools and data using the same protocol.
+
+On the other hand, A2A is a protocol connect agent together. 
+If we want to make the same kind of analogy as for MCP, A2A would be the Ethernet of AI, since it allows AI agents to connect together.
+
+The two protocols have very different purposes and use cases. An A2A agent could use MCP to connect to some tools.
+
+## Show me the code!
+
+Of course, a protocol is great but you might wonder how can leverage it in your application. 
+A2A has already a few implementations in different languages.
+You might guess that Python was the first one, but Java already has its own implementation. 
+LangChain4J is already supporting an A2A client as part of the `langchain4j agentic` module.
+
+So in this short demo, we will build a couple of agents that will expose an A2A server and use another agent to communicate with it.
+We will build a team of super heroes with a team leader and some team members, their goal save the world.
+
+If you want to follow along, all the code is available on [github](TODO)
+
+### A2A server aka Team member
+
+So first, we have our team member `IronRam`. We will first define our AI service using LangChain4J and Quarkus.
+
+#### Dependencies
+
+To do so, we will need the following Maven dependencies:
+```xml
+    <dependency>
+        <groupId>io.quarkiverse.langchain4j</groupId>
+        <artifactId>quarkus-langchain4j-ollama</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>io.github.a2asdk</groupId>
+        <artifactId>a2a-java-sdk-reference-jsonrpc</artifactId>
+        <version>$\{io.a2a.sdk.version}</version>
+    </dependency>
+```
+
+#### AI Service
+Then we will create an AiService using quarkus-langchain4j.
+```java
+import dev.langchain4j.service.SystemMessage;
+import dev.langchain4j.service.UserMessage;
+import io.quarkiverse.langchain4j.RegisterAiService;
+import io.quarkiverse.langchain4j.ToolBox;
+import jakarta.enterprise.context.ApplicationScoped;
+
+import java.util.List;
+
+@RegisterAiService
+@SystemMessage("""
+        You're IronRam, a genius, billionaire, philanthropist. You're a superhero protecting universe 8444.
+        You can fly through space using your IronRamArmor navigation capability.
+        You can also collect object through the universe.
+        """)
+@ApplicationScoped
+public interface IronRam {
+
+
+    @UserMessage("""
+                You need to collect all objects matching the keywords.
+                Follow these steps carefully and use the available tools in the correct order.
+               //...
+            
+                The answer should be a simple json array of string without any special characters
+            
+               ---
+               keywords: \{objectsDescription}
+            
+            """)
+    @ToolBox(\{Baarvis.class, IronRamArmor.class})
+    public List<String> collect(String objectsDescription);
+}
+        
+```
+
+This AI service can of course use some tools as indicated by the `@ToolBox` annotation. It could also use some MCP tools.
+
+#### Agent card
+
+One key element of the A2A protocol is the agent card. To define the agent, we will create an `AgentCardProducer` class. 
+
+That class will have a method annotated with `@Produces` and `@PublicAgentCard` that will be in charge of creating the agent card and returning it.
+
+To produce the agent card we will use the builder provide by the AgentCard class. 
+You can see in the code below that we will be able to describe the agent and its capabilities, but also its skills.
+One key element of this card is the examples in the skills section. It will provide some examples of how to use the skill for the calling agent.
+
+```java
+import io.a2a.server.PublicAgentCard;
+import io.a2a.spec.AgentCapabilities;
+import io.a2a.spec.AgentCard;
+import io.a2a.spec.AgentSkill;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
+import java.util.Collections;
+import java.util.List;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
+/** Producer for Content Writer Agent Card. */
+@ApplicationScoped
+public final class IronRamAgentCardProducer {
+
+  /** HTTP port for the agent. */
+  @Inject
+  @ConfigProperty(name = "quarkus.http.port")
+  private int httpPort;
+
+  /**
+   * Creates the agent card for the content writer agent.
+   *
+   * @return the agent card
+   */
+  @Produces
+  @PublicAgentCard
+  public AgentCard agentCard() {
+    return new AgentCard.Builder()
+        .name("IronRam Agent")
+        .description("""
+                      IronRam, genius, billionaire, philantropist.
+                      He's a super hero to protect universe 8444.
+                      He can fly through space using his IronRamArmor navigation capability.
+                      He can also collect objects through the universe.
+            """)
+        .url("http://localhost:" + httpPort)
+        .version("1.0.0")
+        .documentationUrl("http://example.com/docs")
+        .capabilities(
+            new AgentCapabilities.Builder()
+                .streaming(true)
+                .pushNotifications(false)
+                .stateTransitionHistory(false)
+                .build())
+        .defaultInputModes(Collections.singletonList("text"))
+        .defaultOutputModes(Collections.singletonList("text"))
+        .skills(
+            Collections.singletonList(
+                new AgentSkill.Builder()
+                    .id("ironram")
+                    .name("Goes through space and collect objects")
+                    .description(
+                            """
+                            Goes through space using his IronRamArmor and collects objects based on a given description.
+                            """)
+                    .tags(List.of("collecter","super hero"))
+                    .examples(
+                        List.of(
+                            "Go collect all the infinity stone"))
+                    .build()))
+        .protocolVersion("0.3.0")
+        .build();
+  }
+}
+```
+
+#### Agent Executor
+
+Now that we have our AI service and our agent card, we need to handle the incoming tasks and handle it.
+
+To do so, we will create an `AgentExecutorProducer` class or more exactly in our case, an `IronRamAgentExecutorProducer` class. This class will be in charge of creating the agent executor and returning it. To do so we create method annotated with `@Produces` that will create the executor and return it.
+
+In our case, we've defined the Executor class as an internal class of the `IronRamAgentExecutorProducer` class. 
+This class is named in this case SuperHeroExecutor and implements the AgentExecutor interface.
+This interface requires implementing 2 methods:
+- execute: in charge of handling the incoming task and processing it, but also handling all the eventual status changes. In our case, the implementation is relatively straightforward: We get the task text content, provide it to our AI service, and return the result.
+- cancel: in charge of handling the cancellation of the task.
+```java
+import io.a2a.server.agentexecution.AgentExecutor;
+import io.a2a.server.agentexecution.RequestContext;
+import io.a2a.server.events.EventQueue;
+import io.a2a.server.tasks.TaskUpdater;
+import io.a2a.spec.JSONRPCError;
+import io.a2a.spec.Message;
+import io.a2a.spec.Part;
+import io.a2a.spec.Task;
+import io.a2a.spec.TaskNotCancelableError;
+import io.a2a.spec.TaskState;
+import io.a2a.spec.TextPart;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
+
+import java.util.List;
+
+
+@ApplicationScoped
+public final class IronRamAgentExecutorProducer {
+
+    @Inject
+    private IronRam ironRam;
+
+    /**
+     * Creates the agent executor for the content writer agent.
+     *
+     * @return the agent executor
+     */
+    @Produces
+    public AgentExecutor agentExecutor() {
+        return new SuperHeroExecutor(ironRam);
+    }
+
+    /**
+     * Agent executor implementation for content writer.
+     */
+    private static class SuperHeroExecutor implements AgentExecutor {
+
+        private final IronRam agent;
+
+        SuperHeroExecutor(final IronRam ironRam) {
+            this.agent = ironRam;
+        }
+
+        @Override
+        public void execute(final RequestContext context,
+                            final EventQueue eventQueue) throws JSONRPCError {
+            final TaskUpdater updater = new TaskUpdater(context, eventQueue);
+
+            // mark the task as submitted and start working on it
+            if (context.getTask() == null) {
+                updater.submit();
+            }
+            updater.startWork();
+
+            // extract the text from the message
+            final String assignment = extractTextFromMessage(context.getMessage());
+
+            // call the content writer agent with the message
+            final String response = agent.collect(assignment).toString();
+
+            // create the response part
+            final TextPart responsePart = new TextPart(response, null);
+            final List<Part<?>> parts = List.of(responsePart);
+
+            // add the response as an artifact and complete the task
+            updater.addArtifact(parts, null, null, null);
+            updater.complete();
+        }
+
+        private String extractTextFromMessage(final Message message) {
+            final StringBuilder textBuilder = new StringBuilder();
+            if (message.getParts() != null) {
+                for (final Part part : message.getParts()) {
+                    if (part instanceof TextPart textPart) {
+                        textBuilder.append(textPart.getText());
+                    }
+                }
+            }
+            return textBuilder.toString();
+        }
+
+        @Override
+        public void cancel(final RequestContext context,
+                           final EventQueue eventQueue) throws JSONRPCError {
+            final Task task = context.getTask();
+
+            if (task.getStatus().state() == TaskState.CANCELED) {
+                // task already canceled
+                throw new TaskNotCancelableError();
+            }
+
+            if (task.getStatus().state() == TaskState.COMPLETED) {
+                // task already completed
+                throw new TaskNotCancelableError();
+            }
+
+            // cancel the task
+            final TaskUpdater updater = new TaskUpdater(context, eventQueue);
+            updater.cancel();
+        }
+    }
+}
+
+```
+
+#### Testing our A2A server
+
+With all that, you should be able to run your A2A server locally. 
+If you want to test it you can use the [A2A inspector](https://github.com/a2aproject/a2a-inspector) and connect it to your A2A server.
+
+The A2A Inspector is a web application that's very easy to run and can be used to inspect any A2A server agent.
+
+We can use the A2A Inspector to validate our A2A server agent by specifying our server agent's URL in the Connect text box.
+
+The A2A Inspector will obtain and show our server agent’s agent card
+
+
+## A2A client aka Team Leader
+
+
+## Wrap up
+
+
+## References
+- [Quarkus](https://quarkus.io)
+- [LangChain4J](https://docs.langchain4j.dev/)
+- [A2A](sdf)
+- [A2A Inspector](sf)
+- [MCP](sfd)
+- [AP2](sf)
+- [Quarkus A2A](sf)
+
+
 
 
