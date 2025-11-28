@@ -1,6 +1,6 @@
 ---
-title: "Bridging the Gap: Full-Stack Development Without the Headaches"
-description: Bridging the Gap Full-Stack Development Without the Headaches
+title: "AI-Powered Form Wizards: Chat, Click, Done"
+description: AI-Powered Form Wizards Chat, Click, Done
 tags: [ai, chatbot, form, java, quarkus, langchain4j]
 author: Loïc
 image: form-wizard-cover.png

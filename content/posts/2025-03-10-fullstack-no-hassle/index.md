@@ -3,7 +3,7 @@ title: "Bridging the Gap: Full-Stack Development Without the Headaches"
 description: Bridging the Gap Full-Stack Development Without the Headaches
 tags: [java, quarkus, fullstack, web-bundler, quinoa]
 author: Loïc
-image: img.png
+image: 2025-03-10-fullstack-no-hassle-cover.png
 ---
 # Bridging the Gap: Full-Stack Development Without the Headaches
 
