@@ -1,0 +1,240 @@
+- year: "2026"
+  events:
+    - name: "Voxxed Days Zurich"
+      date: "Mar 2026"
+      location: "Zürich, Switzerland"
+      talks:
+        - title: "Finding the Spark: A Career Reset Button."
+
+    - name: "Javaland"
+      date: "Mar 2026"
+      location: "Rust, Germany"
+      talks:
+        - title: "AI-Powered Form Wizards: Chat, Click, Done"
+
+    - name: "Voxxed Days Ticino"
+      date: "Feb 2026"
+      location: "Lugano, Switzerland"
+      talks:
+        - title: "The Future of Angular: Faster, Lighter, Stronger"
+
+    - name: "Quarkus Insight"
+      date: "Jan 2026"
+      location: "Online"
+      talks:
+        - title: "AI-Powered Form Wizards: Chat, Click, Done"
+
+- year: "2025"
+  events:
+    - name: "DevDay"
+      date: "Nov 2025"
+      location: "Mons, Belgium"
+      talks:
+        - title: "The Future of Angular: Faster, Lighter, Stronger"
+
+    - name: "Voxxed Days Thessaloniki"
+      date: "Nov 2025"
+      location: "Thessaloniki, Greece"
+      talks:
+        - title: "The Future of Angular: Faster, Lighter, Stronger"
+
+    - name: "JavaCro 25"
+      date: "Oct 2025"
+      location: "Croatia"
+      talks:
+        - title: "AI-Powered Form Wizards: Chat, Click, Done"
+        - title: "Opening Roundtable: Software Development in the Age of AI"
+
+    - name: "Devoxx Belgium"
+      date: "Oct 2025"
+      location: "Antwerpen, Belgium"
+      talks:
+        - title: "A2A in 30 Minutes: Building Interoperable AI Agents"
+        - title: "BOF: Java and JVM lovers in Belgium, let's unite!"
+        - title: "AI-Powered Form Wizards: Chat, Click, Done"
+
+    - name: "Dev2Next"
+      date: "Sep 2025"
+      location: "USA, Colorado Springs"
+      talks:
+        - title: "Bridging the Gap: Full-Stack Development Without the Headache"
+
+    - name: "Voxxed Days Luxembourg"
+      date: "Jun 2025"
+      location: "Mondorf-les-Bains, Grand-Duchy of Luxembourg"
+      talks:
+        - title: "Au Cœur de l'Odyssée: Migrer une application d'Angular 10 à 19"
+
+    - name: "Devoxx Poland"
+      date: "Jun 2025"
+      location: "Kraków, Poland"
+      talks:
+        - title: "The Future of Angular: Faster, Lighter, Stronger"
+
+    - name: "MakeIT / JCON OpenBlend Slovenia"
+      date: "May 2025"
+      location: "Portorož, Slovenia"
+      talks:
+        - title: "AI-Powered Form Wizards: Chat, Click, Done"
+        - title: "Bridging the Gap: Full-Stack Development Without the Headaches"
+
+    - name: "GeeCON"
+      date: "May 2025"
+      location: "Kraków, Poland"
+      talks:
+        - title: "Bridging the Gap: Full-Stack Development Without the Headaches"
+
+    - name: "JCON EUROPE"
+      date: "May 2025"
+      location: "Köln, Germany"
+      talks:
+        - title: "AI-Powered Form Wizards: Chat, Click, Done"
+
+    - name: "Angular Dev France"
+      date: "May 2025"
+      location: "Online"
+      talks:
+        - title: "The Future of Angular: Faster, Lighter, Stronger"
+
+    - name: "IA Data Day - Strasbourg"
+      date: "Apr 2025"
+      location: "Strasbourg, France"
+      talks:
+        - title: "RAG to the future : comment garder son IA à jour"
+
+    - name: "Devoxx Greece"
+      date: "Apr 2025"
+      location: "Athens, Greece"
+      talks:
+        - title: "A Developer's Tale: Migrating an Angular app from version 10 to 19"
+
+    - name: "Warsaw IT Days"
+      date: "Apr 2025"
+      location: "Warsaw, Poland"
+      talks:
+        - title: "Bridging the Gap: Full-Stack Development Without the Headaches"
+
+    - name: "Web Day"
+      date: "Mar 2025"
+      location: "Milan, Italy"
+      talks:
+        - title: "The Future of Angular: Faster, Lighter, Stronger"
+
+    - name: "Voxxed Days Zurich"
+      date: "Mar 2025"
+      location: "Zürich, Switzerland"
+      talks:
+        - title: "The Future of Angular: Faster, Lighter, Stronger"
+
+    - name: "DevApp Podcast"
+      date: "Jan 2025"
+      location: "Online"
+      talks:
+        - title: "The Future of Angular: Faster, Lighter, Stronger"
+
+    - name: "Angular Dev France"
+      date: "Jan 2025"
+      location: "Online"
+      talks:
+        - title: "Au Cœur de l'Odyssée: Migrer une application d'Angular 10 à 18"
+
+- year: "2024"
+  events:
+    - name: "DevFest Venezia"
+      date: "Nov 2024"
+      location: "Mestre, Italy"
+      talks:
+        - title: "A Developer's Tale: Migrating an Angular app from version 10 to 18"
+
+    - name: "DEVFEST Mons"
+      date: "Nov 2024"
+      location: "Mons, Belgium"
+      talks:
+        - title: "Quarkus: Supersonic, Subatomic Full-Stack Development"
+
+    - name: "DevDay"
+      date: "Nov 2024"
+      location: "Mons, Belgium"
+      talks:
+        - title: "Angular, l'épopée moderne : Décryptage des dernières avancées"
+
+    - name: "Devoxx Belgium"
+      date: "Oct 2024"
+      location: "Antwerpen, Belgium"
+      talks:
+        - title: "Unleashing the power of Angular: Navigating the latest releases and transformations"
+        - title: "A Developer's Tale: Migrating an Angular app from version 10 to 18"
+
+    - name: "RivieraDev"
+      date: "July 2024"
+      location: "Valbonne, France"
+      talks:
+        - title: "Au Cœur de l'Odyssée: Migrer une application d'Angular 10 à 17"
+        - title: "Quarkus: Supersonic, Subatomic Full-Stack Development"
+
+    - name: "Voxxed Days Luxembourg"
+      date: "June 2024"
+      location: "Mondorf-les-Bains, LU"
+      talks:
+        - title: "Quarkus: Supersonic, Subatomic Full-Stack Development"
+
+    - name: "Devoxx Poland"
+      date: "June 2024"
+      location: "Kraków, Poland"
+      talks:
+        - title: "Unleashing the power of Angular: Navigating the latest releases and transformations"
+
+    - name: "DevFest Lille"
+      date: "June 2024"
+      location: "Lille, France"
+      talks:
+        - title: "Dompter le chaos de l'information avec Langchain4J"
+
+    - name: "Voxxed Day Brussels"
+      date: "May 2024"
+      location: "Brussels, Belgium"
+      talks:
+        - title: "A Developer's Tale: Migrating an Angular app from version 10 to 17"
+
+    - name: "Devoxx UK"
+      date: "May 2024"
+      location: "London, UK"
+      talks:
+        - title: "A Developer's Tale: Migrating an Angular app from version 10 to 17"
+
+    - name: "Devoxx France"
+      date: "April 2024"
+      location: "Paris, France"
+      talks:
+        - title: "Au Cœur de l'Odyssée: Migrer une application d'Angular 10 à 17"
+
+    - name: "Jfokus"
+      date: "Feb 2024"
+      location: "Stockholm, Sweden"
+      talks:
+        - title: "Unleashing the power of Angular: Navigating the latest releases and transformations"
+
+- year: "2023"
+  events:
+    - name: "Codeur en Seine"
+      date: "Oct 2023"
+      location: "Rouen, France"
+      talks:
+        - title: "Quarkus vs Spring Boot : Quel est le framework qui régnera en maître en 2023 ?"
+
+    - name: "Devoxx Belgium"
+      date: "Oct 2023"
+      location: "Antwerpen, Belgium"
+      talks:
+        - title: "Unleashing the power of Angular: Navigating the latest releases and transformations"
+
+    - name: "Voxxed Day Brussels"
+      date: "May 2023"
+      location: "Brussels, Belgium"
+      talks: []
+
+    - name: "DevDay"
+      date: "Mar 2023"
+      location: "Mons, Belgium"
+      talks:
+        - title: "Angular 13 to 15: A corner stone for Angular developers ?"
