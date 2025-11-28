@@ -76,7 +76,9 @@ If you want to enable the Web UI for a particular test, you can simply use the e
 public class GreetingResourceTest {
     @Test
     public void testHelloEndpoint() {
-      //...
+        //...
+    }
+}    
 ```
 
 To run the tests included in your Web UI (e.g., `npm test` ) alongside this class, you can use the `EnableAndRunTests` test profile:

@@ -189,6 +189,8 @@ public class AdoptionForm extends PanacheEntity {
     @NotEmpty
     @Description("the firstname of the person willing to adopt")
     public String firstName;
+    //...
+}
 ```
 
 One key issue you might encounter, depending on the model you're using is that not all the LLMs are the same when it comes to structured output. The LLM may not follow your instructions even with Quarkus' assistance; in this scenario, you may need to improve your prompt. Because of this, I have found that using few-shot prompting, which involves displaying both positive and negative output, is a very successful strategy.
@@ -230,6 +232,8 @@ public class AdoptionForm extends PanacheEntity {
     @NotEmpty
     @Pattern(regexp = "^\\+(?:[0-9] ?)\{6,14}[0-9]$")
     public String phone;
+    //...
+}
 ```
 
 
@@ -332,6 +336,8 @@ Then provide it to your AI service so it can use it when exchanging with the LLM
         retrievalAugmentor = RetrievalAugmentorExample.class
 )
 public interface Bot {
+    //...
+}
 ```
 
 You could even go one step further and provide users access to a chat feature throughout your app, which would make it easier for them to navigate your website. We've all been in the position where we can't find the form or page we're looking for on a website. How helpful would it be to receive guidance from an assistant?
