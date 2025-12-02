@@ -8,7 +8,7 @@ image: 2025-11-28-A2A-cover.png
 
 ## Why agents need friends?
 
-We've recently seen a boom of AI "agents". AI Agents are usually described as a service that talks to an AI model to perform some kind of goal-based operation using tools and context it assumes.
+We've recently seen a boom in AI "agents". AI Agents are usually described as a service that talks to an AI model to perform some kind of goal-based operation using tools and context it assumes.
 
 But most of these agents are still working in an isolated environment. You build an agent into your application and it offers some capabilities, but that's it. You're basically building a monolith with AI in it.
 
@@ -22,7 +22,7 @@ In the real world, collaboration is how things get done. A2A is exactly that. It
 
 ## What's A2A ?
 
-A2A is a protocol that was initially developed by [Google](TODO), but that is now part of the Linux foundation. Several big major tech companies are contributing to the project.
+A2A is a protocol that was initially developed by [Google](TODO), but that is now part of the Linux Foundation. Several big major tech companies are contributing to the project.
 
 The protocol defines how agents can:
 - discover other agents
@@ -95,7 +95,7 @@ This interaction is key in the protocol since it shows that the agents are not w
 At some point, we can imagine that `Smith` will have completed his work, update the status to `COMPLETED` and send a message to `Neo` with the result of his work.
 This result is what A2A calls an Artifact. An artifact is the result of a task it might contain multiple parts with different type of data (text,audio,image,...) giving us multimodal returns.
 
-You can here after a diagram illustrating the happy flow.
+You can see here a diagram illustrating the happy flow.
 {#mermaid}
 sequenceDiagram
 autonumber
@@ -234,7 +234,7 @@ You might guess that Python was the first one, but Java already has its own impl
 LangChain4J is already supporting an A2A client as part of the `langchain4j agentic` module.
 
 So in this short demo, we will build a couple of agents that will expose an A2A server and use another agent to communicate with it.
-We will build a team of super heroes with a team leader and some team members, their goal save the world.
+We will build a team of super heroes with a team leader and some team members, their goal is to save the world.
 
 If you want to follow along, all the code is available on [github](TODO)
 
@@ -339,7 +339,7 @@ public final class IronRamAgentCardProducer {
     return new AgentCard.Builder()
         .name("IronRam Agent")
         .description("""
-                      IronRam, genius, billionaire, philantropist.
+                      IronRam, genius, billionaire, philanthropist.
                       He's a super hero to protect universe 8444.
                       He can fly through space using his IronRamArmor navigation capability.
                       He can also collect objects through the universe.
@@ -364,10 +364,10 @@ public final class IronRamAgentCardProducer {
                             """
                             Goes through space using his IronRamArmor and collects objects based on a given description.
                             """)
-                    .tags(List.of("collecter","super hero"))
+                    .tags(List.of("collector","super hero"))
                     .examples(
                         List.of(
-                            "Go collect all the infinity stone"))
+                            "Go collect all the infinity stones"))
                     .build()))
         .protocolVersion("0.3.0")
         .build();
@@ -553,7 +553,7 @@ var executeMission = AgenticServices.sequenceBuilder()
         .outputName("result")
         .build();
 Object invoke = executeMission.invoke(Map.of("mission", """
-        BaaNos just destroy half the universe using the infinity stones.
+        BaaNos just destroyed half the universe using the infinity stones.
         The only way to reverse it is to quickly collect the infinity stones and snap it.
         """));
 println("-------- Mission results ---------");
