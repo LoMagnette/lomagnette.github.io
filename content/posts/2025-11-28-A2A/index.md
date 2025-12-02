@@ -71,28 +71,26 @@ There are already some existing extensions for A2A, such as [AP2](https://cloud.
 
 As discussed earlier, the first step is to discover other agents and get their agent cards. 
 Once it's done, your agent will be able to communicate with other agents and create tasks.
-Those tasks will need to be managed by the agents and for that there are various statuses. 
+Those tasks will need to be managed by the agents and for that there are various states. 
 Let's see them in action. In the following step, it will be assumed to have 2 agents. 
 The first agent will be used a client and we will call it `Neo`.
 The second agent will be used as a server and we will call it `Smith`.
 
-// TODO add terminal state info
-
 ### Happy flow
 
 The first step is to submit a task. In this scenario, `Neo` will send a task to `Smith`. 
-Once `Smith` receives the task and accepts it, it will set the status to `SUBMITTED`.
+Once `Smith` receives the task and accepts it, it will set the state to `SUBMITTED`.
 
-Once `Smith` starts working on the task, he will update the status to `WORKING`.
+Once `Smith` starts working on the task, he will update the state to `WORKING`.
 
 At some point, `Smith` might realize he needs more information from `Neo` to complete the task. 
-In that case, it will update the status to 'INPUT REQUIRED' and send a message to `Neo` asking for more information. 
+In that case, it will update the state to 'INPUT REQUIRED' and send a message to `Neo` asking for more information. 
 
-If `Neo` responds with the required information, `Smith` will update the status back to `WORKING` and continue working on the task.
+If `Neo` responds with the required information, `Smith` will update the state back to `WORKING` and continue working on the task.
 
 This interaction is key in the protocol since it shows that the agents are not working just as a client-server solution but can really interact and collaborate with each other.
 
-At some point, we can imagine that `Smith` will have completed his work, update the status to `COMPLETED` and send a message to `Neo` with the result of his work.
+At some point, we can imagine that `Smith` will have completed his work, update the state to `COMPLETED` and send a message to `Neo` with the result of his work.
 This result is what A2A calls an Artifact. An artifact is the result of a task it might contain multiple parts with different type of data (text,audio,image,...) giving us multimodal returns.
 
 You can see here a diagram illustrating the happy flow.
@@ -105,34 +103,34 @@ participant Smith
     %% 1. Neo submits the task
     Neo->>Smith: Submit Task
     Note right of Smith: Smith receives the task
-    Smith->>Smith: Accept Task<br/>Set status = SUBMITTED
+    Smith->>Smith: Accept Task<br/>Set state = SUBMITTED
 
     %% 2. Smith starts working
     Note right of Smith: Smith starts working on the task
-    Smith->>Smith: Update status = WORKING
+    Smith->>Smith: Update state = WORKING
 
     %% 3. Smith needs more input
     Note over Smith: Needs more information to continue
-    Smith->>Smith: Update status = INPUT REQUIRED
+    Smith->>Smith: Update state = INPUT REQUIRED
     Smith->>Neo: Request additional information
 
     %% 4. Neo responds, work continues
     Neo-->>Smith: Provide requested information
-    Smith->>Smith: Update status = WORKING<br/>Continue task
+    Smith->>Smith: Update state = WORKING<br/>Continue task
 
     Note over Neo,Smith: Agents interact and collaborate<br/>beyond simple client-server
 
     %% 5. Smith completes the task and returns Artifact
-    Smith->>Smith: Complete work<br/>Update status = COMPLETED
+    Smith->>Smith: Complete work<br/>Update state = COMPLETED
     Smith-->>Neo: Send Artifact (task result)
     Note left of Neo: Artifact can include<br/>text, audio, image, ...
 {/}
 
 ### What could go wrong?
 
-We all know that things don't always go as planned, to handle that A2A has a couple of useful statuses that we'll go through in the following sections.
+We all know that things don't always go as planned, to handle that A2A has a couple of useful states that we'll go through in the following sections.
 
-Let's imagine that `Smith` is working on a task and for some reason fails at some point. In that case, the task status will be updated to `FAILED`. `Smith` will then send a message to `Neo` explaining what went wrong.
+Let's imagine that `Smith` is working on a task and for some reason fails at some point. In that case, the task state will be updated to `FAILED`. `Smith` will then send a message to `Neo` explaining what went wrong.
 {#mermaid}
 sequenceDiagram
 autonumber
@@ -143,7 +141,7 @@ participant Smith
     Note right of Smith: Smith is working on the task
 
     %% Failure occurs
-    Smith->>Smith: Error occurs<br/>Update status = FAILED
+    Smith->>Smith: Error occurs<br/>Update state = FAILED
 
     %% Notify Neo about the failure
     Smith-->>Neo: Send failure message<br/>Explain what went wrong
@@ -151,7 +149,7 @@ participant Smith
     Note over Neo,Smith: Failure is communicated clearly<br/>so Neo can react appropriately
 {/}
 
-Another case could be that `Neo` gave a task to `Smith` but after all realizes it doesn't need `Smith` to complete his work. In that case, `Neo` sends a message to `Smith` to cancel the task and `Smith` will update the status to `CANCELED`.
+Another case could be that `Neo` gave a task to `Smith` but after all realizes it doesn't need `Smith` to complete his work. In that case, `Neo` sends a message to `Smith` to cancel the task and `Smith` will update the state to `CANCELED`.
 
 {#mermaid}
 sequenceDiagram
@@ -166,11 +164,11 @@ participant Smith
     Neo-->>Smith: Cancel Task Request
 
     %% Smith processes cancellation
-    Smith->>Smith: Update status = CANCELED
+    Smith->>Smith: Update state = CANCELED
 {/}
 
 In the following scenario, `Neo` sends a task to `Smith`. But what `Neo` doesn't know is that `Smith` is already very busy and will not be able to work on it. 
-In that case, `Smith` will update the status to `REJECTED` and send a message to `Neo` explaining that he will not be able to work on the task.
+In that case, `Smith` will update the state to `REJECTED` and send a message to `Neo` explaining that he will not be able to work on the task.
 {#mermaid}
 sequenceDiagram
 autonumber
@@ -184,10 +182,10 @@ participant Smith
     Note right of Smith: Smith is already busy<br/>Cannot take this task
 
     %% Smith rejects the task
-    Smith->>Smith: Update status = REJECTED
+    Smith->>Smith: Update state = REJECTED
 {/}
 
-Finally let's imagine that `Smith` is working on a task for `Neo` but at some point realizes that `Neo` does not have the necessary privileges for `Smith` to complete the action. It's the classical case of the `sudo` on linux. In order to complete the action, `Smith` will update the status to `AUTH REQUIRED` and send a message to `Neo` asking for authorization. If then `Neo` provides the necessary authentication elements to `Smith`, then `Smith` will continue working on the task.
+Finally let's imagine that `Smith` is working on a task for `Neo` but at some point realizes that `Neo` does not have the necessary privileges for `Smith` to complete the action. It's the classical case of the `sudo` on linux. In order to complete the action, `Smith` will update the state to `AUTH REQUIRED` and send a message to `Neo` asking for authorization. If then `Neo` provides the necessary authentication elements to `Smith`, then `Smith` will continue working on the task.
 
 {#mermaid}
 sequenceDiagram
@@ -199,7 +197,7 @@ participant Smith
     Note right of Smith: Smith is working on the task
 
     %% Privilege issue discovered
-    Smith->>Smith: Detect insufficient privileges<br/>Update status = AUTH REQUIRED
+    Smith->>Smith: Detect insufficient privileges<br/>Update state = AUTH REQUIRED
 
     %% Request authorization
     Smith-->>Neo: Request authorization<br/>(e.g. sudo-like credentials)
@@ -208,12 +206,29 @@ participant Smith
     Neo-->>Smith: Provide authorization elements
 
     %% Smith resumes work
-    Smith->>Smith: Continue working on task<br/>Status = WORKING
+    Smith->>Smith: Continue working on task<br/>state = WORKING
 {/}
 
 ### Into the unknown
 
-There's one last status supported by the protocol. This status is `unknown`. This status is used when the state of the task cannot be determined. For instance this could occur if a task has expired or the ID of the task is invalid.
+There's one last state supported by the protocol. This state is `unspecified`. This state is used when the state of the task cannot be determined. For instance this could occur if a task has expired or the ID of the task is invalid.
+
+### Terminal states
+
+Among of the states a few of them are considered terminal. 
+They are the ones that indicate that the agent is done with this task. 
+This could mean that either the agent a completed the task or that the agent is not able to continue working on it.
+The following states are considered terminal:
+- COMPLETED
+- FAILED
+- CANCELED
+- REJECTED
+
+### States summary
+
+Here you'll find a summary of the states supported by the protocol and how can transition from one state to another.
+![image](A2A-states.svg)
+
 
 ## What about MCP?
 
@@ -384,7 +399,7 @@ To do so, we will create an `AgentExecutorProducer` class or more exactly in our
 In our case, we've defined the Executor class as an internal class of the `IronRamAgentExecutorProducer` class. 
 This class is named in this case SuperHeroExecutor and implements the AgentExecutor interface.
 This interface requires implementing 2 methods:
-- execute: in charge of handling the incoming task and processing it, but also handling all the eventual status changes. In our case, the implementation is relatively straightforward: We get the task text content, provide it to our AI service, and return the result.
+- execute: in charge of handling the incoming task and processing it, but also handling all the eventual state changes. In our case, the implementation is relatively straightforward: We get the task text content, provide it to our AI service, and return the result.
 - cancel: in charge of handling the cancellation of the task.
 ```java
 import io.a2a.server.agentexecution.AgentExecutor;

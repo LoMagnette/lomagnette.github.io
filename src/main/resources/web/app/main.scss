@@ -298,6 +298,15 @@ pre {
   code {
     font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
   }
+
+  &.mermaid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    border: none;
+    padding: var(--spacing-xl) 0;
+  }
 }
 
 // Modern About/Author Profile Page
