@@ -22,7 +22,7 @@ In the real world, collaboration is how things get done. A2A is exactly that. It
 
 ## What's A2A ?
 
-A2A is a protocol that was initially developed by [Google](TODO), but that is now part of the Linux Foundation. Several big major tech companies are contributing to the project.
+[A2A](https://a2a-protocol.org/latest/) is a protocol that was initially developed by Google, but that is now part of the Linux Foundation. Several big major tech companies are contributing to the project.
 
 The protocol defines how agents can:
 - discover other agents
@@ -41,7 +41,7 @@ This makes any kind of integration flexible and future-proof. The only issue wit
 
 ### Secure by default
 
-We've all heard about the infamous lack of "S" for security in [MCP](TODO). A2A is by default secure. It supports enterprise grade authentication and authorization, by being on par with OpenAPI's authentication schemes.
+We've all heard about the infamous lack of "S" for security in [MCP](https://modelcontextprotocol.io/). A2A is by default secure. It supports enterprise grade authentication and authorization, by being on par with OpenAPI's authentication schemes.
 
 ### Discoverability
 
@@ -65,7 +65,7 @@ As you can imagine A2A supports multimodality out of the box for the inputs and 
 ### Extensible
 
 A2A is built to be extended for specific use cases. A2A offers a lot of capabilities, but for certain aspects we might need more specific features. 
-There are already some existing extensions for A2A, such as [AP2](TODO), that offer a payment protocol over A2A.
+There are already some existing extensions for A2A, such as [AP2](https://cloud.google.com/blog/products/ai-machine-learning/announcing-agents-to-payments-ap2-protocol), that offer a payment protocol over A2A.
 
 ## How does it work?
 
@@ -236,7 +236,7 @@ LangChain4J is already supporting an A2A client as part of the `langchain4j agen
 So in this short demo, we will build a couple of agents that will expose an A2A server and use another agent to communicate with it.
 We will build a team of super heroes with a team leader and some team members, their goal is to save the world.
 
-If you want to follow along, all the code is available on [github](TODO)
+If you want to follow along, all the code is available on [github](https://github.com/LoMagnette/2025-DEVOXX-A2A)
 
 ### A2A server aka Team member
 
@@ -545,6 +545,7 @@ var ironRam = AgenticServices
                 .outputName("stones")
                 .build();
 ```
+//TODO explaine input output
 
 And finally you can use in combination with other agents and build your Agentic solution using a remote agent:
 ```java
