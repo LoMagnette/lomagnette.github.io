@@ -290,7 +290,7 @@ public interface IronRam {
             
             """)
     @ToolBox(\{Baarvis.class, IronRamArmor.class})
-    public List<String> collect(String objectsDescription);
+    List<String> collect(String objectsDescription);
 }
         
 ```
