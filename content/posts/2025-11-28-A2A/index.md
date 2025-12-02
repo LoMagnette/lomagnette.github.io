@@ -95,18 +95,121 @@ This interaction is key in the protocol since it shows that the agents are not w
 At some point, we can imagine that `Smith` will have completed his work, update the status to `COMPLETED` and send a message to `Neo` with the result of his work.
 This result is what A2A calls an Artifact. An artifact is the result of a task it might contain multiple parts with different type of data (text,audio,image,...) giving us multimodal returns.
 
+You can here after a diagram illustrating the happy flow.
+{#mermaid}
+sequenceDiagram
+autonumber
+participant Neo
+participant Smith
+
+    %% 1. Neo submits the task
+    Neo->>Smith: Submit Task
+    Note right of Smith: Smith receives the task
+    Smith->>Smith: Accept Task<br/>Set status = SUBMITTED
+
+    %% 2. Smith starts working
+    Note right of Smith: Smith starts working on the task
+    Smith->>Smith: Update status = WORKING
+
+    %% 3. Smith needs more input
+    Note over Smith: Needs more information to continue
+    Smith->>Smith: Update status = INPUT REQUIRED
+    Smith->>Neo: Request additional information
+
+    %% 4. Neo responds, work continues
+    Neo-->>Smith: Provide requested information
+    Smith->>Smith: Update status = WORKING<br/>Continue task
+
+    Note over Neo,Smith: Agents interact and collaborate<br/>beyond simple client-server
+
+    %% 5. Smith completes the task and returns Artifact
+    Smith->>Smith: Complete work<br/>Update status = COMPLETED
+    Smith-->>Neo: Send Artifact (task result)
+    Note left of Neo: Artifact can include<br/>text, audio, image, ...
+{/}
+
 ### What could go wrong?
 
 We all know that things don't always go as planned, to handle that A2A has a couple of useful statuses that we'll go through in the following sections.
 
 Let's imagine that `Smith` is working on a task and for some reason fails at some point. In that case, the task status will be updated to `FAILED`. `Smith` will then send a message to `Neo` explaining what went wrong.
+{#mermaid}
+sequenceDiagram
+autonumber
+participant Neo
+participant Smith
+
+    %% Smith is already working on a task
+    Note right of Smith: Smith is working on the task
+
+    %% Failure occurs
+    Smith->>Smith: Error occurs<br/>Update status = FAILED
+
+    %% Notify Neo about the failure
+    Smith-->>Neo: Send failure message<br/>Explain what went wrong
+
+    Note over Neo,Smith: Failure is communicated clearly<br/>so Neo can react appropriately
+{/}
 
 Another case could be that `Neo` gave a task to `Smith` but after all realizes it doesn't need `Smith` to complete his work. In that case, `Neo` sends a message to `Smith` to cancel the task and `Smith` will update the status to `CANCELED`.
 
+{#mermaid}
+sequenceDiagram
+autonumber
+participant Neo
+participant Smith
+
+    %% Smith is working on a task Neo previously submitted
+    Note right of Smith: Smith is currently working on Neo's task
+
+    %% Neo decides to cancel
+    Neo-->>Smith: Cancel Task Request
+
+    %% Smith processes cancellation
+    Smith->>Smith: Update status = CANCELED
+{/}
+
 In the following scenario, `Neo` sends a task to `Smith`. But what `Neo` doesn't know is that `Smith` is already very busy and will not be able to work on it. 
 In that case, `Smith` will update the status to `REJECTED` and send a message to `Neo` explaining that he will not be able to work on the task.
+{#mermaid}
+sequenceDiagram
+autonumber
+participant Neo
+participant Smith
+
+    %% Neo sends a new task
+    Neo->>Smith: Submit Task
+
+    %% Smith is busy
+    Note right of Smith: Smith is already busy<br/>Cannot take this task
+
+    %% Smith rejects the task
+    Smith->>Smith: Update status = REJECTED
+{/}
 
 Finally let's imagine that `Smith` is working on a task for `Neo` but at some point realizes that `Neo` does not have the necessary privileges for `Smith` to complete the action. It's the classical case of the `sudo` on linux. In order to complete the action, `Smith` will update the status to `AUTH REQUIRED` and send a message to `Neo` asking for authorization. If then `Neo` provides the necessary authentication elements to `Smith`, then `Smith` will continue working on the task.
+
+{#mermaid}
+sequenceDiagram
+autonumber
+participant Neo
+participant Smith
+
+    %% Smith is working on Neo's task
+    Note right of Smith: Smith is working on the task
+
+    %% Privilege issue discovered
+    Smith->>Smith: Detect insufficient privileges<br/>Update status = AUTH REQUIRED
+
+    %% Request authorization
+    Smith-->>Neo: Request authorization<br/>(e.g. sudo-like credentials)
+
+    %% Neo provides required authentication
+    Neo-->>Smith: Provide authorization elements
+
+    %% Smith resumes work
+    Smith->>Smith: Continue working on task<br/>Status = WORKING
+{/}
 
 ### Into the unknown
 
@@ -119,9 +222,9 @@ MCP is an open source standard introduced by Anthropic that allows AI systems to
 It's frequently described as the USB for AI, since it allows AI systems to connect to external tools and data using the same protocol.
 
 On the other hand, A2A is a protocol connect agent together. 
-If we want to make the same kind of analogy as for MCP, A2A would be the Ethernet of AI, since it allows AI agents to connect together.
+If we want to make the same kind of analogy as for MCP, A2A would be the Ethernet of AI, since it allows AI agents to connect.
 
-The two protocols have very different purposes and use cases. An A2A agent could use MCP to connect to some tools.
+The two protocols have very different purposes and use cases. An A2A agent could use MCP to connect to some tools. 
 
 ## Show me the code!
 
@@ -405,8 +508,63 @@ The A2A Inspector will obtain and show our server agent’s agent card
 
 ## A2A client aka Team Leader
 
+To test our A2A server using java you can use the [A2A Java SDK](https://github.com/a2aproject/a2a-java-sdk).
+But you can also take advantage of the Langchain4j Agentic module that supports A2A out of the box.
+It's really easy to use.
+
+First you need to add the langchain4j-agentic dependency to your project.
+```xml
+<dependency>
+    <groupId>dev.langchain4j</groupId>
+    <artifactId>langchain4j-agentic</artifactId>
+    <version>1.9.1-beta17</version>
+</dependency>
+<dependency>
+    <groupId>dev.langchain4j</groupId>
+    <artifactId>langchain4j-agentic-a2a</artifactId>
+    <version>1.9.1-beta17</version>
+</dependency>
+
+```
+
+Then to use the new agentic api of langchain4j and use your A2A server as any other agent.
+First you can define an interface describing your server:
+```java
+public interface IronRam {
+
+    @Agent
+    String collect(@V("object") String keywords);
+}
+```
+
+Once it's done you can use `AgenticService` to create your A2A agent:
+```java
+var ironRam = AgenticServices
+                .a2aBuilder("http://localhost:8080", IronRam.class)
+                .inputNames("object")
+                .outputName("stones")
+                .build();
+```
+
+And finally you can use in combination with other agents and build your Agentic solution using a remote agent:
+```java
+var executeMission = AgenticServices.sequenceBuilder()
+        .subAgents(nickWooly, ironRam, bruce)
+        .outputName("result")
+        .build();
+Object invoke = executeMission.invoke(Map.of("mission", """
+        BaaNos just destroy half the universe using the infinity stones.
+        The only way to reverse it is to quickly collect the infinity stones and snap it.
+        """));
+println("-------- Mission results ---------");
+println(invoke);
+```
+
+If you want to see the full code of this demo, you can clone it from [here](https://github.com/LoMagnette/2025-DEVOXX-A2A).
 
 ## Wrap up
+
+In this article,
 
 
 ## References
