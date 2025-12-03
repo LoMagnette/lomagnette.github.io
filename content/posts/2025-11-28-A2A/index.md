@@ -473,7 +473,7 @@ public final class IronRamAgentExecutorProducer {
             final String assignment = extractTextFromMessage(context.getMessage());
 
             // call the content writer agent with the message
-            final String response = agent.collect(assignment).toString();
+            final String response = String.join(", ", agent.collect(assignment));
 
             // create the response part
             final TextPart responsePart = new TextPart(response, null);
