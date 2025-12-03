@@ -12,6 +12,12 @@ We've recently seen a boom in AI "agents". AI Agents are usually described as a 
 
 But most of these agents are still working in an isolated environment. You build an agent into your application and it offers some capabilities, but that's it. You're basically building a monolith with AI in it.
 
+If you prefer a visual explanation, here's a video introduction to A2A:
+
+<div style="text-align: center; margin: 2rem 0;">
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/BOpzs5AGU50" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="max-width: 100%; border-radius: 0.75rem;"></iframe>
+</div>
+
 ## The idea behind A2A
 
 The initial concept is really simple, let agents talk to each other. 
@@ -67,7 +73,7 @@ As you can imagine A2A supports multimodality out of the box for the inputs and 
 
 ### Extensible
 
-A2A is built to be extended for specific use cases. A2A offers a lot of capabilities, but for certain aspects we might need more specific features. 
+A2A is built to be extended for specific use cases. A2A offers a lot of capabilities, but for certain aspects we might need more specific features.
 There are already some existing extensions for A2A, such as [AP2](https://cloud.google.com/blog/products/ai-machine-learning/announcing-agents-to-payments-ap2-protocol), that offer a payment protocol over A2A.
 
 ## How does it work?
@@ -592,8 +598,6 @@ It breaks the silos of the traditional AI solution. To do so it use standard web
 A2A is not a competitor of MCP, but it's a complementary solution. Agent using A2A can leverage the power of MCP tools.
 
 Finally, A2A is a very young technology and it's still in its early stages. We'll probably see a lot of evolutions in coming month and years.
-
-
 
 ## References
 - [Quarkus](https://quarkus.io)
