@@ -53,9 +53,12 @@ The agent card describes the agent's name, version, capabilities (eg: streaming,
 ### to Task or not to Task?
 
 A2A introduces the concept of task. A task, as the name suggests, is a unit of work. A2A can work with or without tasks but I personally prefer to use them.
-A task can be synchronous or asynchronous. You probably don't want to block your agent while it's doing some heavy computation. A task has a state and we will see a bit further how its state can vary during the execution of the task.
+A task can be synchronous or asynchronous. You probably don't want to block your agent while it's doing some heavy computation. A task has a state, and we will see a bit further how its state can vary during the execution of the task.
 
-//TODO feedback loop (sse, websockets, webhooks)
+Since A2A supports longing running tasks, it needs a way to communicate with the client agent. You could always go for a polling approach, but that would be really inefficient.
+A2A supports SSE (Server Sent Events) and Webhooks allowing agents to communicate with each other in a more efficient way. 
+It also supports reconnection if the SSE connection is lost.
+SSE is a great solution for real-time communication, but it probably the best solution for really long running tasks in that case using webhooks is probably the best option.
 
 ### Not only text
 
@@ -91,7 +94,7 @@ If `Neo` responds with the required information, `Smith` will update the state b
 This interaction is key in the protocol since it shows that the agents are not working just as a client-server solution but can really interact and collaborate with each other.
 
 At some point, we can imagine that `Smith` will have completed his work, update the state to `COMPLETED` and send a message to `Neo` with the result of his work.
-This result is what A2A calls an Artifact. An artifact is the result of a task it might contain multiple parts with different type of data (text,audio,image,...) giving us multimodal returns.
+This result is what A2A calls an Artifact. An artifact is the result of a task it might contain one or multiple parts with different type of data (text,audio,image,...) giving us multimodal returns.
 
 You can see here a diagram illustrating the happy flow.
 {#mermaid}
@@ -211,11 +214,11 @@ participant Smith
 
 ### Into the unknown
 
-There's one last state supported by the protocol. This state is `unspecified`. This state is used when the state of the task cannot be determined. For instance this could occur if a task has expired or the ID of the task is invalid.
+There's one last state supported by the protocol. This state is `unspecified` (previously called `unknown`). This state is used when the state of the task cannot be determined. For instance this could occur if a task has expired or the ID of the task is invalid.
 
 ### Terminal states
 
-Among of the states a few of them are considered terminal. 
+Among the states, a few of them are considered terminal. 
 They are the ones that indicate that the agent is done with this task. 
 This could mean that either the agent a completed the task or that the agent is not able to continue working on it.
 The following states are considered terminal:
@@ -223,6 +226,8 @@ The following states are considered terminal:
 - FAILED
 - CANCELED
 - REJECTED
+
+You can find more info on the different states in the [specification](https://a2a-protocol.org/latest/specification/#413-taskstate).
 
 ### States summary
 
@@ -560,7 +565,8 @@ var ironRam = AgenticServices
                 .outputName("stones")
                 .build();
 ```
-//TODO explaine input output
+You can see that we're using some input and output names. These names will be used to map the input and output of the agent and store in the AgenticScope of langchain4j.
+You can read more about it [here](https://docs.langchain4j.dev/tutorials/agents).
 
 And finally you can use in combination with other agents and build your Agentic solution using a remote agent:
 ```java
@@ -580,19 +586,23 @@ If you want to see the full code of this demo, you can clone it from [here](http
 
 ## Wrap up
 
-In this article,
+In this article, we've seen that A2A enables Agent to Agent collaboration. 
+It breaks the silos of the traditional AI solution. To do so it use standard web protocols and enterprise grade technologies.
 
-//TODO
+A2A is not a competitor of MCP, but it's a complementary solution. Agent using A2A can leverage the power of MCP tools.
+
+Finally, A2A is a very young technology and it's still in its early stages. We'll probably see a lot of evolutions in coming month and years.
+
 
 
 ## References
 - [Quarkus](https://quarkus.io)
 - [LangChain4J](https://docs.langchain4j.dev/)
-- [A2A](sdf)
-- [A2A Inspector](sf)
-- [MCP](sfd)
-- [AP2](sf)
-- [Quarkus A2A](sf)
+- [A2A](https://a2a-protocol.org/latest/)
+- [A2A Inspector](https://github.com/a2aproject/a2a-inspector)
+- [MCP](https://modelcontextprotocol.io/)
+- [AP2](https://cloud.google.com/blog/products/ai-machine-learning/announcing-agents-to-payments-ap2-protocol)
+- [Quarkus A2A](https://quarkus.io/blog/quarkus-and-a2a-java-sdk/)
 
 
 
