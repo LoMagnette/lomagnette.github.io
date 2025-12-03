@@ -15,7 +15,7 @@ But most of these agents are still working in an isolated environment. You build
 If you prefer a visual explanation, here's a video introduction to A2A:
 
 <div style="text-align: center; margin: 2rem 0;">
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/BOpzs5AGU50" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="max-width: 100%; border-radius: 0.75rem;"></iframe>
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/BOpzs5AGU50" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="max-width: 100%; border-radius: 0.75rem;"></iframe>
 </div>
 
 ## The idea behind A2A
