@@ -31,12 +31,15 @@
       location: "Mons, Belgium"
       talks:
         - title: "The Future of Angular: Faster, Lighter, Stronger"
+          slides: https://speakerdeck.com/magnette/le-futur-dangular-au-dela-de-ngzone
 
     - name: "Voxxed Days Thessaloniki"
       date: "Nov 2025"
       location: "Thessaloniki, Greece"
       talks:
         - title: "The Future of Angular: Faster, Lighter, Stronger"
+          slides: https://speakerdeck.com/magnette/vdthess-the-future-of-angular-faster-lighter-stronger
+          recording: https://www.youtube.com/watch?v=n9IcRKkCltc
         - title: "Mentorship / Discussion about personal branding and Public Speaking"
 
     - name: "JavaCro 25"
@@ -44,6 +47,7 @@
       location: "Croatia"
       talks:
         - title: "AI-Powered Form Wizards: Chat, Click, Done"
+          slides: https://speakerdeck.com/magnette/ai-powered-form-wizards-chat-click-done-bd92e7ee-8557-4081-b6a2-4f6a1096bbcc
         - title: "Opening Roundtable: Software Development in the Age of AI"
 
     - name: "Devoxx Belgium"
@@ -51,93 +55,118 @@
       location: "Antwerpen, Belgium"
       talks:
         - title: "A2A in 30 Minutes: Building Interoperable AI Agents"
+          slides: https://speakerdeck.com/magnette/a2a-in-30-minutes-building-interoperable-ai-agents
+          recording: https://www.youtube.com/watch?v=BOpzs5AGU50
         - title: "BOF: Java and JVM lovers in Belgium, let's unite!"
         - title: "AI-Powered Form Wizards: Chat, Click, Done"
+          slides: https://speakerdeck.com/magnette/ai-powered-form-wizards-chat-click-done-bd92e7ee-8557-4081-b6a2-4f6a1096bbcc
+          recording: https://www.youtube.com/watch?v=f_5b_qanhzg
 
     - name: "Dev2Next"
       date: "Sep 2025"
       location: "USA, Colorado Springs"
       talks:
         - title: "Bridging the Gap: Full-Stack Development Without the Headache"
+          slides: https://speakerdeck.com/magnette/dev2next-bridging-the-gap-full-stack-development-without-the-headaches
 
     - name: "Voxxed Days Luxembourg"
       date: "Jun 2025"
       location: "Mondorf-les-Bains, Grand-Duchy of Luxembourg"
       talks:
         - title: "Au Cœur de l'Odyssée: Migrer une application d'Angular 10 à 19"
+          slides: https://speakerdeck.com/magnette/a-developers-tale-migrating-an-angular-app-from-version-10-to-19
+          recording: https://www.youtube.com/watch?v=8nIAR2aABlk&t=2s
 
     - name: "Devoxx Poland"
       date: "Jun 2025"
       location: "Kraków, Poland"
       talks:
         - title: "The Future of Angular: Faster, Lighter, Stronger"
+          slides: https://speakerdeck.com/magnette/the-future-of-angular-faster-lighter-stronger-78e8b7b7-101e-434b-86ac-86c22dc992f6
 
     - name: "MakeIT / JCON OpenBlend Slovenia"
       date: "May 2025"
       location: "Portorož, Slovenia"
       talks:
         - title: "AI-Powered Form Wizards: Chat, Click, Done"
+          slides: https://speakerdeck.com/magnette/ai-powered-form-wizards-chat-click-done
         - title: "Bridging the Gap: Full-Stack Development Without the Headaches"
+          slides: https://speakerdeck.com/magnette/bridging-the-gap-full-stack-development-without-the-headaches
 
     - name: "GeeCON"
       date: "May 2025"
       location: "Kraków, Poland"
       talks:
         - title: "Bridging the Gap: Full-Stack Development Without the Headaches"
+          slides: https://speakerdeck.com/magnette/bridging-the-gap-full-stack-development-without-the-headaches
 
     - name: "JCON EUROPE"
       date: "May 2025"
       location: "Köln, Germany"
       talks:
         - title: "AI-Powered Form Wizards: Chat, Click, Done"
+          slides: https://speakerdeck.com/magnette/ai-powered-form-wizards-chat-click-done
+          recording: https://www.youtube.com/watch?v=z5m4ef_LtdQ
 
     - name: "Angular Dev France"
       date: "May 2025"
       location: "Online"
       talks:
         - title: "The Future of Angular: Faster, Lighter, Stronger"
+          slides: https://speakerdeck.com/magnette/the-future-of-angular-faster-lighter-stronger
+          recording: https://www.youtube.com/watch?v=HKMPqYmugtg
 
     - name: "IA Data Day - Strasbourg"
       date: "Apr 2025"
       location: "Strasbourg, France"
       talks:
         - title: "RAG to the future : comment garder son IA à jour"
+          slides: https://speakerdeck.com/magnette/rag-to-the-future-comment-garder-son-ia-a-jour
 
     - name: "Devoxx Greece"
       date: "Apr 2025"
       location: "Athens, Greece"
       talks:
         - title: "A Developer's Tale: Migrating an Angular app from version 10 to 19"
+          slides: https://speakerdeck.com/magnette/a-developers-tale-migrating-an-angular-app-from-version-10-to-19
+          recording: https://www.youtube.com/watch?v=dwERF-hvPpk
 
     - name: "Warsaw IT Days"
       date: "Apr 2025"
       location: "Warsaw, Poland"
       talks:
         - title: "Bridging the Gap: Full-Stack Development Without the Headaches"
+          slides: https://speakerdeck.com/magnette/bridging-the-gap-full-stack-development-without-the-headaches
 
     - name: "Web Day"
       date: "Mar 2025"
       location: "Milan, Italy"
       talks:
         - title: "The Future of Angular: Faster, Lighter, Stronger"
+          slides: https://speakerdeck.com/magnette/the-future-of-angular-faster-lighter-stronger
 
     - name: "Voxxed Days Zurich"
       date: "Mar 2025"
       location: "Zürich, Switzerland"
       talks:
         - title: "The Future of Angular: Faster, Lighter, Stronger"
+          slides: https://speakerdeck.com/magnette/the-future-of-angular-faster-lighter-stronger
+          recording: https://www.youtube.com/watch?v=oMs4qcmbgRs&t=5s
 
     - name: "DevApp Podcast"
       date: "Jan 2025"
       location: "Online"
       talks:
         - title: "The Future of Angular: Faster, Lighter, Stronger"
+          slides: https://speakerdeck.com/magnette/the-future-of-angular-faster-lighter-stronger
 
     - name: "Angular Dev France"
       date: "Jan 2025"
       location: "Online"
       talks:
         - title: "Au Cœur de l'Odyssée: Migrer une application d'Angular 10 à 18"
+          slides: https://speakerdeck.com/magnette/au-coeur-de-lodyssee-migrer-une-application-dangular-10-a-18
+          recording: https://www.youtube.com/watch?v=HqopjZLfZ-A
 
 - year: "2024"
   events:
@@ -146,74 +175,97 @@
       location: "Mestre, Italy"
       talks:
         - title: "A Developer's Tale: Migrating an Angular app from version 10 to 18"
+          slides: https://speakerdeck.com/magnette/a-developers-tale-migrating-an-angular-app-from-version-10-to-18-e301429f-e64e-4095-b473-5e064c589394
 
     - name: "DEVFEST Mons"
       date: "Nov 2024"
       location: "Mons, Belgium"
       talks:
         - title: "Quarkus: Supersonic, Subatomic Full-Stack Development"
+          slides: https://speakerdeck.com/magnette/quarkus-supersonic-and-subatomic-fullstack-development
+          recording: https://www.youtube.com/watch?v=qtF_u2oZop0&t=2s
 
     - name: "DevDay"
       date: "Nov 2024"
       location: "Mons, Belgium"
       talks:
         - title: "Angular, l'épopée moderne : Décryptage des dernières avancées"
+          slides: https://speakerdeck.com/magnette/angular-lepopee-moderne-decryptage-des-dernieres-avancees
 
     - name: "Devoxx Belgium"
       date: "Oct 2024"
       location: "Antwerpen, Belgium"
       talks:
         - title: "Unleashing the power of Angular: Navigating the latest releases and transformations"
+          slides: https://speakerdeck.com/magnette/unleashing-the-power-of-angular-navigating-the-latest-releases-and-transformations-48728ce0-372e-46af-9518-6c8fce12cdf3
+          recording: https://www.youtube.com/watch?v=LEHmmxZfaUs
         - title: "A Developer's Tale: Migrating an Angular app from version 10 to 18"
+          slides: https://speakerdeck.com/magnette/a-developers-tale-migrating-an-angular-app-from-version-10-to-18
+          recording: https://www.youtube.com/watch?v=pT2dWsodUpQ
 
     - name: "RivieraDev"
       date: "July 2024"
       location: "Valbonne, France"
       talks:
         - title: "Au Cœur de l'Odyssée: Migrer une application d'Angular 10 à 17"
+          slides: https://speakerdeck.com/magnette/au-coeur-de-lodyssee-migrer-une-application-dangular-10-a-17-2c5070e6-a004-42d0-9342-58c9c9482e1b
         - title: "Quarkus: Supersonic, Subatomic Full-Stack Development"
+          slides: https://speakerdeck.com/magnette/quarkus-supersonic-subatomic-full-stack-development-d225d160-4141-4047-998d-08ea29b7b64d
 
     - name: "Voxxed Days Luxembourg"
       date: "June 2024"
       location: "Mondorf-les-Bains, LU"
       talks:
         - title: "Quarkus: Supersonic, Subatomic Full-Stack Development"
+          slides: https://speakerdeck.com/magnette/quarkus-supersonic-subatomic-full-stack-development
+          recording: https://www.youtube.com/watch?v=Asg0xHTiJzo
 
     - name: "Devoxx Poland"
       date: "June 2024"
       location: "Kraków, Poland"
       talks:
         - title: "Unleashing the power of Angular: Navigating the latest releases and transformations"
+          slides: https://speakerdeck.com/magnette/unleashing-the-power-of-angular-navigating-the-latest-releases-and-transformations
 
     - name: "DevFest Lille"
       date: "June 2024"
       location: "Lille, France"
       talks:
         - title: "Dompter le chaos de l'information avec Langchain4J"
+          slides: https://speakerdeck.com/magnette/dompter-le-chaos-de-linformation-construire-un-allie-ia-avec-langchain4j
+          recording: https://www.youtube.com/watch?v=jlnhGSUiBV4
 
     - name: "Voxxed Day Brussels"
       date: "May 2024"
       location: "Brussels, Belgium"
       talks:
         - title: "A Developer's Tale: Migrating an Angular app from version 10 to 17"
+          slides: https://speakerdeck.com/magnette/a-developers-tale-migrating-an-angular-app-from-version-10-to-17-addd944f-97fb-4149-b070-e40854ee1e53
+          recording: https://www.youtube.com/watch?v=Asg0xHTiJzo
 
     - name: "Devoxx UK"
       date: "May 2024"
       location: "London, UK"
       talks:
         - title: "A Developer's Tale: Migrating an Angular app from version 10 to 17"
+          slides: https://speakerdeck.com/magnette/a-developers-tale-migrating-an-angular-app-from-version-10-to-17
+          recording: https://www.youtube.com/watch?v=v2qZPQDR1qk
 
     - name: "Devoxx France"
       date: "April 2024"
       location: "Paris, France"
       talks:
         - title: "Au Cœur de l'Odyssée: Migrer une application d'Angular 10 à 17"
+          slides: https://speakerdeck.com/magnette/au-coeur-de-lodyssee-migrer-une-application-dangular-10-a-17
+          recording: https://www.youtube.com/watch?v=xhPYkBD6tng
 
     - name: "Jfokus"
       date: "Feb 2024"
       location: "Stockholm, Sweden"
       talks:
         - title: "Unleashing the power of Angular: Navigating the latest releases and transformations"
+          slides: https://speakerdeck.com/magnette/jfokus-2024-unleashing-the-power-of-angular-navigating-the-latest-releases-and-transformations
+          recording: https://www.youtube.com/watch?v=icf6YN3VN3g
 
 - year: "2023"
   events:
@@ -228,11 +280,12 @@
       location: "Antwerpen, Belgium"
       talks:
         - title: "Unleashing the power of Angular: Navigating the latest releases and transformations"
-
+          recording: https://www.youtube.com/watch?v=O6f2Tp8MkdY
     - name: "Voxxed Day Brussels"
       date: "May 2023"
       location: "Brussels, Belgium"
-      talks: []
+      talks:
+        - title: "Quarkus vs Spring Boot: Which framework reigns supreme in 2023 ?"
 
     - name: "DevDay"
       date: "Mar 2023"
