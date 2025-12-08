@@ -64,7 +64,7 @@ A task can be synchronous or asynchronous. You probably don't want to block your
 Since A2A supports longing running tasks, it needs a way to communicate with the client agent. You could always go for a polling approach, but that would be really inefficient.
 A2A supports SSE (Server Sent Events) and Webhooks allowing agents to communicate with each other in a more efficient way. 
 It also supports reconnection if the SSE connection is lost.
-SSE is a great solution for real-time communication, but it probably the best solution for really long running tasks in that case using webhooks is probably the best option.
+SSE is a great solution for real-time communication, but for really long-running tasks, using webhooks is likely the better option.
 
 ### Not only text
 
