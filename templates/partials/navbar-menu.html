@@ -35,11 +35,6 @@
                 <i class="fa-brands fa-github"></i>
             </a>
             {/if}
-            {#if site.data.get('social-twitter')??}
-            <a href="https://twitter.com/{site.data.get('social-twitter')}" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Twitter">
-                <i class="fa-brands fa-twitter"></i>
-            </a>
-            {/if}
             {#if site.data.get('social-linkedin')??}
             <a href="https://linkedin.com/in/{site.data.get('social-linkedin')}" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn">
                 <i class="fa-brands fa-linkedin"></i>
@@ -48,6 +43,11 @@
             {#if site.data.get('social-bluesky')??}
             <a href="https://bsky.app/profile/{site.data.get('social-bluesky')}" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Bluesky">
                 <i class="fa-brands fa-bluesky"></i>
+            </a>
+            {/if}
+            {#if site.data.get('social-twitter')??}
+            <a href="https://twitter.com/{site.data.get('social-twitter')}" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Twitter">
+                <i class="fa-brands fa-twitter"></i>
             </a>
             {/if}
         </div>
