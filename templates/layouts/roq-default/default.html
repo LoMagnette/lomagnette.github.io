@@ -4,6 +4,17 @@
   {#include partials/roq-default/head.html /}
   <!-- Place this tag in your head or just before your close body tag. -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XJP40L6W16"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag()\{dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XJP40L6W16');
+  </script>
+
   {#insert head /}
 </head>
 <body class="{page.data.bodyClass ?: 'default'}">
