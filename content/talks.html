@@ -63,15 +63,23 @@ layout: :theme/page
 }
 
 .event-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
     margin-bottom: 0.75rem;
+    flex-wrap: wrap;
 }
 
 .event-name {
     font-size: 1.25rem;
     font-weight: 700;
     color: var(--text-primary);
-    margin-bottom: 0.5rem;
-    margin-top: 0.5rem;
+    margin: 0;
+    flex: 1;
+    min-width: 200px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .event-name a {
@@ -87,26 +95,19 @@ layout: :theme/page
 
 .event-meta {
     display: flex;
-    gap: 1.5rem;
-    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
     color: var(--text-tertiary);
     font-size: 0.9rem;
-    margin-bottom: 0;
+    margin: 0;
+    flex-shrink: 0;
 }
 
 .event-meta-item {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-}
-
-.event-meta-item::before {
-    content: '';
-    display: inline-block;
-    width: 4px;
-    height: 4px;
-    background: var(--color-primary);
-    border-radius: 50%;
+    white-space: nowrap;
 }
 
 .talks-list {
@@ -141,19 +142,26 @@ layout: :theme/page
 
 .talk-content {
     flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
 }
 
 .talk-title {
     font-weight: 600;
     color: var(--text-primary);
-    margin-bottom: 0.35rem;
+    margin: 0;
     line-height: 1.4;
+    flex: 1;
+    min-width: 200px;
 }
 
 .talk-links {
     display: flex;
     gap: 0.5rem;
-    flex-wrap: wrap;
+    align-items: center;
+    flex-shrink: 0;
 }
 
 .talk-link {
@@ -193,9 +201,39 @@ layout: :theme/page
         font-size: 1.75rem;
     }
 
-    .event-meta {
+    .event-header {
         flex-direction: column;
+        align-items: flex-start;
         gap: 0.5rem;
+    }
+
+    .event-name {
+        min-width: unset;
+        width: 100%;
+        flex: none;
+    }
+
+    .event-meta {
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .event-meta-item {
+        font-size: 0.85rem;
+    }
+
+    .talk-title {
+        min-width: unset;
+        width: 100%;
+        flex-basis: 100%;
+    }
+
+    .talk-content {
+        gap: 0.5rem;
+    }
+
+    .talk-links {
+        margin-left: 0;
     }
 }
 </style>
@@ -221,7 +259,7 @@ layout: :theme/page
                             {/if}
                             <div class="event-meta">
                                 <span class="event-meta-item">{event.date}</span>
-                                <span class="event-meta-item">{event.location}</span>
+                                <span class="event-meta-item">{#if event.flag}{event.flag} {/if}{event.location}</span>
                             </div>
                         </div>
 

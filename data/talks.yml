@@ -4,6 +4,7 @@
       url: "https://zurich.voxxeddays.com/"
       date: "Mar 2026"
       location: "Zürich, Switzerland"
+      flag: "🇨🇭"
       talks:
         - title: "Finding the Spark: A Career Reset Button."
 
@@ -11,6 +12,7 @@
       url: "https://www.javaland.eu/en/home/"
       date: "Mar 2026"
       location: "Rust, Germany"
+      flag: "🇩🇪"
       talks:
         - title: "AI-Powered Form Wizards: Chat, Click, Done"
 
@@ -18,6 +20,7 @@
       url: "https://ticino.voxxeddays.com/"
       date: "Feb 2026"
       location: "Lugano, Switzerland"
+      flag: "🇨🇭"
       talks:
         - title: "The Future of Angular: Faster, Lighter, Stronger"
 
@@ -25,6 +28,7 @@
       url: "https://quarkus.io/insights/"
       date: "Jan 2026"
       location: "Online"
+      flag: "🌐"
       talks:
         - title: "AI-Powered Form Wizards: Chat, Click, Done"
 
@@ -34,6 +38,7 @@
       url: "https://devday.be/"
       date: "Nov 2025"
       location: "Mons, Belgium"
+      flag: "🇧🇪"
       talks:
         - title: "The Future of Angular: Faster, Lighter, Stronger"
           slides: https://speakerdeck.com/magnette/le-futur-dangular-au-dela-de-ngzone
@@ -42,6 +47,7 @@
       url: "https://voxxeddays.com/thessaloniki/"
       date: "Nov 2025"
       location: "Thessaloniki, Greece"
+      flag: "🇬🇷"
       talks:
         - title: "The Future of Angular: Faster, Lighter, Stronger"
           slides: https://speakerdeck.com/magnette/vdthess-the-future-of-angular-faster-lighter-stronger
@@ -52,6 +58,7 @@
       url: "https://2025.javacro.hr/eng/"
       date: "Oct 2025"
       location: "Croatia"
+      flag: "🇭🇷"
       talks:
         - title: "AI-Powered Form Wizards: Chat, Click, Done"
           slides: https://speakerdeck.com/magnette/ai-powered-form-wizards-chat-click-done-bd92e7ee-8557-4081-b6a2-4f6a1096bbcc
@@ -61,6 +68,7 @@
       url: "https://devoxx.be/"
       date: "Oct 2025"
       location: "Antwerpen, Belgium"
+      flag: "🇧🇪"
       talks:
         - title: "A2A in 30 Minutes: Building Interoperable AI Agents"
           slides: https://speakerdeck.com/magnette/a2a-in-30-minutes-building-interoperable-ai-agents
@@ -74,6 +82,7 @@
       url: "https://www.dev2next.com"
       date: "Sep 2025"
       location: "USA, Colorado Springs"
+      flag: "🇺🇸"
       talks:
         - title: "Bridging the Gap: Full-Stack Development Without the Headache"
           slides: https://speakerdeck.com/magnette/dev2next-bridging-the-gap-full-stack-development-without-the-headaches
@@ -82,6 +91,7 @@
       url: "https://luxembourg.voxxeddays.com/en/"
       date: "Jun 2025"
       location: "Mondorf-les-Bains, Grand-Duchy of Luxembourg"
+      flag: "🇱🇺"
       talks:
         - title: "Au Cœur de l'Odyssée: Migrer une application d'Angular 10 à 19"
           slides: https://speakerdeck.com/magnette/a-developers-tale-migrating-an-angular-app-from-version-10-to-19
@@ -91,6 +101,7 @@
       url: "https://devoxx.pl/"
       date: "Jun 2025"
       location: "Kraków, Poland"
+      flag: "🇵🇱"
       talks:
         - title: "The Future of Angular: Faster, Lighter, Stronger"
           slides: https://speakerdeck.com/magnette/the-future-of-angular-faster-lighter-stronger-78e8b7b7-101e-434b-86ac-86c22dc992f6
@@ -99,6 +110,7 @@
       url: "https://slovenia.jcon.one/en/"
       date: "May 2025"
       location: "Portorož, Slovenia"
+      flag: "🇸🇮"
       talks:
         - title: "AI-Powered Form Wizards: Chat, Click, Done"
           slides: https://speakerdeck.com/magnette/ai-powered-form-wizards-chat-click-done
@@ -109,6 +121,7 @@
       url: "https://www.geecon.org/"
       date: "May 2025"
       location: "Kraków, Poland"
+      flag: "🇵🇱"
       talks:
         - title: "Bridging the Gap: Full-Stack Development Without the Headaches"
           slides: https://speakerdeck.com/magnette/bridging-the-gap-full-stack-development-without-the-headaches
@@ -117,6 +130,7 @@
       url: "https://jcon.one/"
       date: "May 2025"
       location: "Köln, Germany"
+      flag: "🇩🇪"
       talks:
         - title: "AI-Powered Form Wizards: Chat, Click, Done"
           slides: https://speakerdeck.com/magnette/ai-powered-form-wizards-chat-click-done
@@ -126,6 +140,7 @@
       url: "https://angulardevs.fr/"
       date: "May 2025"
       location: "Online"
+      flag: "🌐"
       talks:
         - title: "The Future of Angular: Faster, Lighter, Stronger"
           slides: https://speakerdeck.com/magnette/the-future-of-angular-faster-lighter-stronger
@@ -135,6 +150,7 @@
       url: "https://iadataday.capitale.dev/"
       date: "Apr 2025"
       location: "Strasbourg, France"
+      flag: "🇫🇷"
       talks:
         - title: "RAG to the future : comment garder son IA à jour"
           slides: https://speakerdeck.com/magnette/rag-to-the-future-comment-garder-son-ia-a-jour
@@ -143,6 +159,7 @@
       url: "https://devoxx.gr/"
       date: "Apr 2025"
       location: "Athens, Greece"
+      flag: "🇬🇷"
       talks:
         - title: "A Developer's Tale: Migrating an Angular app from version 10 to 19"
           slides: https://speakerdeck.com/magnette/a-developers-tale-migrating-an-angular-app-from-version-10-to-19
@@ -152,6 +169,7 @@
       url: "https://warszawskiedniinformatyki.pl/en/"
       date: "Apr 2025"
       location: "Warsaw, Poland"
+      flag: "🇵🇱"
       talks:
         - title: "Bridging the Gap: Full-Stack Development Without the Headaches"
           slides: https://speakerdeck.com/magnette/bridging-the-gap-full-stack-development-without-the-headaches
@@ -160,6 +178,7 @@
       url: "https://www.webdayconf.it/"
       date: "Mar 2025"
       location: "Milan, Italy"
+      flag: "🇮🇹"
       talks:
         - title: "The Future of Angular: Faster, Lighter, Stronger"
           slides: https://speakerdeck.com/magnette/the-future-of-angular-faster-lighter-stronger
@@ -168,6 +187,7 @@
       url: "https://zurich.voxxeddays.com/"
       date: "Mar 2025"
       location: "Zürich, Switzerland"
+      flag: "🇨🇭"
       talks:
         - title: "The Future of Angular: Faster, Lighter, Stronger"
           slides: https://speakerdeck.com/magnette/the-future-of-angular-faster-lighter-stronger
@@ -177,6 +197,7 @@
       url: "https://devapps.ms/"
       date: "Jan 2025"
       location: "Online"
+      flag: "🌐"
       talks:
         - title: "The Future of Angular: Faster, Lighter, Stronger"
           slides: https://speakerdeck.com/magnette/the-future-of-angular-faster-lighter-stronger
@@ -185,6 +206,7 @@
       url: "https://angulardevs.fr/"
       date: "Jan 2025"
       location: "Online"
+      flag: "🌐"
       talks:
         - title: "Au Cœur de l'Odyssée: Migrer une application d'Angular 10 à 18"
           slides: https://speakerdeck.com/magnette/au-coeur-de-lodyssee-migrer-une-application-dangular-10-a-18
@@ -196,6 +218,7 @@
       url: "https://gdg.community.dev/gdg-venezia/"
       date: "Nov 2024"
       location: "Mestre, Italy"
+      flag: "🇮🇹"
       talks:
         - title: "A Developer's Tale: Migrating an Angular app from version 10 to 18"
           slides: https://speakerdeck.com/magnette/a-developers-tale-migrating-an-angular-app-from-version-10-to-18-e301429f-e64e-4095-b473-5e064c589394
@@ -204,6 +227,7 @@
       url: "https://gdg-mons.com/"
       date: "Nov 2024"
       location: "Mons, Belgium"
+      flag: "🇧🇪"
       talks:
         - title: "Quarkus: Supersonic, Subatomic Full-Stack Development"
           slides: https://speakerdeck.com/magnette/quarkus-supersonic-and-subatomic-fullstack-development
@@ -213,6 +237,7 @@
       url: "https://devday.be/"
       date: "Nov 2024"
       location: "Mons, Belgium"
+      flag: "🇧🇪"
       talks:
         - title: "Angular, l'épopée moderne : Décryptage des dernières avancées"
           slides: https://speakerdeck.com/magnette/angular-lepopee-moderne-decryptage-des-dernieres-avancees
@@ -221,6 +246,7 @@
       url: "https://devoxx.be/"
       date: "Oct 2024"
       location: "Antwerpen, Belgium"
+      flag: "🇧🇪"
       talks:
         - title: "Unleashing the power of Angular: Navigating the latest releases and transformations"
           slides: https://speakerdeck.com/magnette/unleashing-the-power-of-angular-navigating-the-latest-releases-and-transformations-48728ce0-372e-46af-9518-6c8fce12cdf3
@@ -233,6 +259,7 @@
       url: "https://rivieradev.fr/"
       date: "July 2024"
       location: "Valbonne, France"
+      flag: "🇫🇷"
       talks:
         - title: "Au Cœur de l'Odyssée: Migrer une application d'Angular 10 à 17"
           slides: https://speakerdeck.com/magnette/au-coeur-de-lodyssee-migrer-une-application-dangular-10-a-17-2c5070e6-a004-42d0-9342-58c9c9482e1b
@@ -243,6 +270,7 @@
       url: "https://luxembourg.voxxeddays.com/en/"
       date: "June 2024"
       location: "Mondorf-les-Bains, LU"
+      flag: "🇱🇺"
       talks:
         - title: "Quarkus: Supersonic, Subatomic Full-Stack Development"
           slides: https://speakerdeck.com/magnette/quarkus-supersonic-subatomic-full-stack-development
@@ -252,6 +280,7 @@
       url: "https://devoxx.pl/"
       date: "June 2024"
       location: "Kraków, Poland"
+      flag: "🇵🇱"
       talks:
         - title: "Unleashing the power of Angular: Navigating the latest releases and transformations"
           slides: https://speakerdeck.com/magnette/unleashing-the-power-of-angular-navigating-the-latest-releases-and-transformations
@@ -260,14 +289,17 @@
       url: "https://devfest.gdglille.org/"
       date: "June 2024"
       location: "Lille, France"
+      flag: "🇫🇷"
       talks:
         - title: "Dompter le chaos de l'information avec Langchain4J"
           slides: https://speakerdeck.com/magnette/dompter-le-chaos-de-linformation-construire-un-allie-ia-avec-langchain4j
           recording: https://www.youtube.com/watch?v=jlnhGSUiBV4
 
     - name: "Voxxed Day Brussels"
+      url: "https://brussels24.voxxeddays.com/"
       date: "May 2024"
       location: "Brussels, Belgium"
+      flag: "🇧🇪"
       talks:
         - title: "A Developer's Tale: Migrating an Angular app from version 10 to 17"
           slides: https://speakerdeck.com/magnette/a-developers-tale-migrating-an-angular-app-from-version-10-to-17-addd944f-97fb-4149-b070-e40854ee1e53
@@ -277,6 +309,7 @@
       url: "https://www.devoxx.co.uk/"
       date: "May 2024"
       location: "London, UK"
+      flag: "🇬🇧"
       talks:
         - title: "A Developer's Tale: Migrating an Angular app from version 10 to 17"
           slides: https://speakerdeck.com/magnette/a-developers-tale-migrating-an-angular-app-from-version-10-to-17
@@ -286,6 +319,7 @@
       url: "https://www.devoxx.fr/"
       date: "April 2024"
       location: "Paris, France"
+      flag: "🇫🇷"
       talks:
         - title: "Au Cœur de l'Odyssée: Migrer une application d'Angular 10 à 17"
           slides: https://speakerdeck.com/magnette/au-coeur-de-lodyssee-migrer-une-application-dangular-10-a-17
@@ -295,6 +329,7 @@
       url: "https://www.jfokus.se/"
       date: "Feb 2024"
       location: "Stockholm, Sweden"
+      flag: "🇸🇪"
       talks:
         - title: "Unleashing the power of Angular: Navigating the latest releases and transformations"
           slides: https://speakerdeck.com/magnette/jfokus-2024-unleashing-the-power-of-angular-navigating-the-latest-releases-and-transformations
@@ -306,6 +341,7 @@
       url: "https://www.codeursenseine.com/"
       date: "Oct 2023"
       location: "Rouen, France"
+      flag: "🇫🇷"
       talks:
         - title: "Quarkus vs Spring Boot : Quel est le framework qui régnera en maître en 2023 ?"
 
@@ -313,12 +349,15 @@
       url: "https://devoxx.be/"
       date: "Oct 2023"
       location: "Antwerpen, Belgium"
+      flag: "🇧🇪"
       talks:
         - title: "Unleashing the power of Angular: Navigating the latest releases and transformations"
           recording: https://www.youtube.com/watch?v=O6f2Tp8MkdY
     - name: "Voxxed Day Brussels"
+      url: "https://brussels24.voxxeddays.com/"
       date: "May 2023"
       location: "Brussels, Belgium"
+      flag: "🇧🇪"
       talks:
         - title: "Quarkus vs Spring Boot: Which framework reigns supreme in 2023 ?"
 
@@ -326,5 +365,6 @@
       url: "https://devday.be/"
       date: "Mar 2023"
       location: "Mons, Belgium"
+      flag: "🇧🇪"
       talks:
         - title: "Angular 13 to 15: A corner stone for Angular developers ?"
