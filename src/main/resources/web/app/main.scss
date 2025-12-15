@@ -634,8 +634,19 @@ pre {
         transition: transform var(--transition-base);
       }
 
-      &:hover::after {
+      &:hover::after,
+      &.active::after {
         transform: translateX(-50%) scaleX(1);
+      }
+
+      &.active {
+        background: var(--hover-bg);
+        color: var(--text-primary);
+        font-weight: 600;
+
+        i {
+          color: var(--color-primary);
+        }
       }
     }
   }

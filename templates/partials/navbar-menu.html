@@ -1,4 +1,5 @@
 {@io.quarkiverse.roq.frontmatter.runtime.model.Site site}
+{@io.quarkiverse.roq.frontmatter.runtime.model.Page page}
 {@java.util.List<io.vertx.core.json.JsonObject> menu}
 
 <header class="top-nav" role="banner">
@@ -15,7 +16,7 @@
                 <li class="nav-item">
                     <a href="{site.url(item.path)}"
                        {#if item.target??}target="{item.target}" rel="noopener noreferrer"{/if}
-                       class="nav-link">
+                       class="nav-link {#if page.url.path == item.path}active{#else if item.path != '/' && page.url.path.startsWith(item.path)}active{/if}">
                         <i class="{item.icon}" aria-hidden="true"></i>
                         <span>{item.title}</span>
                     </a>
