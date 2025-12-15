@@ -161,7 +161,8 @@ layout: :theme/page
     align-items: center;
     gap: 0.25rem;
     padding: 0.25rem 0.65rem;
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+    //background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+    background: none;
     color: white;
     text-decoration: none;
     border-radius: 5px;
@@ -235,12 +236,12 @@ layout: :theme/page
                                                 <div class="talk-links">
                                                     {#if talk.slides}
                                                         <a href="{talk.slides}" target="_blank" class="talk-link">
-                                                            <img src="/images/slides.png" alt="" width="24"/> Slides
+                                                            <img src="/images/slides.png" alt="" width="24"/>
                                                         </a>
                                                     {/if}
                                                     {#if talk.recording}
                                                         <a href="{talk.recording}" target="_blank" class="talk-link">
-                                                            <img src="/images/camera.png" alt="" width="24"/> Recording
+                                                            <img src="/images/camera.png" alt="" width="24"/>
                                                         </a>
                                                     {/if}
                                                 </div>
