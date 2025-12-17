@@ -16,6 +16,14 @@
       talks:
         - title: "AI-Powered Form Wizards: Chat, Click, Done"
 
+    - name: "BeJUG"
+      url: "https://zurich.voxxeddays.com/"
+      date: "Feb 2026"
+      location: "Leuven, Belgium"
+      flag: "🇧🇪"
+      talks:
+        - title: "Finding the Spark: A Career Reset Button."
+
     - name: "Voxxed Days Ticino"
       url: "https://ticino.voxxeddays.com/"
       date: "Feb 2026"
