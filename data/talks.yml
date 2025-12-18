@@ -1,5 +1,13 @@
 - year: "2026"
   events:
+   - name: "JCON EUROPE"
+      url: "https://jcon.one/"
+      date: "May 2025"
+      location: "Köln, Germany"
+      flag: "🇩🇪"
+      talks:
+        - title: "A2A in 45 Minutes: Building Interoperable AI Agents"
+        
     - name: "Voxxed Days Zurich"
       url: "https://zurich.voxxeddays.com/"
       date: "Mar 2026"
