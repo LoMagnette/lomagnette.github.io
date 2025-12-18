@@ -1,6 +1,6 @@
 - year: "2026"
   events:
-   - name: "JCON EUROPE"
+    - name: "JCON EUROPE"
       url: "https://jcon.one/"
       date: "May 2025"
       location: "Köln, Germany"
