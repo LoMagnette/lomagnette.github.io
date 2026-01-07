@@ -12,7 +12,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-        <quarkus.platform.version>3.30.3</quarkus.platform.version>
+        <quarkus.platform.version>3.30.6</quarkus.platform.version>
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.5.4</surefire-plugin.version>
     </properties>
@@ -33,7 +33,7 @@
         <dependency>
             <groupId>io.quarkiverse.roq</groupId>
             <artifactId>quarkus-roq-plugin-qrcode</artifactId>
-            <version>2.0.2</version>
+            <version>2.0.3</version>
         </dependency>
         <dependency>
             <groupId>io.quarkiverse.qute.web</groupId>
@@ -43,57 +43,57 @@
         <dependency>
             <groupId>io.quarkiverse.roq</groupId>
             <artifactId>quarkus-roq-plugin-diagram</artifactId>
-            <version>2.0.2</version>
+            <version>2.0.3</version>
         </dependency>
         <dependency>
             <groupId>io.quarkiverse.roq</groupId>
             <artifactId>quarkus-roq</artifactId>
-            <version>2.0.2</version>
+            <version>2.0.3</version>
         </dependency>
         <dependency>
             <groupId>io.quarkiverse.roq</groupId>
             <artifactId>quarkus-roq-plugin-asciidoc</artifactId>
-            <version>2.0.2</version>
+            <version>2.0.3</version>
         </dependency>
         <dependency>
             <groupId>io.quarkiverse.roq</groupId>
             <artifactId>quarkus-roq-plugin-tagging</artifactId>
-            <version>2.0.2</version>
+            <version>2.0.3</version>
         </dependency>
         <dependency>
             <groupId>io.quarkiverse.roq</groupId>
             <artifactId>quarkus-roq-plugin-markdown</artifactId>
-            <version>2.0.2</version>
+            <version>2.0.3</version>
         </dependency>
         <dependency>
             <groupId>io.quarkiverse.roq</groupId>
             <artifactId>quarkus-roq-frontmatter</artifactId>
-            <version>2.0.2</version>
+            <version>2.0.3</version>
         </dependency>
         <dependency>
             <groupId>io.quarkiverse.roq</groupId>
             <artifactId>quarkus-roq-plugin-lunr</artifactId>
-            <version>2.0.2</version>
+            <version>2.0.3</version>
         </dependency>
         <dependency>
             <groupId>io.quarkiverse.roq</groupId>
             <artifactId>quarkus-roq-data</artifactId>
-            <version>2.0.2</version>
+            <version>2.0.3</version>
         </dependency>
         <dependency>
             <groupId>io.quarkiverse.roq</groupId>
             <artifactId>quarkus-roq-plugin-aliases</artifactId>
-            <version>2.0.2</version>
+            <version>2.0.3</version>
         </dependency>
         <dependency>
             <groupId>io.quarkiverse.roq</groupId>
             <artifactId>quarkus-roq-plugin-sitemap</artifactId>
-            <version>2.0.2</version>
+            <version>2.0.3</version>
         </dependency>
         <dependency>
             <groupId>io.quarkiverse.roq</groupId>
             <artifactId>quarkus-roq-generator</artifactId>
-            <version>2.0.2</version>
+            <version>2.0.3</version>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
