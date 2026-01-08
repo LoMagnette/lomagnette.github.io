@@ -48,11 +48,11 @@ public class ListFiles {
         var name = path.getFileName().toString();
         var display = isDir ? "\u001B[34m" + name + "\u001B[0m" : name;
 
-        System.out.println("%-12s %-10s %s".formatted(
-            permissions(path, isDir),
-            size(path, isDir),
-            display
-        ));
+        System.out.printf(
+                "%-12s %-10s %s%n", permissions(path, isDir),
+                size(path, isDir),
+                display
+        );
     }
 
     private static String size(Path path, boolean isDir) {
@@ -227,7 +227,7 @@ void main(String[] args) throws IOException {
         stream
             .filter(path -> !path.getFileName().toString().startsWith("."))
             .sorted()
-            .forEach(path -> printEntry(path));
+            .forEach(this::printEntry);
     }
 }
 
