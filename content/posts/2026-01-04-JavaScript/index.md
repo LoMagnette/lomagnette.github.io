@@ -21,7 +21,7 @@ In this article, I'll show you how Java became a first-class scripting language 
 ## The Death of Manual Compilation
 
 The first problem if you want to write a Java script is compilation. You probably don't want to run `javac` and manage `.class` files for a simple script. 
-But since Java 11, you're able to run single-file source-code programs directly, using the `java` launcher.
+But since Java 11 (via [JEP 330](https://openjdk.org/jeps/330), you're able to run single-file source-code programs directly, using the `java` launcher.
 
 ### Single-File Execution
 Let's say you want to rewrite `ls` in Java using good old Java you might do something like this:
@@ -48,7 +48,7 @@ public class ListFiles {
         var name = path.getFileName().toString();
         var display = isDir ? "\u001B[34m" + name + "\u001B[0m" : name;
 
-        IO.println("%-12s %-10s %s".formatted(
+        System.out.println("%-12s %-10s %s".formatted(
             permissions(path, isDir),
             size(path, isDir),
             display
@@ -90,7 +90,7 @@ No `javac` needed. No `.class` files cluttering your directory. Just instant exe
 
 ### Multi-File Support
 
-But since **Java 22**, you're not limited to single-file programs. You can now write multi-file programs and run them directly. The Java launcher  locates and compiles related source files in subdirectories.
+But since **Java 22** (via [JEP 458](https://openjdk.org/jeps/458), you're not limited to single-file programs. You can now write multi-file programs and run them directly. The Java launcher locates and compiles related source files in subdirectories.
 For instance if you have something like this:
 
 ```java
@@ -114,7 +114,7 @@ record Message(String welcomingWord, String name) {
 class MessagingService {
 
     public void sendMessage(Message message){
-        IO.println(message.welcomingWord() + " " + message.name());
+        System.out.println(message.welcomingWord() + " " + message.name());
     }
 
 }
@@ -193,7 +193,7 @@ void main() {
 ```
 By the way, the IO class is part of the `java.lang` package, thus it's implicitly imported by every source file.
 
-If you want to learn about all this, I recommend reading the [JEP-512](https://openjdk.org/jeps/512).
+If you want to learn about all this, I recommend reading the [JEP 512](https://openjdk.org/jeps/512).
 
 ## Java as a Native Script: Shebang Support
 
@@ -288,27 +288,24 @@ Suddenly, Java feels like a native scripting language.
 
 ## Advanced Automation with JBang
 
-While the built-in features are impressive, [JBang](https://www.jbang.dev/) takes Java scripting to the next level by handling setup overhead and enabling advanced features.
+All of these built-in features are great and have made Java a capable scripting language, but [JBang](https://www.jbang.dev/) takes Java scripting to the next level by handling setup overhead and enabling advanced features.
 
 ### What is JBang?
 
-JBang is a tool that facilitates Java scripting by eliminating friction. It's like having a personal assistant that handles all the boring setup work.
+JBang is a tool that lets developers create, edit, and run self-contained, source-only Java programs with unprecedented ease. It can automatically download and install required Java versions and even run JAR files directly from local or remote locations.
 
-### Zero-Setup Management
-
-JBang can automatically download and install required Java versions if they're missing:
-
+Running a script is as simple as:
 ```bash
-jbang MyScript.java  # Installs Java if needed
+jbang MyScript.java
 ```
-
-No more "Java version not found" errors. JBang handles it.
 
 ### Dependency Management
 
-This is where JBang truly shines. Unlike pure Java scripts that require manual classpath management, JBang lets you declare dependencies directly in your file using special comments:
+This is where JBang truly shines. It lets you declare dependencies directly in your file using special comments, removing the need for Maven or Gradle in simple projects.
 
+Notice the `///` shebang line, which is specific to JBang and allows the script to be executed directly.
 ```java
+///usr/bin/env jbang "$0" "$@" ; exit $?
 //DEPS com.google.code.gson:gson:2.10.1
 //DEPS org.apache.commons:commons-lang3:3.14.0
 
@@ -317,11 +314,13 @@ import org.apache.commons.lang3.StringUtils;
 
 void main() {
     Gson gson = new Gson();
-    String json = gson.toJson(new Person("John", 30));
-    System.out.println(StringUtils.capitalize(json));
+    var person = new Person("John", 30);
+    String json = gson.toJson(person);
+    IO.println(StringUtils.capitalize(json));
 }
-```
 
+record Person(String name, int age) {}
+```
 JBang automatically downloads and manages these dependencies. No Maven. No Gradle. Just declare and use.
 
 ### Powerful Features
@@ -334,12 +333,13 @@ JBang offers several advanced capabilities:
 jbang edit MyScript.java  # Opens in your IDE with full autocomplete
 ```
 
-**Native Binaries**: Generate standalone native binaries using GraalVM for near-instant startup:
+**Native Binaries**: Generate standalone native binaries using [GraalVM](https://www.graalvm.org/) for near-instant startup:
 
 ```bash
 jbang export native MyScript.java
 ./MyScript  # Blazing fast native execution
 ```
+You must still be careful when using native images, especially when it comes with the usage of reflection. More on this [here](https://www.jbang.dev/documentation/jbang/latest/native-images.html)
 
 **Templates**: Quickly scaffold CLI tools or web servers:
 
@@ -357,7 +357,12 @@ While simple scripts are great, some automation tasks require robust CLI interfa
 Picocli integrates perfectly with JBang to provide ANSI-colored help messages and strongly-typed argument parsing with minimal effort:
 
 ```java
-//DEPS info.picocli:picocli:4.7.5
+
+///usr/bin/env jbang "$0" "$@" ; exit $?
+
+//DEPS info.picocli:picocli:4.7.7
+//DEPS info.picocli:picocli-codegen:4.7.7
+//NATIVE_OPTIONS --no-fallback -H:+ReportExceptionStackTraces
 
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -376,7 +381,7 @@ class Greet implements Runnable {
     public void run() {
         for (int i = 0; i < count; i++) {
             for (String name : names) {
-                System.out.println("Hello, " + name + "!");
+                IO.println("Hello, " + name + "!");
             }
         }
     }
@@ -409,7 +414,7 @@ Your scripts can rival professionally built CLI tools.
 
 ## Java's New Era
 
-We've come full circle. Java, once synonymous with enterprise complexity and verbose boilerplate, has transformed into a lean scripting language.
+We've come full circle. Java, once synonymous with enterprise complexity and verbose boilerplate, has become a capable lean scripting language.
 
 ### Why This Matters
 
