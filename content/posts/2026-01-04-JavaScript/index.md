@@ -292,9 +292,12 @@ All of these built-in features are great and have made Java a capable scripting 
 
 ### What is JBang?
 
-JBang is a tool that lets developers create, edit, and run self-contained, source-only Java programs with unprecedented ease. It can automatically download and install required Java versions and even run JAR files directly from local or remote locations.
+JBang is a tool that lets developers create, edit, and run self-contained, source-only Java programs with unprecedented ease.
+With JBang, your script can fetch dependencies without you having to dive into Maven or Gradle. You can install and run it on any platform, including Docker and Github Actions, and the best part is that JBang will automatically download and install required Java versions if they're missing.
 
-Running a script is as simple as:
+By the way, you can also use JBang to run any Java application or library packaged as a JAR file, whether it's available locally or online (via HTTP/HTTPS or Maven Central).
+
+Running a JBang script is as easy as:
 ```bash
 jbang MyScript.java
 ```
@@ -323,17 +326,17 @@ record Person(String name, int age) {}
 ```
 JBang automatically downloads and manages these dependencies. No Maven. No Gradle. Just declare and use.
 
-### Powerful Features
+### Awesome Features
 
-JBang offers several advanced capabilities:
+JBang offers a lot of advanced features:
 
-**IDE Integration**: Generate a temporary project structure for full IntelliSense support:
+**IDE Integration**: JBang is able to install VSCodium, generate a project structure and open the script in your IDE:
 
 ```bash
 jbang edit MyScript.java  # Opens in your IDE with full autocomplete
 ```
 
-**Native Binaries**: Generate standalone native binaries using [GraalVM](https://www.graalvm.org/) for near-instant startup:
+**Native Binaries**: It supports the generation of native image binaries using [GraalVM](https://www.graalvm.org/) for near-instant startup:
 
 ```bash
 jbang export native MyScript.java
@@ -341,23 +344,28 @@ jbang export native MyScript.java
 ```
 You must still be careful when using native images, especially when it comes with the usage of reflection. More on this [here](https://www.jbang.dev/documentation/jbang/latest/native-images.html)
 
-**Templates**: Quickly scaffold CLI tools or web servers:
+**Templates**: JBang comes with a set of templates to help you quickly bootstrap your scripts.
 
 ```bash
-jbang init --template=cli mycli.java
-jbang init --template=qcli myserver.java
+# Create a CLI app
+jbang init --template=cli myapp.java
+
+# Create a web server
+jbang init --template=qcli webapp.java
+
+# Create a JavaFX app
+jbang init --template=javafx gui.java
 ```
 
 ## Elevating Your Scripts: CLI Richness with Picocli
 
-While simple scripts are great, some automation tasks require robust CLI interfaces with options, positional parameters, and help menus. That's where [Picocli](https://picocli.info/) comes in.
+Simple scripts are great place to start. However, usually you'll want to add some extra functionality such as options, positional parameters and help menus to build a robust CLI experience. That's where [Picocli](https://picocli.info/) comes in.
 
 ### Pro-Grade Tools
 
-Picocli integrates perfectly with JBang to provide ANSI-colored help messages and strongly-typed argument parsing with minimal effort:
+Picocli integrates perfectly with JBang to provide ANSI-colored help messages and strongly-typed argument parsing with minimal effort. You can build professional CLIs with auto-generated help, version info, type checking, and beautiful error messages; all with minimal code.
 
 ```java
-
 ///usr/bin/env jbang "$0" "$@" ; exit $?
 
 //DEPS info.picocli:picocli:4.7.7
@@ -399,8 +407,6 @@ jbang greet.java --help
 jbang greet.java -c 3 Alice Bob
 ```
 
-You get professional CLI behavior: auto-generated help, version info, type checking, and beautiful error messages. All with minimal code.
-
 ### Zero-Code CLI Experience
 
 Picocli handles the complexity:
@@ -414,7 +420,8 @@ Your scripts can rival professionally built CLI tools.
 
 ## Java's New Era
 
-We've come full circle. Java, once synonymous with enterprise complexity and verbose boilerplate, has become a capable lean scripting language.
+I hope after reading you've realized that Java is not just synonymous with enterprise complexity and verbose boilerplate.
+You can use it to build powerful automation scripts with ease.
 
 ### Why This Matters
 
