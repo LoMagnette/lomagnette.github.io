@@ -24,6 +24,15 @@
       talks:
         - title: "AI-Powered Form Wizards: Chat, Click, Done"
 
+    - name: "DubJUG"
+      url: "https://www.dubjug.org/"
+      date: "Feb 2026"
+      location: "Dublin, Ireland"
+      flag: "🇮🇪"
+      talks:
+        - title: "AI-Powered Form Wizards: Chat, Click, Done"
+        - title: "JavaScript (No, Not That One): Modern Automation with Java"
+
     - name: "BeJUG"
       url: "https://bejug.github.io"
       date: "Feb 2026"
