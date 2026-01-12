@@ -1921,6 +1921,75 @@ a:focus, button:focus, input:focus, textarea:focus {
     background: linear-gradient(135deg, #111111 0%, #0a0a0a 100%) !important;
     border-top-color: rgba(255, 255, 255, 0.05);
   }
+
+  // Fix ALL Asciidoctor colors for dark mode to ensure readability
+  .subheader,
+  .admonitionblock td.content > .title,
+  .audioblock > .title,
+  .exampleblock > .title,
+  .imageblock > .title,
+  .listingblock > .title,
+  .literalblock > .title,
+  .stemblock > .title,
+  .openblock > .title,
+  .paragraph > .title,
+  .quoteblock > .title,
+  table.tableblock > .title,
+  .verseblock > .title,
+  .videoblock > .title,
+  .dlist > .title,
+  .olist > .title,
+  .ulist > .title,
+  .qlist > .title,
+  .hdlist > .title {
+    color: var(--text-primary) !important;
+  }
+
+  #toctitle,
+  .sidebarblock > .content > .title,
+  h4, h5, h6 {
+    color: var(--text-primary) !important;
+  }
+
+  #content h1 > a.link,
+  h2 > a.link,
+  h3 > a.link,
+  #toctitle > a.link,
+  .sidebarblock > .content > .title > a.link,
+  h4 > a.link,
+  h5 > a.link,
+  h6 > a.link {
+    color: var(--color-primary-light) !important;
+
+    &:hover {
+      color: var(--color-primary) !important;
+    }
+  }
+
+  // Ensure ALL h1, h2, h3 elements and their links have proper contrast
+  h1, h2, h3 {
+    color: var(--text-primary) !important;
+
+    a {
+      color: var(--text-primary) !important;
+
+      &:hover {
+        color: var(--color-primary-light) !important;
+      }
+    }
+  }
+
+  // Ensure event and post titles specifically use proper colors
+  .event-title,
+  .event-title a,
+  .post-title,
+  .post-title a {
+    color: var(--text-primary) !important;
+
+    &:hover {
+      color: var(--color-primary-light) !important;
+    }
+  }
 }
 
 // ============================================================================
