@@ -1,5 +1,13 @@
 - year: "2026"
   events:
+    - name: "Devoxx UK"
+      url: "https://www.devoxx.co.uk/"
+      date: "May 2026"
+      location: "London, UK"
+      flag: "🇬🇧"
+      talks:
+        - title: "Building Interoperable AI Agents in 30 Minutes"
+        - title: "Java Script (No, Not That One): Modern Automation with Java"
     - name: "JCON EUROPE"
       url: "https://jcon.one/"
       date: "May 2025"
