@@ -8,6 +8,13 @@
       talks:
         - title: "Building Interoperable AI Agents in 30 Minutes"
         - title: "Java Script (No, Not That One): Modern Automation with Java"
+    - name: "Devoxx France"
+      url: "https://www.devoxx.fr/"
+      date: "April 2026"
+      location: "Paris, France"
+      flag: "🇫🇷"
+      talks:
+        - title: "A2A en 30 Minutes: Construire des agent IA qui communiquent"
     - name: "JCON EUROPE"
       url: "https://jcon.one/"
       date: "April 2026"
