@@ -90,6 +90,7 @@
       flag: "🌐"
       talks:
         - title: "AI-Powered Form Wizards: Chat, Click, Done"
+          recording: https://www.youtube.com/watch?v=icLTCRGqC7s&pp=ygUOTG_Dr2MgTWFnbmV0dGU%3D
 
 - year: "2025"
   events:
@@ -184,6 +185,7 @@
       talks:
         - title: "Bridging the Gap: Full-Stack Development Without the Headaches"
           slides: https://speakerdeck.com/magnette/bridging-the-gap-full-stack-development-without-the-headaches
+          recording: https://www.youtube.com/watch?v=e_S_QAhyMks&pp=ygUOTG_Dr2MgTWFnbmV0dGU%3D
 
     - name: "JCON EUROPE"
       url: "https://jcon.one/"
