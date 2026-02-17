@@ -1,6 +1,6 @@
 ---
 title: Talks
-description: List of all the conference talks I've given.
+description: All the talks I've given at conferences.
 layout: :theme/page
 ---
 
@@ -30,93 +30,36 @@ layout: :theme/page
     color: var(--text-secondary);
 }
 
-.year-section {
-    margin-bottom: 2.5rem;
-}
-
-.year-title {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 1.25rem;
-    color: var(--text-primary);
-    border-left: 6px solid var(--color-primary);
-    padding-left: 1rem;
-}
-
-.events-grid {
-    display: grid;
-    gap: 1rem;
-}
-
-.event-card {
+.talk-card {
     background: var(--card-gradient);
     border-radius: 10px;
     padding: 0.75rem;
     box-shadow: var(--shadow-md);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    margin-bottom: 1rem;
     border: 1px solid var(--border-color);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.event-card:hover {
+.talk-card:hover {
     transform: translateY(-4px);
     box-shadow: var(--shadow-lg);
 }
 
-.event-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 0.75rem;
-    flex-wrap: wrap;
-}
-
-.event-name {
+.talk-card-title {
     font-size: 1.25rem;
     font-weight: 700;
     color: var(--text-primary);
-    margin: 0;
-    flex: 1;
-    min-width: 200px;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
+    margin: 0 0 0.75rem 0;
+    border-left: 6px solid var(--color-primary);
+    padding-left: 1rem;
 }
 
-.event-name a {
-    color: var(--text-primary);
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-.event-name a:hover {
-    color: var(--color-primary);
-    text-decoration: underline;
-}
-
-.event-meta {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    color: var(--text-tertiary);
-    font-size: 0.9rem;
-    margin: 0;
-    flex-shrink: 0;
-}
-
-.event-meta-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    white-space: nowrap;
-}
-
-.talks-list {
-    margin-top: 1rem;
-    padding-top: 1rem;
+.appearances-list {
+    padding-top: 0.5rem;
     border-top: 2px solid var(--border-color);
 }
 
-.talk-item {
+.appearance-item {
     display: flex;
     align-items: flex-start;
     gap: 0.75rem;
@@ -127,11 +70,11 @@ layout: :theme/page
     transition: background 0.2s ease;
 }
 
-.talk-item:hover {
+.appearance-item:hover {
     background: var(--hover-bg);
 }
 
-.talk-bullet {
+.appearance-bullet {
     flex-shrink: 0;
     width: 6px;
     height: 6px;
@@ -140,7 +83,7 @@ layout: :theme/page
     margin-top: 0.45rem;
 }
 
-.talk-content {
+.appearance-content {
     flex: 1;
     display: flex;
     align-items: center;
@@ -148,28 +91,49 @@ layout: :theme/page
     flex-wrap: wrap;
 }
 
-.talk-title {
-    font-weight: 600;
-    color: var(--text-primary);
-    margin: 0;
-    line-height: 1.4;
+.appearance-info {
     flex: 1;
     min-width: 200px;
 }
 
-.talk-links {
+.appearance-event {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+    line-height: 1.4;
+}
+
+.appearance-event a {
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.appearance-event a:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+
+.appearance-meta {
+    display: flex;
+    gap: 0.75rem;
+    color: var(--text-tertiary);
+    font-size: 0.85rem;
+    margin-top: 0.15rem;
+}
+
+.appearance-links {
     display: flex;
     gap: 0.5rem;
     align-items: center;
     flex-shrink: 0;
 }
 
-.talk-link {
+.appearance-link {
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
     padding: 0.25rem 0.65rem;
-    //background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
     background: none;
     color: white;
     text-decoration: none;
@@ -179,17 +143,39 @@ layout: :theme/page
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.talk-link:hover {
+.appearance-link:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(20, 184, 166, 0.4);
     color: white;
 }
 
-.no-talks {
-    color: var(--text-muted);
-    font-style: italic;
-    padding: 0.75rem;
-    text-align: center;
+.appearance-count {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 12px;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+}
+
+.badge-retired {
+    display: inline-block;
+    background: var(--text-tertiary);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 12px;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+    opacity: 0.7;
+}
+
+.talk-card.retired {
+    opacity: 0.6;
 }
 
 @media (max-width: 768px) {
@@ -197,100 +183,66 @@ layout: :theme/page
         font-size: 2rem;
     }
 
-    .year-title {
-        font-size: 1.75rem;
-    }
-
-    .event-header {
-        flex-direction: column;
-        align-items: flex-start;
+    .appearance-content {
         gap: 0.5rem;
     }
 
-    .event-name {
-        min-width: unset;
-        width: 100%;
-        flex: none;
-    }
-
-    .event-meta {
-        gap: 0.75rem;
-        flex-wrap: wrap;
-    }
-
-    .event-meta-item {
-        font-size: 0.85rem;
-    }
-
-    .talk-title {
+    .appearance-info {
         min-width: unset;
         width: 100%;
         flex-basis: 100%;
     }
 
-    .talk-content {
-        gap: 0.5rem;
+    .appearance-links {
+        margin-left: 0;
     }
 
-    .talk-links {
-        margin-left: 0;
+    .appearance-meta {
+        flex-wrap: wrap;
     }
 }
 </style>
 
 <div class="talks-container">
     <div class="talks-header">
-        <h1>Conference Talks</h1>
-        <p>Sharing knowledge and experiences with the developer community</p>
+        <h1>Talks</h1>
+        <p>All the talks I've given, grouped by topic</p>
     </div>
 
-    {#for year in cdi:talks.list}
-        <div class="year-section">
-            <h2 class="year-title">{year.year}</h2>
-
-            <div class="events-grid">
-                {#for event in year.events}
-                    <div class="event-card">
-                        <div class="event-header">
-                            {#if event.url}
-                                <h3 class="event-name"><a href="{event.url}" target="_blank" rel="noopener noreferrer">{event.name}</a></h3>
-                            {#else}
-                                <h3 class="event-name">{event.name}</h3>
+    {#for talk in cdi:talksList.list}
+        <div class="talk-card{#if talk.retired} retired{/if}">
+            <h2 class="talk-card-title">{talk.title}<span class="appearance-count">{talk.appearances.size}x</span>{#if talk.retired}<span class="badge-retired">Retired</span>{/if}</h2>
+            <div class="appearances-list">
+                {#for appearance in talk.appearances}
+                    <div class="appearance-item">
+                        <div class="appearance-bullet"></div>
+                        <div class="appearance-content">
+                            <div class="appearance-info">
+                                {#if appearance.eventUrl}
+                                    <div class="appearance-event"><a href="{appearance.eventUrl}" target="_blank" rel="noopener noreferrer">{appearance.eventName}</a></div>
+                                {#else}
+                                    <div class="appearance-event">{appearance.eventName}</div>
+                                {/if}
+                                <div class="appearance-meta">
+                                    <span>{appearance.date}</span>
+                                    <span>{#if appearance.flag}{appearance.flag} {/if}{appearance.location}</span>
+                                </div>
+                            </div>
+                            {#if appearance.slides || appearance.recording}
+                                <div class="appearance-links">
+                                    {#if appearance.slides}
+                                        <a href="{appearance.slides}" target="_blank" class="appearance-link">
+                                            <img src="/images/slides.png" alt="" width="24"/>
+                                        </a>
+                                    {/if}
+                                    {#if appearance.recording}
+                                        <a href="{appearance.recording}" target="_blank" class="appearance-link">
+                                            <img src="/images/camera.png" alt="" width="24"/>
+                                        </a>
+                                    {/if}
+                                </div>
                             {/if}
-                            <div class="event-meta">
-                                <span class="event-meta-item">{event.date}</span>
-                                <span class="event-meta-item">{#if event.flag}{event.flag} {/if}{event.location}</span>
-                            </div>
                         </div>
-
-                        {#if event.talks.size > 0}
-                            <div class="talks-list">
-                                {#for talk in event.talks}
-                                    <div class="talk-item">
-                                        <div class="talk-bullet"></div>
-                                        <div class="talk-content">
-                                            <div class="talk-title">{talk.title}</div>
-                                            {#if talk.slides || talk.recording}
-                                                <div class="talk-links">
-                                                    {#if talk.slides}
-                                                        <a href="{talk.slides}" target="_blank" class="talk-link">
-                                                            <img src="/images/slides.png" alt="" width="24"/>
-                                                        </a>
-                                                    {/if}
-                                                    {#if talk.recording}
-                                                        <a href="{talk.recording}" target="_blank" class="talk-link">
-                                                            <img src="/images/camera.png" alt="" width="24"/>
-                                                        </a>
-                                                    {/if}
-                                                </div>
-                                            {/if}
-                                        </div>
-                                    </div>
-                                {/for}
-                            </div>
-                        {#else}
-                            <div class="no-talks">No talks listed for this event</div>
-                        {/if}
                     </div>
                 {/for}
             </div>
