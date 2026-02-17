@@ -1,5 +1,22 @@
 - year: "2026"
   events:
+    - name: "MakeIT / JCON OpenBlend Slovenia"
+      url: "https://slovenia.jcon.one/en/"
+      date: "May 2026"
+      location: "Portorož, Slovenia"
+      flag: "🇸🇮"
+      talks:
+        - title: "A2A in 45 Minutes: Building Interoperable AI Agents"
+        - title: "From AI to Agent with Langchain4J"
+
+    - name: "JNation"
+      url: "https://www.jnation.pt/"
+      date: "May 2026"
+      location: "Coimbra, PT"
+      flag: "🇵🇹"
+      talks:
+        - title: "'A2A in 50 Minutes: Building Interoperable AI Agents"
+
     - name: "Devoxx UK"
       url: "https://www.devoxx.co.uk/"
       date: "May 2026"
@@ -8,6 +25,7 @@
       talks:
         - title: "Building Interoperable AI Agents in 30 Minutes"
         - title: "Java Script (No, Not That One): Modern Automation with Java"
+
     - name: "Devoxx France"
       url: "https://www.devoxx.fr/"
       date: "April 2026"
@@ -15,6 +33,7 @@
       flag: "🇫🇷"
       talks:
         - title: "A2A en 30 Minutes: Construire des agent IA qui communiquent"
+
     - name: "JCON EUROPE"
       url: "https://jcon.one/"
       date: "April 2026"
