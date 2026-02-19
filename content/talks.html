@@ -173,6 +173,42 @@ layout: :theme/page
     opacity: 0.6;
 }
 
+.talks-filter {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 1.5rem;
+}
+
+.talks-filter button {
+    padding: 0.4rem 1.2rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 2px solid var(--color-primary);
+    background: transparent;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.talks-filter button:first-child {
+    border-radius: 6px 0 0 6px;
+}
+
+.talks-filter button:last-child {
+    border-radius: 0 6px 6px 0;
+    border-left: none;
+}
+
+.talks-filter button.active {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+    color: white;
+}
+
+.talks-container.hide-retired .talk-card.retired {
+    display: none;
+}
+
 @media (max-width: 768px) {
     .talks-header h1 {
         font-size: 2rem;
@@ -188,10 +224,15 @@ layout: :theme/page
 }
 </style>
 
-<div class="talks-container">
+<div class="talks-container hide-retired" id="talksContainer">
     <div class="talks-header">
         <h1>Talks</h1>
         <p>All the talks I've given, grouped by topic</p>
+    </div>
+
+    <div class="talks-filter">
+        <button class="active" data-filter="active">Active</button>
+        <button data-filter="all">All</button>
     </div>
 
     {#for talk in cdi:talksList.list}
@@ -233,3 +274,18 @@ layout: :theme/page
         </div>
     {/for}
 </div>
+
+<script>
+document.querySelectorAll('.talks-filter button').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.talks-filter button').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        var container = document.getElementById('talksContainer');
+        if (btn.dataset.filter === 'active') {
+            container.classList.add('hide-retired');
+        } else {
+            container.classList.remove('hide-retired');
+        }
+    });
+});
+</script>
