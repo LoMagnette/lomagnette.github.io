@@ -54,99 +54,94 @@ layout: :theme/page
     padding-left: 1rem;
 }
 
-.appearances-list {
-    padding-top: 0.5rem;
+.appearances-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
     border-top: 2px solid var(--border-color);
+    border-spacing: 0;
 }
 
-.appearance-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-    padding: 0.5rem;
-    margin-bottom: 0.35rem;
-    background: var(--card-bg);
-    border-radius: 6px;
+.appearances-table col.col-event   { width: 35%; }
+.appearances-table col.col-date    { width: 15%; }
+.appearances-table col.col-location { width: 40%; }
+.appearances-table col.col-links   { width: 10%; }
+
+.appearances-table,
+.appearances-table thead,
+.appearances-table tbody,
+.appearances-table th,
+.appearances-table tr,
+.appearances-table td {
+    border: none !important;
+}
+
+.appearances-table tr {
     transition: background 0.2s ease;
 }
 
-.appearance-item:hover {
+.appearances-table tr:hover {
     background: var(--hover-bg);
 }
 
-.appearance-bullet {
-    flex-shrink: 0;
-    width: 6px;
-    height: 6px;
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
-    border-radius: 50%;
-    margin-top: 0.45rem;
+.appearances-table td {
+    padding: 0.35rem 0.5rem;
+    font-size: 0.9rem;
+    vertical-align: middle;
+    background: transparent;
 }
 
-.appearance-content {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-}
-
-.appearance-info {
-    flex: 1;
-    min-width: 200px;
-}
-
-.appearance-event {
+.appearances-table .col-event {
     font-weight: 600;
     color: var(--text-primary);
-    margin: 0;
-    line-height: 1.4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.appearance-event a {
+.appearances-table .col-event a {
     color: var(--text-primary);
     text-decoration: none;
     transition: color 0.2s ease;
 }
 
-.appearance-event a:hover {
+.appearances-table .col-event a:hover {
     color: var(--color-primary);
     text-decoration: underline;
 }
 
-.appearance-meta {
-    display: flex;
-    gap: 0.75rem;
+.appearances-table .col-date {
     color: var(--text-tertiary);
     font-size: 0.85rem;
-    margin-top: 0.15rem;
+    white-space: nowrap;
 }
 
-.appearance-links {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    flex-shrink: 0;
+.appearances-table .col-location {
+    color: var(--text-tertiary);
+    font-size: 0.85rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.appearances-table .col-links {
+    white-space: nowrap;
+    text-align: right;
 }
 
 .appearance-link {
     display: inline-flex;
     align-items: center;
-    gap: 0.25rem;
-    padding: 0.25rem 0.65rem;
+    padding: 0.15rem 0.3rem;
     background: none;
-    color: white;
     text-decoration: none;
-    border-radius: 5px;
-    font-size: 0.8rem;
-    font-weight: 500;
+    border-radius: 4px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .appearance-link:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(20, 184, 166, 0.4);
-    color: white;
 }
 
 .appearance-count {
@@ -183,22 +178,12 @@ layout: :theme/page
         font-size: 2rem;
     }
 
-    .appearance-content {
-        gap: 0.5rem;
+    .appearances-table .col-event {
+        white-space: normal;
     }
 
-    .appearance-info {
-        min-width: unset;
-        width: 100%;
-        flex-basis: 100%;
-    }
-
-    .appearance-links {
-        margin-left: 0;
-    }
-
-    .appearance-meta {
-        flex-wrap: wrap;
+    .appearances-table .col-location {
+        display: none;
     }
 }
 </style>
@@ -212,40 +197,39 @@ layout: :theme/page
     {#for talk in cdi:talksList.list}
         <div class="talk-card{#if talk.retired} retired{/if}">
             <h2 class="talk-card-title">{talk.title}<span class="appearance-count">{talk.appearances.size}x</span>{#if talk.retired}<span class="badge-retired">Retired</span>{/if}</h2>
-            <div class="appearances-list">
+            <table class="appearances-table">
+                <colgroup>
+                    <col class="col-event">
+                    <col class="col-date">
+                    <col class="col-location">
+                    <col class="col-links">
+                </colgroup>
                 {#for appearance in talk.appearances}
-                    <div class="appearance-item">
-                        <div class="appearance-bullet"></div>
-                        <div class="appearance-content">
-                            <div class="appearance-info">
-                                {#if appearance.eventUrl}
-                                    <div class="appearance-event"><a href="{appearance.eventUrl}" target="_blank" rel="noopener noreferrer">{appearance.eventName}</a></div>
-                                {#else}
-                                    <div class="appearance-event">{appearance.eventName}</div>
-                                {/if}
-                                <div class="appearance-meta">
-                                    <span>{appearance.date}</span>
-                                    <span>{#if appearance.flag}{appearance.flag} {/if}{appearance.location}</span>
-                                </div>
-                            </div>
-                            {#if appearance.slides || appearance.recording}
-                                <div class="appearance-links">
-                                    {#if appearance.slides}
-                                        <a href="{appearance.slides}" target="_blank" class="appearance-link">
-                                            <img src="/images/slides.png" alt="" width="24"/>
-                                        </a>
-                                    {/if}
-                                    {#if appearance.recording}
-                                        <a href="{appearance.recording}" target="_blank" class="appearance-link">
-                                            <img src="/images/camera.png" alt="" width="24"/>
-                                        </a>
-                                    {/if}
-                                </div>
+                    <tr>
+                        <td class="col-event">
+                            {#if appearance.eventUrl}
+                                <a href="{appearance.eventUrl}" target="_blank" rel="noopener noreferrer">{appearance.eventName}</a>
+                            {#else}
+                                {appearance.eventName}
                             {/if}
-                        </div>
-                    </div>
+                        </td>
+                        <td class="col-date">{appearance.date}</td>
+                        <td class="col-location">{#if appearance.flag}{appearance.flag} {/if}{appearance.location}</td>
+                        <td class="col-links">
+                            {#if appearance.slides}
+                                <a href="{appearance.slides}" target="_blank" class="appearance-link">
+                                    <img src="/images/slides.png" alt="" width="18"/>
+                                </a>
+                            {/if}
+                            {#if appearance.recording}
+                                <a href="{appearance.recording}" target="_blank" class="appearance-link">
+                                    <img src="/images/camera.png" alt="" width="18"/>
+                                </a>
+                            {/if}
+                        </td>
+                    </tr>
                 {/for}
-            </div>
+            </table>
         </div>
     {/for}
 </div>

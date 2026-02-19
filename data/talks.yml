@@ -1,35 +1,41 @@
-- id: a2a
+- id: 1
   title: "A2A: Building Interoperable AI Agents"
-- id: ai-form-wizards
+- id: 2
   title: "AI-Powered Form Wizards: Chat, Click, Done"
-- id: langchain4j
+- id: 3
   title: "From AI to Agent with Langchain4J"
-- id: java-script
+- id: 4
   title: "Java Script (No, Not That One): Modern Automation with Java"
-- id: spark
+- id: 5
   title: "Finding the Spark: A Career Reset Button."
-- id: angular-future
+- id: 6
+  title: "Unleashing the power of Angular: Navigating the latest releases and transformations"
+  retired: true
+- id: 7
   title: "The Future of Angular: Faster, Lighter, Stronger"
-- id: fullstack
+- id: 9
   title: "Bridging the Gap: Full-Stack Development Without the Headaches"
-- id: rag
+  retired: true
+- id: 10
   title: "RAG to the Future: Keeping Your AI Up to Date"
   retired: true
-- id: angular-migration
+- id: 11
   title: "A Developer's Tale: Migrating an Angular App"
   retired: true
-- id: quarkus-fullstack
+- id: 12
   title: "Quarkus: Supersonic, Subatomic Full-Stack Development"
   retired: true
-- id: quarkus-vs-spring
+- id: 13
   title: "Quarkus vs Spring Boot"
   retired: true
-- id: langchain4j-rag
+- id: 14
   title: "Dompter le chaos de l'information avec Langchain4J"
   retired: true
-- id: mentorship
+- id: 15
   title: "Mentorship / Discussion about personal branding and Public Speaking"
-- id: roundtable-ai
+  retired: true
+- id: 16
   title: "Opening Roundtable: Software Development in the Age of AI"
-- id: bof-java-belgium
+  retired: true
+- id: 17
   title: "BOF: Java and JVM lovers in Belgium, let's unite!"

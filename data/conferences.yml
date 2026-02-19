@@ -6,10 +6,10 @@
       location: "Portorož, Slovenia"
       flag: "🇸🇮"
       talks:
-        - talkId: a2a
+        - talkId: 1
           title: "A2A in 45 Minutes: Building Interoperable AI Agents"
-        - talkId: langchain4j
-          title: "From AI to Agent with Langchain4J"
+        - talkId: 3
+          title: "From AI to Agent with 3"
 
     - name: "JNation"
       url: "https://www.jnation.pt/"
@@ -17,7 +17,7 @@
       location: "Coimbra, PT"
       flag: "🇵🇹"
       talks:
-        - talkId: a2a
+        - talkId: 1
           title: "A2A in 50 Minutes: Building Interoperable AI Agents"
 
     - name: "Devoxx UK"
@@ -26,9 +26,9 @@
       location: "London, UK"
       flag: "🇬🇧"
       talks:
-        - talkId: a2a
+        - talkId: 1
           title: "Building Interoperable AI Agents in 30 Minutes"
-        - talkId: java-script
+        - talkId: 4
           title: "Java Script (No, Not That One): Modern Automation with Java"
 
     - name: "Devoxx France"
@@ -37,7 +37,7 @@
       location: "Paris, France"
       flag: "🇫🇷"
       talks:
-        - talkId: a2a
+        - talkId: 1
           title: "A2A en 30 Minutes: Construire des agent IA qui communiquent"
 
     - name: "JCON EUROPE"
@@ -46,7 +46,7 @@
       location: "Köln, Germany"
       flag: "🇩🇪"
       talks:
-        - talkId: a2a
+        - talkId: 1
           title: "A2A in 45 Minutes: Building Interoperable AI Agents"
 
     - name: "Voxxed Days Zurich"
@@ -55,7 +55,7 @@
       location: "Zürich, Switzerland"
       flag: "🇨🇭"
       talks:
-        - talkId: spark
+        - talkId: 5
 
     - name: "Javaland"
       url: "https://www.javaland.eu/en/home/"
@@ -63,7 +63,7 @@
       location: "Rust, Germany"
       flag: "🇩🇪"
       talks:
-        - talkId: ai-form-wizards
+        - talkId: 2
 
     - name: "DubJUG"
       url: "https://www.dubjug.org/"
@@ -71,8 +71,8 @@
       location: "Dublin, Ireland"
       flag: "🇮🇪"
       talks:
-        - talkId: ai-form-wizards
-        - talkId: java-script
+        - talkId: 2
+        - talkId: 4
           title: "JavaScript (No, Not That One): Modern Automation with Java"
 
     - name: "BeJUG"
@@ -81,7 +81,7 @@
       location: "Leuven, Belgium"
       flag: "🇧🇪"
       talks:
-        - talkId: spark
+        - talkId: 5
 
     - name: "Voxxed Days Ticino"
       url: "https://ticino.voxxeddays.com/"
@@ -89,7 +89,7 @@
       location: "Lugano, Switzerland"
       flag: "🇨🇭"
       talks:
-        - talkId: angular-future
+        - talkId: 7
 
     - name: "Quarkus Insight"
       url: "https://quarkus.io/insights/"
@@ -97,7 +97,7 @@
       location: "Online"
       flag: "🌐"
       talks:
-        - talkId: ai-form-wizards
+        - talkId: 2
           recording: https://www.youtube.com/watch?v=icLTCRGqC7s&pp=ygUOTG_Dr2MgTWFnbmV0dGU%3D
 
 - year: "2025"
@@ -108,7 +108,7 @@
       location: "Mons, Belgium"
       flag: "🇧🇪"
       talks:
-        - talkId: angular-future
+        - talkId: 7
           slides: https://speakerdeck.com/magnette/le-futur-dangular-au-dela-de-ngzone
 
     - name: "Voxxed Days Thessaloniki"
@@ -117,10 +117,10 @@
       location: "Thessaloniki, Greece"
       flag: "🇬🇷"
       talks:
-        - talkId: angular-future
+        - talkId: 7
           slides: https://speakerdeck.com/magnette/vdthess-the-future-of-angular-faster-lighter-stronger
           recording: https://www.youtube.com/watch?v=n9IcRKkCltc
-        - talkId: mentorship
+        - talkId: 15
 
     - name: "JavaCro 25"
       url: "https://2025.javacro.hr/eng/"
@@ -128,9 +128,9 @@
       location: "Croatia"
       flag: "🇭🇷"
       talks:
-        - talkId: ai-form-wizards
+        - talkId: 2
           slides: https://speakerdeck.com/magnette/ai-powered-form-wizards-chat-click-done-bd92e7ee-8557-4081-b6a2-4f6a1096bbcc
-        - talkId: roundtable-ai
+        - talkId: 16
 
     - name: "Devoxx Belgium"
       url: "https://devoxx.be/"
@@ -138,12 +138,12 @@
       location: "Antwerpen, Belgium"
       flag: "🇧🇪"
       talks:
-        - talkId: a2a
+        - talkId: 1
           title: "A2A in 30 Minutes: Building Interoperable AI Agents"
           slides: https://speakerdeck.com/magnette/a2a-in-30-minutes-building-interoperable-ai-agents
           recording: https://www.youtube.com/watch?v=BOpzs5AGU50
         - talkId: bof-java-belgium
-        - talkId: ai-form-wizards
+        - talkId: 2
           slides: https://speakerdeck.com/magnette/ai-powered-form-wizards-chat-click-done-bd92e7ee-8557-4081-b6a2-4f6a1096bbcc
           recording: https://www.youtube.com/watch?v=f_5b_qanhzg
 
@@ -153,7 +153,7 @@
       location: "USA, Colorado Springs"
       flag: "🇺🇸"
       talks:
-        - talkId: fullstack
+        - talkId: 9
           title: "Bridging the Gap: Full-Stack Development Without the Headache"
           slides: https://speakerdeck.com/magnette/dev2next-bridging-the-gap-full-stack-development-without-the-headaches
 
@@ -163,7 +163,7 @@
       location: "Mondorf-les-Bains, Grand-Duchy of Luxembourg"
       flag: "🇱🇺"
       talks:
-        - talkId: angular-migration
+        - talkId: 11
           title: "Au Cœur de l'Odyssée: Migrer une application d'Angular 10 à 19"
           slides: https://speakerdeck.com/magnette/a-developers-tale-migrating-an-angular-app-from-version-10-to-19
           recording: https://www.youtube.com/watch?v=8nIAR2aABlk&t=2s
@@ -174,7 +174,7 @@
       location: "Kraków, Poland"
       flag: "🇵🇱"
       talks:
-        - talkId: angular-future
+        - talkId: 7
           slides: https://speakerdeck.com/magnette/the-future-of-angular-faster-lighter-stronger-78e8b7b7-101e-434b-86ac-86c22dc992f6
 
     - name: "MakeIT / JCON OpenBlend Slovenia"
@@ -183,9 +183,9 @@
       location: "Portorož, Slovenia"
       flag: "🇸🇮"
       talks:
-        - talkId: ai-form-wizards
+        - talkId: 2
           slides: https://speakerdeck.com/magnette/ai-powered-form-wizards-chat-click-done
-        - talkId: fullstack
+        - talkId: 9
           slides: https://speakerdeck.com/magnette/bridging-the-gap-full-stack-development-without-the-headaches
 
     - name: "GeeCON"
@@ -194,7 +194,7 @@
       location: "Kraków, Poland"
       flag: "🇵🇱"
       talks:
-        - talkId: fullstack
+        - talkId: 9
           slides: https://speakerdeck.com/magnette/bridging-the-gap-full-stack-development-without-the-headaches
           recording: https://www.youtube.com/watch?v=e_S_QAhyMks&pp=ygUOTG_Dr2MgTWFnbmV0dGU%3D
 
@@ -204,7 +204,7 @@
       location: "Köln, Germany"
       flag: "🇩🇪"
       talks:
-        - talkId: ai-form-wizards
+        - talkId: 2
           slides: https://speakerdeck.com/magnette/ai-powered-form-wizards-chat-click-done
           recording: https://www.youtube.com/watch?v=z5m4ef_LtdQ
 
@@ -214,7 +214,7 @@
       location: "Online"
       flag: "🌐"
       talks:
-        - talkId: angular-future
+        - talkId: 7
           slides: https://speakerdeck.com/magnette/the-future-of-angular-faster-lighter-stronger
           recording: https://www.youtube.com/watch?v=HKMPqYmugtg
 
@@ -224,7 +224,7 @@
       location: "Strasbourg, France"
       flag: "🇫🇷"
       talks:
-        - talkId: rag
+        - talkId: 10
           title: "RAG to the future : comment garder son IA à jour"
           slides: https://speakerdeck.com/magnette/rag-to-the-future-comment-garder-son-ia-a-jour
 
@@ -234,7 +234,7 @@
       location: "Athens, Greece"
       flag: "🇬🇷"
       talks:
-        - talkId: angular-migration
+        - talkId: 11
           title: "A Developer's Tale: Migrating an Angular app from version 10 to 19"
           slides: https://speakerdeck.com/magnette/a-developers-tale-migrating-an-angular-app-from-version-10-to-19
           recording: https://www.youtube.com/watch?v=dwERF-hvPpk
@@ -245,7 +245,7 @@
       location: "Warsaw, Poland"
       flag: "🇵🇱"
       talks:
-        - talkId: fullstack
+        - talkId: 9
           slides: https://speakerdeck.com/magnette/bridging-the-gap-full-stack-development-without-the-headaches
 
     - name: "Web Day"
@@ -254,7 +254,7 @@
       location: "Milan, Italy"
       flag: "🇮🇹"
       talks:
-        - talkId: angular-future
+        - talkId: 7
           slides: https://speakerdeck.com/magnette/the-future-of-angular-faster-lighter-stronger
 
     - name: "Voxxed Days Zurich"
@@ -263,7 +263,7 @@
       location: "Zürich, Switzerland"
       flag: "🇨🇭"
       talks:
-        - talkId: angular-future
+        - talkId: 7
           slides: https://speakerdeck.com/magnette/the-future-of-angular-faster-lighter-stronger
           recording: https://www.youtube.com/watch?v=oMs4qcmbgRs&t=5s
 
@@ -273,7 +273,7 @@
       location: "Online"
       flag: "🌐"
       talks:
-        - talkId: angular-future
+        - talkId: 7
           slides: https://speakerdeck.com/magnette/the-future-of-angular-faster-lighter-stronger
 
     - name: "Angular Dev France"
@@ -282,7 +282,7 @@
       location: "Online"
       flag: "🌐"
       talks:
-        - talkId: angular-migration
+        - talkId: 11
           title: "Au Cœur de l'Odyssée: Migrer une application d'Angular 10 à 18"
           slides: https://speakerdeck.com/magnette/au-coeur-de-lodyssee-migrer-une-application-dangular-10-a-18
           recording: https://www.youtube.com/watch?v=HqopjZLfZ-A
@@ -295,7 +295,7 @@
       location: "Mestre, Italy"
       flag: "🇮🇹"
       talks:
-        - talkId: angular-migration
+        - talkId: 11
           title: "A Developer's Tale: Migrating an Angular app from version 10 to 18"
           slides: https://speakerdeck.com/magnette/a-developers-tale-migrating-an-angular-app-from-version-10-to-18-e301429f-e64e-4095-b473-5e064c589394
 
@@ -305,7 +305,7 @@
       location: "Mons, Belgium"
       flag: "🇧🇪"
       talks:
-        - talkId: quarkus-fullstack
+        - talkId: 12
           slides: https://speakerdeck.com/magnette/quarkus-supersonic-and-subatomic-fullstack-development
           recording: https://www.youtube.com/watch?v=qtF_u2oZop0&t=2s
 
@@ -315,7 +315,7 @@
       location: "Mons, Belgium"
       flag: "🇧🇪"
       talks:
-        - talkId: angular-future
+        - talkId: 6
           title: "Angular, l'épopée moderne : Décryptage des dernières avancées"
           slides: https://speakerdeck.com/magnette/angular-lepopee-moderne-decryptage-des-dernieres-avancees
 
@@ -325,11 +325,11 @@
       location: "Antwerpen, Belgium"
       flag: "🇧🇪"
       talks:
-        - talkId: angular-future
+        - talkId: 6
           title: "Unleashing the power of Angular: Navigating the latest releases and transformations"
           slides: https://speakerdeck.com/magnette/unleashing-the-power-of-angular-navigating-the-latest-releases-and-transformations-48728ce0-372e-46af-9518-6c8fce12cdf3
           recording: https://www.youtube.com/watch?v=LEHmmxZfaUs
-        - talkId: angular-migration
+        - talkId: 11
           title: "A Developer's Tale: Migrating an Angular app from version 10 to 18"
           slides: https://speakerdeck.com/magnette/a-developers-tale-migrating-an-angular-app-from-version-10-to-18
           recording: https://www.youtube.com/watch?v=pT2dWsodUpQ
@@ -340,10 +340,10 @@
       location: "Valbonne, France"
       flag: "🇫🇷"
       talks:
-        - talkId: angular-migration
+        - talkId: 11
           title: "Au Cœur de l'Odyssée: Migrer une application d'Angular 10 à 17"
           slides: https://speakerdeck.com/magnette/au-coeur-de-lodyssee-migrer-une-application-dangular-10-a-17-2c5070e6-a004-42d0-9342-58c9c9482e1b
-        - talkId: quarkus-fullstack
+        - talkId: 12
           slides: https://speakerdeck.com/magnette/quarkus-supersonic-subatomic-full-stack-development-d225d160-4141-4047-998d-08ea29b7b64d
 
     - name: "Voxxed Days Luxembourg"
@@ -352,7 +352,7 @@
       location: "Mondorf-les-Bains, LU"
       flag: "🇱🇺"
       talks:
-        - talkId: quarkus-fullstack
+        - talkId: 12
           slides: https://speakerdeck.com/magnette/quarkus-supersonic-subatomic-full-stack-development
           recording: https://www.youtube.com/watch?v=Asg0xHTiJzo
 
@@ -362,7 +362,7 @@
       location: "Kraków, Poland"
       flag: "🇵🇱"
       talks:
-        - talkId: angular-future
+        - talkId: 6
           title: "Unleashing the power of Angular: Navigating the latest releases and transformations"
           slides: https://speakerdeck.com/magnette/unleashing-the-power-of-angular-navigating-the-latest-releases-and-transformations
 
@@ -372,7 +372,7 @@
       location: "Lille, France"
       flag: "🇫🇷"
       talks:
-        - talkId: langchain4j-rag
+        - talkId: 14
           slides: https://speakerdeck.com/magnette/dompter-le-chaos-de-linformation-construire-un-allie-ia-avec-langchain4j
           recording: https://www.youtube.com/watch?v=jlnhGSUiBV4
 
@@ -382,7 +382,7 @@
       location: "Brussels, Belgium"
       flag: "🇧🇪"
       talks:
-        - talkId: angular-migration
+        - talkId: 11
           title: "A Developer's Tale: Migrating an Angular app from version 10 to 17"
           slides: https://speakerdeck.com/magnette/a-developers-tale-migrating-an-angular-app-from-version-10-to-17-addd944f-97fb-4149-b070-e40854ee1e53
           recording: https://www.youtube.com/watch?v=Asg0xHTiJzo
@@ -393,7 +393,7 @@
       location: "London, UK"
       flag: "🇬🇧"
       talks:
-        - talkId: angular-migration
+        - talkId: 11
           title: "A Developer's Tale: Migrating an Angular app from version 10 to 17"
           slides: https://speakerdeck.com/magnette/a-developers-tale-migrating-an-angular-app-from-version-10-to-17
           recording: https://www.youtube.com/watch?v=v2qZPQDR1qk
@@ -404,7 +404,7 @@
       location: "Paris, France"
       flag: "🇫🇷"
       talks:
-        - talkId: angular-migration
+        - talkId: 11
           title: "Au Cœur de l'Odyssée: Migrer une application d'Angular 10 à 17"
           slides: https://speakerdeck.com/magnette/au-coeur-de-lodyssee-migrer-une-application-dangular-10-a-17
           recording: https://www.youtube.com/watch?v=xhPYkBD6tng
@@ -415,7 +415,7 @@
       location: "Stockholm, Sweden"
       flag: "🇸🇪"
       talks:
-        - talkId: angular-future
+        - talkId: 6
           title: "Unleashing the power of Angular: Navigating the latest releases and transformations"
           slides: https://speakerdeck.com/magnette/jfokus-2024-unleashing-the-power-of-angular-navigating-the-latest-releases-and-transformations
           recording: https://www.youtube.com/watch?v=icf6YN3VN3g
@@ -428,7 +428,7 @@
       location: "Rouen, France"
       flag: "🇫🇷"
       talks:
-        - talkId: quarkus-vs-spring
+        - talkId: 13
           title: "Quarkus vs Spring Boot : Quel est le framework qui régnera en maître en 2023 ?"
 
     - name: "Devoxx Belgium"
@@ -437,7 +437,7 @@
       location: "Antwerpen, Belgium"
       flag: "🇧🇪"
       talks:
-        - talkId: angular-future
+        - talkId: 6
           title: "Unleashing the power of Angular: Navigating the latest releases and transformations"
           recording: https://www.youtube.com/watch?v=O6f2Tp8MkdY
 
@@ -447,7 +447,7 @@
       location: "Brussels, Belgium"
       flag: "🇧🇪"
       talks:
-        - talkId: quarkus-vs-spring
+        - talkId: 13
           title: "Quarkus vs Spring Boot: Which framework reigns supreme in 2023 ?"
 
     - name: "DevDay"
@@ -456,5 +456,5 @@
       location: "Mons, Belgium"
       flag: "🇧🇪"
       talks:
-        - talkId: angular-future
+        - talkId: 6
           title: "Angular 13 to 15: A corner stone for Angular developers ?"
