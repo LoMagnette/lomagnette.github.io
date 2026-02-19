@@ -74,21 +74,22 @@ layout: :theme/page
 .appearances-table tr,
 .appearances-table td {
     border: none !important;
+    background: transparent !important;
 }
 
 .appearances-table tr {
     transition: background 0.2s ease;
 }
 
-.appearances-table tr:hover {
-    background: var(--hover-bg);
+.appearances-table tr:hover,
+.appearances-table tr:hover td {
+    background: var(--hover-bg) !important;
 }
 
 .appearances-table td {
     padding: 0.35rem 0.5rem;
     font-size: 0.9rem;
     vertical-align: middle;
-    background: transparent;
 }
 
 .appearances-table .col-event {
