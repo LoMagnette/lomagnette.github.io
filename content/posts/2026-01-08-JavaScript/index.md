@@ -21,7 +21,7 @@ In this article, I'll show you how Java became a first-class scripting language 
 ## The Death of Manual Compilation
 
 The first problem if you want to write a Java script is compilation. You probably don't want to run `javac` and manage `.class` files for a simple script. 
-But since Java 11 (via [JEP 330](https://openjdk.org/jeps/330), you're able to run single-file source-code programs directly, using the `java` launcher.
+But since Java 11 (via [JEP 330](https://openjdk.org/jeps/330)), you're able to run single-file source-code programs directly, using the `java` launcher.
 
 ### Single-File Execution
 Let's say you want to rewrite `ls` in Java using good old Java you might do something like this:
@@ -90,7 +90,7 @@ No `javac` needed. No `.class` files cluttering your directory. Just instant exe
 
 ### Multi-File Support
 
-But since **Java 22** (via [JEP 458](https://openjdk.org/jeps/458), you're not limited to single-file programs. You can now write multi-file programs and run them directly. The Java launcher locates and compiles related source files in subdirectories.
+But since **Java 22** (via [JEP 458](https://openjdk.org/jeps/458)), you're not limited to single-file programs. You can now write multi-file programs and run them directly. The Java launcher locates and compiles related source files in subdirectories.
 For instance if you have something like this:
 
 ```java
@@ -199,7 +199,7 @@ If you want to learn about all this, I recommend reading the [JEP 512](https://o
 
 One of the defining features of a script is the ability to run it directly from the command line, like `./myscript`, without explicitly calling an interpreter. Many scripting languages achieve this with a "shebang" line (`#!`). This special line at the start of a file tells the operating system which program to use for execution.
 
-Since **Java 11** (via [JEP 330](https://openjdk.org/jeps/330), which also introduced single-file execution), the `java` launcher supports this convention.
+Since **Java 11** (via [JEP 330](https://openjdk.org/jeps/330)), which also introduced single-file execution), the `java` launcher supports this convention.
 
 Let's refactor our `ListFiles` example into a proper, executable script using the modern Java features we've discussed:
 
