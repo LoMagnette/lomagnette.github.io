@@ -2,6 +2,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
+import io.quarkus.qute.RawString;
+
 import java.util.*;
 
 @ApplicationScoped
@@ -18,7 +20,18 @@ public class TalksList {
                              String slides, String recording, String originalTitle) {
     }
 
-    public record TalkEntry(String title, List<Appearance> appearances, boolean retired) {
+    public record TalkEntry(String title, String description, List<Appearance> appearances, boolean retired) {
+        public RawString descriptionHtml() {
+            if (description == null) return null;
+            String html = description
+                    .replace("&", "&amp;")
+                    .replace("<", "&lt;")
+                    .replace(">", "&gt;")
+                    .replaceAll("\\*\\*(.+?)\\*\\*", "<strong>$1</strong>")
+                    .replace("\n\n", "</p><p>")
+                    .replace("\n", "<br>");
+            return new RawString("<p>" + html + "</p>");
+        }
     }
 
     public List<TalkEntry> getList() {
@@ -53,8 +66,9 @@ public class TalksList {
             String id = entry.getKey();
             Talks.Talk talkDef = talkById.get(id);
             String canonicalTitle = talkDef != null ? talkDef.title() : id;
+            String description = talkDef != null ? talkDef.description() : null;
             boolean retired = talkDef != null && Boolean.TRUE.equals(talkDef.retired());
-            result.add(new TalkEntry(canonicalTitle, entry.getValue(), retired));
+            result.add(new TalkEntry(canonicalTitle, description, entry.getValue(), retired));
         }
 
         return result;

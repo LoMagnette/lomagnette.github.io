@@ -1,36 +1,59 @@
 - id: 1
   title: "A2A: Building Interoperable AI Agents"
+  description: "
+  Until recently, AI agents were advancing in intelligence but remained isolated. Developers attempted to make them collaborate by repurposing protocols like MCP, which connects language models to external tools and data. However, MCP was never intended for agent-to-agent communication. This gap became clear as agents grew more complex and collaboration became essential. In April, Google and its partners announced the A2A protocol, an open standard specifically designed to let agents discover each other, communicate, and collaborate across ecosystems.
+  \n\n
+  This talk introduces the A2A protocol and shows how it enables agents to work together in multi-agent, multi-modal, and even long-running scenarios. We will explain its core principles, such as open standards, secure communication, and capability discovery through Agent Cards. You will also see how agents negotiate tasks, exchange context and artifacts, and coordinate their user experiences. We will highlight how A2A complements protocols like MCP by enabling agents to orchestrate one another while still using MCP internally to access tools and data.
+  \n\n
+  By the end of this session, you will understand what problems A2A solves, how it fits into the broader agent ecosystem, and how it improves on previous approaches. You will leave with a clear understanding of how to design agents that can truly interoperate and contribute to the emerging Internet of Agents."
 - id: 2
   title: "AI-Powered Form Wizards: Chat, Click, Done"
+  description: "Forms are everywhere — and everywhere, they're frustrating. What if users could just say what they need, and an AI-powered wizard would handle the rest? In this session, we'll build an intelligent form system that combines conversational AI with traditional form UIs. Users can chat naturally, click through guided steps, or mix both — the wizard adapts. We'll explore how to use LLMs to understand intent, extract structured data, validate inputs, and drive dynamic form flows. Live coding included."
 - id: 3
   title: "From AI to Agent with Langchain4J"
+  description: "
+  You’ve built AI features into your application. Models are wrapped in services, RAG is in place, tools are wired, and calls are flowing. Then requirements evolve. A single response is no longer enough. You need steps that follow each other, branches based on decisions, retries when things fail, and sometimes multiple actions happening at the same time. At that point, it becomes unclear how to structure the logic without losing control or readability.
+  \n\n
+  In this talk, we move from AI calls to agentic systems using LangChain4j. We’ll explore common workflow patterns such as sequential, loop, parallel, and conditional flows, along with error handling as a first-class concern. From there, we’ll zoom out to agentic concepts like shared state with an AgenticScope, goal-oriented agents, and pure agentic setups. We’ll also look beyond AI-only approaches, mixing in non-AI agents and human-in-the-loop interactions. All of this will be built live, step by step, to show how these ideas work in practice.
+  \n\n
+  You’ll leave with a concrete understanding of when to use workflows and when to rely on agents, how to combine both without confusion, and how to keep state, goals, and responsibilities explicit. The goal is not to build smarter prompts, but systems that are easier to reason about, easier to evolve, and better aligned with real-world application needs."
 - id: 4
   title: "Java Script (No, Not That One): Modern Automation with Java"
+  description: "Java has quietly become a powerful scripting language. With JBang, single-file programs, and modern Java features, you can write quick automation scripts, CLI tools, and one-off utilities — all in Java. No project setup, no build tool, no boilerplate. In this session, we'll explore how to use Java for the kind of tasks you'd normally reach for Python or Bash. From file processing to API calls to system automation, Java scripting is fast, type-safe, and surprisingly fun."
 - id: 5
   title: "Finding the Spark: A Career Reset Button."
+  description: "Ever felt stuck in your career? Like you're going through the motions but the spark is gone? This talk is a personal story about hitting that wall — and finding a way through. We'll explore what it means to reset your career, rediscover what drives you, and take concrete steps to reignite your passion for tech. Not a framework talk, not a tutorial — just an honest conversation about growth, change, and finding your way back to loving what you do."
 - id: 6
   title: "Unleashing the power of Angular: Navigating the latest releases and transformations"
   retired: true
+  description: "Angular has undergone a massive transformation in recent versions. Standalone components, signals, new control flow, deferrable views — the framework is evolving fast. In this session, we'll navigate the most impactful changes across recent Angular releases and understand how they reshape the way we build applications. Whether you're an Angular veteran or just curious about where the framework is heading, this talk will bring you up to speed."
 - id: 7
   title: "The Future of Angular: Faster, Lighter, Stronger"
+  description: "Angular is reinventing itself. With signals replacing Zone.js, zoneless change detection, and a push toward lighter, faster applications, the framework is making bold moves. In this session, we'll look at what's coming next for Angular — from performance improvements to developer experience enhancements. We'll explore the roadmap, demo upcoming features, and discuss what these changes mean for your existing and future projects."
 - id: 9
   title: "Bridging the Gap: Full-Stack Development Without the Headaches"
   retired: true
+  description: "Full-stack development often means juggling two separate worlds — a backend API and a frontend SPA, with all the complexity that brings. But what if you could bridge that gap? In this session, we'll explore modern approaches to full-stack Java development that reduce boilerplate, simplify deployment, and keep you productive. Using Quarkus and its web bundler, we'll build a complete application where backend and frontend live together harmoniously."
 - id: 10
   title: "RAG to the Future: Keeping Your AI Up to Date"
   retired: true
+  description: "LLMs are trained on static data — but the world keeps moving. Retrieval-Augmented Generation (RAG) is the bridge that keeps your AI grounded in reality. In this session, we'll build a RAG pipeline from scratch, exploring how to ingest documents, chunk and embed them, store them in a vector database, and retrieve relevant context at query time. You'll see how RAG transforms a generic LLM into a domain-specific expert that always has the latest information."
 - id: 11
   title: "A Developer's Tale: Migrating an Angular App"
   retired: true
+  description: "Migrating a large Angular application across multiple major versions is an epic journey. This is the story of taking a real-world app from Angular 10 all the way to the latest version — the challenges, the breaking changes, the tooling that helped, and the lessons learned along the way. If you're facing a similar migration or just want to understand what's involved, this talk gives you a practical, honest roadmap."
 - id: 12
   title: "Quarkus: Supersonic, Subatomic Full-Stack Development"
   retired: true
+  description: "Quarkus isn't just for microservices — it's a full-stack powerhouse. In this session, we'll explore how Quarkus can serve as your complete application platform, handling everything from REST APIs to server-side rendering to frontend asset bundling. Live coding included: we'll build a full-stack application from scratch and deploy it, showcasing Quarkus's developer experience, fast startup, and low memory footprint."
 - id: 13
   title: "Quarkus vs Spring Boot"
   retired: true
+  description: "The two heavyweights of Java frameworks go head to head. In this session, we'll compare Quarkus and Spring Boot across multiple dimensions — developer experience, performance, ecosystem, cloud-native features, and more. No fan wars, just facts and demos. Whether you're choosing a framework for your next project or just curious about the differences, this talk gives you an informed, balanced perspective."
 - id: 14
   title: "Dompter le chaos de l'information avec Langchain4J"
   retired: true
+  description: "L'information est partout — emails, documents, bases de données, APIs — et elle est chaotique. Comment construire un assistant IA capable de naviguer dans ce chaos et d'en extraire de la valeur ? Dans cette session, nous utiliserons LangChain4j pour construire un allié IA qui ingère, comprend et restitue l'information de manière intelligente. Du RAG aux agents, en passant par les outils et la mémoire conversationnelle."
 - id: 15
   title: "Mentorship / Discussion about personal branding and Public Speaking"
   retired: true
