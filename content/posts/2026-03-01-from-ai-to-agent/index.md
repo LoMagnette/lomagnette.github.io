@@ -18,10 +18,11 @@ The intended audience is Java developers who already have basic AI integration e
 Before we orchestrate anything, we need a common unit of work. In LangChain4j, an agent is a Java interface with a single method that performs a task, typically backed by an LLM. You define it declaratively:
 
 ```java
-public interface CreativeWriter {
-    @UserMessage("You are a creative writer. Write a short story about: {{topic}}")
-    @Agent("Generates a story based on the given topic")
-    String generateStory(@V("topic") String topic);
+public interface SithNameGenerator {
+    @UserMessage("You are a Sith naming council. Transform this boring name into something " +
+            "properly villainous: {{jediName}}")
+    @Agent("Transforms a Jedi name into a suitably menacing Sith identity")
+    String darken(@V("jediName") String jediName);
 }
 ```
 
@@ -30,10 +31,10 @@ The `@Agent` annotation marks this as an agent with a description. The `@UserMes
 To instantiate an agent, you use the builder:
 
 ```java
-CreativeWriter writer = AgenticServices
-    .agentBuilder(CreativeWriter.class)
+SithNameGenerator sithNamer = AgenticServices
+    .agentBuilder(SithNameGenerator.class)
     .chatModel(myChatModel)
-    .outputKey("story")
+    .outputKey("sithName")
     .build();
 ```
 
@@ -62,15 +63,15 @@ The scope also maintains an invocation history: `invocations()` returns the full
 For production use, LangChain4j offers typed keys to prevent spelling errors and type mismatches:
 
 ```java
-public static class UserRequest implements TypedKey<String> { }
+public static class HeroApplication implements TypedKey<String> { }
 
-public interface CategoryRouter {
-    @Agent(typedOutputKey = Category.class)
-    RequestCategory classify(@K(UserRequest.class) String request);
+public interface PowerTierAssessor {
+    @Agent(typedOutputKey = PowerTier.class)
+    PowerTier assess(@K(HeroApplication.class) String application);
 }
 ```
 
-Typed keys enforce constraints at compile time. When your system grows to dozens of agents sharing state, this is not optional: it is survival.
+Typed keys enforce constraints at compile time. When your system grows to dozens of agents processing hero applications, accidentally reading a `PowerTier` as a `String` is not optional: it is survival.
 
 
 ## Workflow Pattern 1: Sequential
@@ -78,14 +79,14 @@ Typed keys enforce constraints at compile time. When your system grows to dozens
 The simplest orchestration pattern is the sequential workflow. Agents execute one after another in a defined order, each reading from and writing to the AgenticScope:
 
 ```java
-UntypedAgent novelCreator = AgenticServices
+UntypedAgent sequelFactory = AgenticServices
     .sequenceBuilder()
-    .subAgents(creativeWriter, audienceEditor, styleEditor)
-    .outputKey("story")
+    .subAgents(plotThickener, castingAgent, trailerScriptWriter)
+    .outputKey("sequel")
     .build();
 ```
 
-Here, `creativeWriter` generates a draft and writes it to the scope. Then `audienceEditor` reads the draft, adjusts it for the target audience, and writes the updated version back. Finally, `styleEditor` polishes the style.
+Here, `plotThickener` takes the original movie synopsis, raises the stakes (this time it is personal, possibly involving a long-lost sibling or a second, more powerful MacGuffin), and writes the new plot to the scope. Then `castingAgent` reads the plot, decides who returns and who gets killed in the opening act, and writes out the cast. Finally, `trailerScriptWriter` produces the inevitable "IN A WORLD WHERE..." teaser copy.
 
 This is the pattern you reach for when tasks have a natural ordering and each step depends on the previous one. Think of content pipelines, multi-stage data processing, or any chain-of-thought decomposition where you want explicit control over each step.
 
@@ -93,9 +94,9 @@ LangChain4j also provides a declarative equivalent using annotations:
 
 ```java
 @SequenceAgent(
-    outputKey = "carConditions",
-    subAgents = { CleaningAgent.class, CarConditionFeedbackAgent.class })
-CarConditions processCarReturn(String carMake, String carModel, ...);
+    outputKey = "admissionPacket",
+    subAgents = { SortingHatAgent.class, CourseSchedulerAgent.class })
+AdmissionPacket enrollStudent(String studentBackground);
 ```
 
 The annotation-driven approach is cleaner for straightforward cases and integrates well with CDI frameworks like Quarkus.
@@ -106,23 +107,23 @@ The annotation-driven approach is cleaner for straightforward cases and integrat
 Not every problem is solved in a single pass. Sometimes you need iterative refinement: write a draft, score it, revise, score again, until the quality threshold is met. That is the loop workflow:
 
 ```java
-UntypedAgent styleReviewLoop = AgenticServices
+UntypedAgent pitchPolisher = AgenticServices
     .loopBuilder()
-    .subAgents(styleScorer, styleEditor)
+    .subAgents(studioExec, pitchRewriter)
     .maxIterations(5)
-    .exitCondition(scope -> scope.readState("score", 0.0) >= 0.8)
+    .exitCondition(scope -> scope.readState("greenlit", false))
     .build();
 ```
 
-The loop executes `styleScorer` and `styleEditor` repeatedly. After each iteration, the exit condition is evaluated. If the score meets the threshold, the loop exits. If not, we go around again, up to the configured maximum.
+The loop runs `studioExec` (reads the current pitch, produces a `greenlit` boolean and a list of notes like "needs more explosions" or "can the dog survive this time?") then `pitchRewriter` (incorporates the notes and tries again). After each round, the exit condition is evaluated. If `greenlit` flips to `true`, we have a movie. If not, more rewrites, up to the configured maximum.
 
 Three configuration points matter:
 
 - **`maxIterations(n)`**: a hard safety cap. Without this, a loop that never satisfies its exit condition runs forever. Always set this.
-- **`exitCondition(Predicate<AgenticScope>)`**: the condition that ends the loop. It has access to the full scope, so you can base it on scores, flags, counters, or any combination.
+- **`exitCondition(Predicate<AgenticScope>)`**: the condition that ends the loop. It has access to the full scope, so you can base it on scores, flags, booleans, or any combination.
 - **`testExitAtLoopEnd(boolean)`**: controls whether the condition is checked at the beginning or end of each iteration.
 
-The loop pattern is powerful for quality gates. A reviewer agent scores the output, a refinement agent improves it, and the loop continues until the bar is cleared.
+The loop pattern is powerful for quality gates. A gatekeeper agent evaluates the output, a refinement agent improves it, and the loop continues until the bar is cleared.
 
 
 ## Workflow Pattern 3: Parallel
@@ -130,22 +131,21 @@ The loop pattern is powerful for quality gates. A reviewer agent scores the outp
 When agents are independent and can work without each other's results, running them sequentially wastes time. The parallel workflow executes agents simultaneously:
 
 ```java
-EveningPlannerAgent agent = AgenticServices
-    .parallelBuilder(EveningPlannerAgent.class)
-    .subAgents(foodExpert, movieExpert)
-    .executor(Executors.newFixedThreadPool(2))
-    .outputKey("plans")
-    .output(agenticScope -> {
-        List<String> movies = agenticScope.readState("movies");
-        List<String> meals = agenticScope.readState("meals");
-        return combineIntoEveningPlans(movies, meals);
-    })
+HeistPlannerAgent heist = AgenticServices
+    .parallelBuilder(HeistPlannerAgent.class)
+    .subAgents(vaultSchematicAnalyst, disguiseDesigner, getawayPlanner)
+    .executor(Executors.newFixedThreadPool(3))
+    .outputKey("heistPlan")
+    .output(scope -> assembleHeistPlan(
+        scope.readState("vaultBlueprints"),
+        scope.readState("disguises"),
+        scope.readState("escapeRoute")))
     .build();
 ```
 
-The `foodExpert` and `movieExpert` agents run on separate threads. When both finish, the output function combines their results. If each agent takes 2 seconds, the total time is approximately 2 seconds instead of 4.
+`vaultSchematicAnalyst`, `disguiseDesigner`, and `getawayPlanner` run simultaneously on separate threads. Nobody waits for anyone else. When all three finish, the output function assembles the final plan. If each agent takes 3 seconds, the total time is 3 seconds, not 9. The casino never sees it coming.
 
-You provide the thread pool via `executor()`, so you control the concurrency model. The `output()` function is where you merge the parallel results into a single coherent output. LangChain4j also offers a parallel mapper variant where the same agent processes multiple items concurrently, useful for batch operations like classifying hundreds of support tickets.
+You provide the thread pool via `executor()`, so you control the concurrency model. The `output()` function is where you merge the parallel results into a single coherent output. LangChain4j also offers a parallel mapper variant where the same agent processes multiple items concurrently, useful for batch operations like screening hundreds of heist crew applications.
 
 
 ## Workflow Pattern 4: Conditional
@@ -153,43 +153,43 @@ You provide the thread pool via `executor()`, so you control the concurrency mod
 When different inputs require different processing paths, you need conditional branching. The conditional workflow routes execution based on the current state:
 
 ```java
-UntypedAgent expertsAgent = AgenticServices
+UntypedAgent missionBriefing = AgenticServices
     .conditionalBuilder()
-    .subAgent(scope -> scope.readState("category") == MEDICAL, medicalExpert)
-    .subAgent(scope -> scope.readState("category") == LEGAL, legalExpert)
+    .subAgent(scope -> scope.readState("alignment") == LIGHT_SIDE,  jediCouncilAgent)
+    .subAgent(scope -> scope.readState("alignment") == DARK_SIDE,   sithLordAgent)
+    .subAgent(scope -> scope.readState("alignment") == NEUTRAL,     mandalorianAgent)
     .build();
 ```
 
 Each sub-agent is paired with a predicate. The predicates are evaluated against the AgenticScope, and only the matching agent is invoked. The conditions can examine the full accumulated state of the workflow, making this far more expressive than a simple switch on a single variable.
 
-Conditional workflows are the routing layer. A classifier agent determines the category, writes it to the scope, and the conditional workflow dispatches to the appropriate specialist. No LLM decides the routing: you do, with explicit predicates.
+Conditional workflows are the routing layer. An `AlignmentClassifier` agent reads the inbound request, writes the force alignment to the scope, and the conditional workflow routes to the right specialist. The Mandalorian takes jobs the others refuse. No LLM decides the routing: you do, with explicit predicates.
 
 
 ## Composing Patterns
 
 The real power of these patterns emerges when you combine them. Every workflow is itself an agent, which means it can be a sub-agent in another workflow. A loop inside a sequence. A parallel step inside a conditional. A conditional inside a loop.
 
-Consider a content creation pipeline: a sequence where the first step generates a draft, the second step is a loop that refines until quality is reached, and the third step formats for publishing.
+Consider a Game of Thrones Small Council campaign planner: a sequence that first gathers intelligence, then loops through council debate until a strategy reaches majority approval, and finally dispatches ravens with the orders.
 
 ```java
-WriteupAndReviewLoop writeAndReviewLoop = AgenticServices
-    .loopBuilder(WriteupAndReviewLoop.class)
-    .subAgents(writer, scorer)
-    .outputKey("writeup")
-    .exitCondition(agenticScope ->
-        agenticScope.readState("score", 0.0) >= 0.8)
-    .maxIterations(5)
+CouncilDebateLoop councilLoop = AgenticServices
+    .loopBuilder(CouncilDebateLoop.class)
+    .subAgents(smallCouncilCritic, strategyReviser)
+    .outputKey("battlePlan")
+    .exitCondition(scope -> scope.readState("approvalVotes", 0) >= 4)
+    .maxIterations(3)
     .build();
 
-// Use the loop as a step in a larger sequence
-UntypedAgent pipeline = AgenticServices
+// The loop becomes one step inside a larger sequence
+UntypedAgent smallCouncil = AgenticServices
     .sequenceBuilder()
-    .subAgents(researchAgent, writeAndReviewLoop, publishAgent)
-    .outputKey("publication")
+    .subAgents(spymasterAgent, councilLoop, ravenDispatcher)
+    .outputKey("warDeclaration")
     .build();
 ```
 
-This composability is what separates a framework from a collection of utilities. You build complex behaviors from simple, well-understood pieces.
+`spymasterAgent` gathers intelligence and writes it to the scope. `councilLoop` bounces the strategy between `smallCouncilCritic` (counts objections, updates `approvalVotes`) and `strategyReviser` (addresses them) until four council members sign off — or three rounds expire and Cersei wins by default. `ravenDispatcher` then sends the orders. This composability is what separates a framework from a collection of utilities. You build complex behaviors from simple, well-understood pieces.
 
 
 ## Error Handling as a First-Class Concern
@@ -200,8 +200,9 @@ Error handlers receive the full context (the exception, the agent name, and the 
 
 ```java
 .errorHandler(errorContext -> {
-    if (errorContext.agentName().equals("generateStory")) {
-        errorContext.agenticScope().writeState("topic", "default");
+    if (errorContext.agentName().equals("darken")) {
+        // The council could not agree — retry with something universally menacing
+        errorContext.agenticScope().writeState("jediName", "Dave");
         return ErrorRecoveryResult.retry();
     }
     return ErrorRecoveryResult.throwException();
@@ -225,15 +226,15 @@ Everything described so far has been deterministic. You define the sequence, the
 The supervisor pattern hands control to an LLM-based planner. Instead of a fixed sequence, the supervisor decides which agents to invoke and in what order:
 
 ```java
-SupervisorAgent supervisor = AgenticServices
+SupervisorAgent nickFury = AgenticServices
     .supervisorBuilder()
     .chatModel(plannerModel)
-    .subAgents(withdrawAgent, creditAgent, exchangeAgent)
+    .subAgents(ironManAgent, thorAgent, blackWidowAgent, hulkAgent)
     .responseStrategy(SupervisorResponseStrategy.SUMMARY)
     .build();
 ```
 
-The supervisor receives a request, looks at the available agents and their descriptions, and generates an execution plan. For a banking query, it might decide to call `creditAgent` first, then `exchangeAgent`. For a different query, just `withdrawAgent`. The sequence is not coded: it is reasoned.
+Nick Fury receives the threat briefing, reads the available heroes and their descriptions, and assembles the response team. For a rogue AI takeover, `ironManAgent`. For an alien fleet over New York, `thorAgent` and `blackWidowAgent`. For "Thanos has the gauntlet again" — all four, with `hulkAgent` politely asked to stay calm until absolutely necessary. The sequence is not coded: it is reasoned.
 
 Response strategies control how the final answer is assembled:
 
@@ -252,38 +253,38 @@ Between fully deterministic workflows and fully autonomous supervisors lies the 
 
 Each agent declares what it needs (preconditions) and what it produces (postconditions) through its required inputs and output keys. The planner builds a dependency graph, examines the current scope state, and calculates the shortest path to the goal. The declarative agent definitions, with their `@K` input annotations and `outputKey` declarations, serve as the specification the planner uses to construct the execution plan.
 
-Consider a research pipeline where three agents have explicit dependencies:
+Consider a Pixar movie production pipeline where three agents have explicit dependencies:
 
 ```java
-// Needs "topic" in scope, produces "research"
-public interface ResearchAgent {
-    @Agent(description = "Researches a topic and returns key findings")
-    @UserMessage("Gather key facts about: {{topic}}")
-    String research(@K("topic") String topic);
+// Needs "concept" in scope, produces "characters"
+public interface CharacterDesignerAgent {
+    @Agent(description = "Creates lovable characters that will traumatize children for decades")
+    @UserMessage("Design the main characters for this Pixar concept: {{concept}}")
+    String design(@K("concept") String concept);
 }
 
-// Needs "research" in scope, produces "draft"
-public interface WriterAgent {
-    @Agent(description = "Writes an article draft from research notes")
-    @UserMessage("Write a structured article from these notes: {{research}}")
-    String write(@K("research") String research);
+// Needs "characters" in scope, produces "tearjerkerMoment"
+public interface EmotionalPeakWriter {
+    @Agent(description = "Identifies the exact scene where adults start weeping in public")
+    @UserMessage("Write the gut-punch emotional turning point for these characters: {{characters}}")
+    String write(@K("characters") String characters);
 }
 
-// Needs "draft" in scope, produces "summary"
-public interface SummarizerAgent {
-    @Agent(description = "Produces a concise summary of an article")
-    @UserMessage("Summarize this article in three sentences: {{draft}}")
-    String summarize(@K("draft") String draft);
+// Needs "tearjerkerMoment" in scope, produces "merchandiseLine"
+public interface MerchandiseIdeatorAgent {
+    @Agent(description = "Designs the plushies and lunchboxes that will fund the sequel")
+    @UserMessage("Design the merchandise line inspired by this emotional moment: {{tearjerkerMoment}}")
+    String ideate(@K("tearjerkerMoment") String tearjerkerMoment);
 }
 
-UntypedAgent pipeline = AgenticServices
+UntypedAgent pixarMachine = AgenticServices
     .goalOrientedBuilder()
-    .subAgents(researchAgent, writerAgent, summarizerAgent)
-    .outputKey("summary")   // the goal: get "summary" into scope
+    .subAgents(characterDesigner, emotionalPeakWriter, merchandiseIdeator)
+    .outputKey("merchandiseLine")  // because that was always the real goal
     .build();
 ```
 
-At runtime, the planner inspects the dependency graph. The scope contains `"topic"`. The goal is `"summary"`. The planner resolves: `ResearchAgent` (topic → research) then `WriterAgent` (research → draft) then `SummarizerAgent` (draft → summary). No hardcoded sequence. If you later add a `TranslatorAgent` that needs `"summary"` and produces `"translation"`, and change the goal to `"translation"`, the planner updates the path automatically.
+At runtime, the scope contains `"concept"` (say, `"a sentient traffic cone who dreams of Route 66"`). The goal is `"merchandiseLine"`. The planner resolves: `CharacterDesignerAgent` (concept → characters) then `EmotionalPeakWriter` (characters → tearjerkerMoment) then `MerchandiseIdeatorAgent` (tearjerkerMoment → merchandiseLine). No hardcoded sequence. Change the goal to `"tearjerkerMoment"` and the planner stops one step earlier, without touching any agent code.
 
 The key insight: the planning is algorithmic, not LLM-driven. The agents may use LLMs, but orchestration is a graph traversal problem. This gives you more flexibility than a hardcoded workflow while maintaining full auditability. Note that this pattern does not currently support built-in loops; compose with a loop workflow if you need iterative refinement.
 
