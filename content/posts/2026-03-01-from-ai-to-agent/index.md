@@ -1,11 +1,11 @@
 ---
 title: "From AI to Agent with Langchain4j"
-description: "Discover how modern Java has evolved into a powerful scripting language, eliminating boilerplate and enabling instant execution for automation tasks"
+description: "Learn how to orchestrate multiple AI agents in Java using LangChain4j's agentic module, from sequential pipelines and loops to goal-oriented planning and LLM-driven supervisors."
 tags: [java, langchain4j, ai]
 author: Loïc
 image: ai-to-agent-cover.png
 ---
-You have built AI features into your Java application. Your model is wrapped in a service, RAG is feeding it context, tools are wired, and calls are flowing. It works. Then requirements evolve. A single prompt-and-response is no longer enough. You need steps that follow each other, branches based on decisions, retries when things fail, and multiple actions running concurrently. The question shifts from "how do I call an LLM?" to "how do I orchestrate multiple LLM-driven tasks into a coherent system?"
+You have built AI features into your Java application. Your model is wrapped in a service, RAG is feeding it context, tools are wired, and calls are flCowing. It works. Then requirements evolve. A single prompt-and-response is no longer enough. You need steps that follow each other, branches based on decisions, retries when things fail, and multiple actions running concurrently. The question shifts from "how do I call an LLM?" to "how do I orchestrate multiple LLM-driven tasks into a coherent system?"
 
 This article walks through that transition using LangChain4j's agentic module. We will start from simple agents, move through four workflow patterns and their composition, then progress to goal-oriented planning and fully agentic systems, covering shared state, error handling, non-AI agents, human-in-the-loop, and the critical question of when to use which approach.
 
