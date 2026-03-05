@@ -3,6 +3,7 @@ title: "From AI to Agent with Langchain4j"
 description: "Discover how modern Java has evolved into a powerful scripting language, eliminating boilerplate and enabling instant execution for automation tasks"
 tags: [java, langchain4j, ai]
 author: Loïc
+image: ai-to-agent-cover.png
 ---
 You have built AI features into your Java application. Your model is wrapped in a service, RAG is feeding it context, tools are wired, and calls are flowing. It works. Then requirements evolve. A single prompt-and-response is no longer enough. You need steps that follow each other, branches based on decisions, retries when things fail, and multiple actions running concurrently. The question shifts from "how do I call an LLM?" to "how do I orchestrate multiple LLM-driven tasks into a coherent system?"
 
@@ -103,10 +104,8 @@ The scope also maintains an invocation history: `invocations()` returns the full
 
 Before we look at more examples, one distinction is critical. LangChain4j uses two annotations to feed data into agents:
 
-- **`@V("name")`** binds a method parameter directly. It is used when calling an agent from outside or when an agent is the entry point of a pipeline. The value you pass becomes the template variable.
-- **`@K(Key.class)`** reads a value from the AgenticScope. It is used when an agent runs inside a workflow and consumes data written by a previous agent.
-
-When `@V` is used on a pipeline's entry method, the parameter value is written to the scope under that key, making it available to downstream agents via `@K`.
+- **`@V("name")`** binds a method parameter directly, used when calling an agent from outside or as the entry point of a pipeline. The value is also written to the scope, making it available to downstream agents via `@K`.
+- **`@K(Key.class)`** reads a value from the AgenticScope, used when an agent runs inside a workflow and consumes data written by a previous agent.
 
 ### Typed Keys
 
@@ -129,7 +128,7 @@ public interface ThreatClassifier {
 
 The `@K` annotation maps a method parameter to a typed scope variable. The `TypedKey` class it references defines both the key name and the expected type, letting the compiler catch mismatches rather than your production logs.
 
-Typed keys can also define a `defaultValue()` that is returned when the key has not been written to the scope yet:
+Typed keys can also define a `defaultValue()` for when the key has not been written yet:
 
 ```java
 public static class MasterApprovals implements TypedKey<Integer> {
@@ -140,7 +139,7 @@ public static class MasterApprovals implements TypedKey<Integer> {
 }
 ```
 
-You can chain agents together in a typed sequence. A `TransmissionInterceptor` agent receives scrambled input via `@V`, decodes it, and writes the result to the `InterceptedTransmission` key. The `ThreatClassifier` then reads that value via `@K` and writes its assessment:
+You can chain agents in a typed sequence. The `TransmissionInterceptor` receives input via `@V` and writes to `InterceptedTransmission`; the `ThreatClassifier` reads it via `@K`:
 
 ```java
 IntelPipeline pipeline = AgenticServices
@@ -152,7 +151,7 @@ IntelPipeline pipeline = AgenticServices
 String threatAssessment = pipeline.analyze(scrambledInput);
 ```
 
-Typed keys enforce name and type safety throughout the scope. When your system grows to dozens of agents processing intercepted Imperial transmissions, catching a `ThreatLevel` misread as a `String` at compile time is not a convenience. It is survival.
+When your system grows to dozens of agents, catching a `ThreatLevel` misread as a `String` at compile time is not a convenience. It is survival.
 
 
 ## Workflow Pattern 1: Sequential
@@ -272,8 +271,7 @@ The loop runs `ackbar` (reviews the current attack plan, says APPROVED when no c
 Three configuration points matter:
 
 - **`maxIterations(n)`**: a hard safety cap. Without this, a loop that never satisfies its exit condition runs forever. Always set this.
-- **`exitCondition(Predicate<AgenticScope>)`**: an optional condition that ends the loop early. It has access to the full scope, so you can base it on scores, flags, booleans, or any combination. The example above relies solely on `maxIterations`, but the composing patterns section will show `exitCondition` in action.
-- **`testExitAtLoopEnd(boolean)`**: controls whether the exit condition is evaluated before or after the agents run each iteration. The default is `true`, meaning the condition is checked after each full pass. Set it to `false` to test the condition first, which short-circuits the loop immediately if the goal is already met on entry.
+- **`exitCondition(Predicate<AgenticScope>)`**: an optional condition that ends the loop early. It has access to the full scope, so you can base it on scores, flags, or any combination. The composing patterns section will show this in action.
 
 The loop pattern is powerful for quality gates. A gatekeeper agent evaluates the output, a refinement agent improves it, and the loop continues until the bar is cleared or the maximum iterations are reached.
 
@@ -317,9 +315,9 @@ Note that this example uses string-based output keys for brevity; typed keys wor
 
 `spaceFleetStrategist`, `groundAssaultAgent`, and `jediMissionPlanner` run simultaneously on separate threads. The fleet engagement above Endor, the Ewok ground coordination, and Luke's solo mission into the Death Star are all planned at the same time. When all three finish, the `output()` function assembles the final battle order. If each agent takes 3 seconds, the total is 3 seconds, not 9.
 
-You provide the thread pool via `executor()`, so you control the concurrency model. The `output()` function is where you merge the parallel results into a single coherent output. LangChain4j also offers a parallel mapper variant where the same agent processes multiple items concurrently, useful for batch operations like simultaneously assessing every Rebel pilot's combat readiness.
+You provide the thread pool via `executor()`, so you control the concurrency model. The `output()` function merges the parallel results into a single coherent output.
 
-One important consideration: because agents run on separate threads, treat the `AgenticScope` as the single point of coordination. Each agent should write to its own distinct output key, avoiding any external shared mutable state. The scope handles concurrent writes safely.
+Because agents run on separate threads, treat the `AgenticScope` as the single point of coordination. Each agent should write to its own distinct output key. The scope handles concurrent writes safely.
 
 
 ## Workflow Pattern 4: Conditional
@@ -439,7 +437,7 @@ The handler can inspect the scope, check which agent failed via `errorContext.ag
 
 Workflows give you full control but require you to hardcode the sequence. The goal-oriented pattern removes that constraint: you declare what each agent produces and what it needs, and a deterministic planner calculates the execution path automatically.
 
-Inspired by Goal-Oriented Action Planning (GOAP), a technique widely used in game AI for NPC decision-making, this approach uses algorithmic graph traversal rather than either a hardcoded sequence or LLM reasoning. Each agent declares its input keys via `@K` annotations and its output key. The planner builds a dependency graph from those declarations, examines the current scope state, and calculates the shortest path to the goal.
+Inspired by Goal-Oriented Action Planning (GOAP), this approach uses algorithmic graph traversal rather than either a hardcoded sequence or LLM reasoning. Each agent declares its input keys via `@K` annotations and its output key. The planner builds a dependency graph, examines the current scope state, and calculates the shortest path to the goal.
 
 Consider a lightsaber forging pipeline where three agents have explicit dependencies:
 
@@ -503,11 +501,11 @@ HiltOnlyForge hiltOnly = AgenticServices
 
 The planner finds the path; you declare the goal.
 
-The key insight: the planning is algorithmic, not LLM-driven. The agents may use LLMs, but orchestration is a graph traversal problem. This gives you more flexibility than a hardcoded workflow while maintaining full auditability. Note that this pattern does not currently support built-in loops; compose with a loop workflow if you need iterative refinement.
+The key insight: the planning is algorithmic, not LLM-driven. The agents may use LLMs, but orchestration is a graph traversal problem. This gives you more flexibility than a hardcoded workflow while maintaining full auditability.
 
 ### Custom Orchestration: The Planner Interface
 
-All the patterns described above (sequential, loop, parallel, conditional, and goal-oriented) are implementations of a single abstraction: the `Planner` interface.
+All the patterns described above are implementations of a single abstraction: the `Planner` interface.
 
 ```java
 public interface Planner {
@@ -519,7 +517,7 @@ public interface Planner {
 }
 ```
 
-The planner separates the planning layer (which agent comes next?) from the execution layer (actually running the agent). You are not limited to the built-in patterns: implement the `Planner` interface for custom orchestration strategies.
+You are not limited to the built-in patterns: implement `Planner` for custom orchestration strategies.
 
 
 ## Going Agentic: The Supervisor Pattern
@@ -539,15 +537,9 @@ DarthVaderCommand vader = AgenticServices
 
 Note that the supervisor's `chatModel` is specifically for the planning and routing decisions. Each sub-agent can use its own (potentially different) model.
 
-Vader receives the situation report, reads the available assets and their descriptions, and reasons about what to deploy. For a fugitive Jedi hiding in the lower levels of Coruscant, the supervisor might choose `bountyHunter`. For a confirmed Rebel base on Hoth, it might combine `stormtrooperRegiment` and `starDestroyer`. The sequence is not coded; it is reasoned at runtime by the LLM.
+Vader receives the situation report and reasons about what to deploy. For a fugitive Jedi on Coruscant, the supervisor might choose `bountyHunter`. For a Rebel base on Hoth, it might combine `stormtrooperRegiment` and `starDestroyer`. The sequence is not coded; it is reasoned at runtime.
 
-Response strategies control how the final answer is assembled:
-
-- **LAST**: returns whatever the last agent produced.
-- **SUMMARY**: generates a summary of all operations performed.
-- **SCORED**: uses a scoring agent to select the best response.
-
-Context strategies control what information flows between agents: full chat memory, summarized context, or a custom approach you define.
+Response strategies control how the final answer is assembled: **LAST** returns the last agent's output, **SUMMARY** generates a combined report, and **SCORED** uses a scoring agent to select the best response.
 
 The supervisor is the most flexible pattern, but it comes with costs: higher latency, higher token consumption, and harder auditability. Use it when the flexibility genuinely justifies these trade-offs.
 
@@ -589,11 +581,9 @@ This mixing matters because real applications are not pure AI pipelines. Treatin
 
 ## Human-in-the-Loop
 
-Some decisions should not be automated. Firing the Death Star's superlaser at a populated planet, granting a Padawan the rank of Jedi Knight, or deciding whether to trust a suspiciously helpful protocol droid. These require human judgment.
+Some decisions should not be automated. LangChain4j treats human-in-the-loop as a special kind of non-AI agent. The built-in `HumanInTheLoop` class wraps a function that receives the `AgenticScope` and returns the human's response.
 
-LangChain4j treats human-in-the-loop as a special kind of non-AI agent. The built-in `HumanInTheLoop` class wraps a function that receives the current `AgenticScope` (so it can read context) and returns the human's response. You configure it with a description, an output key, and the function that handles the interaction.
-
-Consider a Death Star firing protocol. A `TargetAnalyzer` agent examines the proposed planet and writes its assessment to the scope. Then a human commander must confirm before the superlaser fires:
+Consider a Death Star firing protocol. A `TargetAnalyzer` agent examines the proposed planet, then a human commander must confirm before the superlaser fires:
 
 ```java
 public static class ProposedTarget implements TypedKey<String> { }
@@ -651,9 +641,9 @@ DeathStarProtocol protocol = AgenticServices
 String result = protocol.execute("Alderaan");
 ```
 
-The sequence pauses at `commanderApproval`, prints the confirmation prompt to the console via `IO.readln()`, and waits. Once the commander responds, the value is written to the scope under `"ConfirmedTarget"` and the next agent picks it up.
+The sequence pauses at `commanderApproval`, prompts the console via `IO.readln()`, and waits. Once the commander responds, the value is written to `"ConfirmedTarget"` and the next agent picks it up.
 
-The `responseProvider` function is deliberately generic. It takes the scope and returns an object. In production, you would replace the console I/O with a REST endpoint, a UI callback, or a Quarkus CDI event. Since users may take time to respond, LangChain4j recommends configuring the `HumanInTheLoop` agent as asynchronous, so other agents that do not depend on the human input can proceed in parallel.
+The `responseProvider` is deliberately generic: it takes the scope and returns an object. In production, replace the console I/O with a REST endpoint, a UI callback, or a messaging system.
 
 
 ## Observability
