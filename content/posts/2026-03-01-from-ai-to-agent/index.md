@@ -4,11 +4,49 @@ description: "Discover how modern Java has evolved into a powerful scripting lan
 tags: [java, langchain4j, ai]
 author: Loïc
 ---
-You have built AI features into your Java application. Your model is wrapped in a service, RAG is feeding it context, tools are wired, and calls are flowing. It works. Then requirements evolve. A single prompt-and-response is no longer enough. You need steps that follow each other, branches based on decisions, retries when things fail, and sometimes multiple actions happening at the same time. The question shifts from "how do I call an LLM?" to "how do I orchestrate multiple LLM-driven tasks into a coherent system?"
+You have built AI features into your Java application. Your model is wrapped in a service, RAG is feeding it context, tools are wired, and calls are flowing. It works. Then requirements evolve. A single prompt-and-response is no longer enough. You need steps that follow each other, branches based on decisions, retries when things fail, and multiple actions running concurrently. The question shifts from "how do I call an LLM?" to "how do I orchestrate multiple LLM-driven tasks into a coherent system?"
 
-This article walks through that transition using LangChain4j's agentic module. We will start from simple agents, move through five workflow patterns, and arrive at fully agentic systems, covering shared state, error handling, non-AI agents, human-in-the-loop, and the critical question of when to use which approach.
+This article walks through that transition using LangChain4j's agentic module. We will start from simple agents, move through four workflow patterns and their composition, then progress to goal-oriented planning and fully agentic systems, covering shared state, error handling, non-AI agents, human-in-the-loop, and the critical question of when to use which approach.
 
 The intended audience is Java developers who already have basic AI integration experience. If you know how to call a model and wire a tool, you are ready for what comes next.
+
+
+## Getting Started
+
+LangChain4j's agentic module is currently in beta. Add it alongside the core library and your preferred model provider:
+
+```xml
+<dependency>
+    <groupId>dev.langchain4j</groupId>
+    <artifactId>langchain4j-agentic</artifactId>
+    <version>1.11.0-beta19</version>
+</dependency>
+```
+
+The goal-oriented planner lives in a separate module, currently only available as a snapshot (see the Goal-Oriented Agents section for details):
+
+```xml
+<dependency>
+    <groupId>dev.langchain4j</groupId>
+    <artifactId>langchain4j-agentic-patterns</artifactId>
+    <version>1.12.0-beta20-SNAPSHOT</version>
+</dependency>
+```
+
+All examples in this article use `AgenticServices` as the entry point for building agents and workflows. If you have used `AiServices` to build AI-backed interfaces, `AgenticServices` extends that same pattern for multi-agent orchestration.
+
+The examples configure a chat model like this:
+
+```java
+ChatModel model = OllamaChatModel.builder()
+    .baseUrl("http://localhost:11434")
+    .modelName("llama3.2:1b")
+    .build();
+```
+
+Any LangChain4j-supported model provider works. Swap in OpenAI, Anthropic, or Azure as needed. Check the [LangChain4j documentation](https://docs.langchain4j.dev) for the latest artifact coordinates and version.
+
+Code examples use Java 23+ preview features (`IO.println`, `IO.readln`) for concise I/O. Replace with `System.out.println` and `BufferedReader` if you are on an earlier version.
 
 
 ## The Building Block: What Is an Agent?
@@ -17,23 +55,26 @@ Before we orchestrate anything, we need a common unit of work. In LangChain4j, a
 
 ```java
 public interface SithNameGenerator {
-    @UserMessage("You are a Sith naming council. Transform this boring name into something " +
-                 "properly villainous: {{jediName}}")
+    @UserMessage("""
+            You are a Sith naming council. Transform this boring name into something \
+            properly villainous. Return ONLY the Sith name, nothing else: {{jediName}}""")
     @Agent("Transforms a Jedi name into a suitably menacing Sith identity")
     String darken(@V("jediName") String jediName);
 }
 ```
 
-The `@Agent` annotation marks this as an agent with a description. The `@UserMessage` provides the prompt template. This looks deceptively similar to a plain LangChain4j AI service, and that is intentional: agents build on the same foundation.
+The `@Agent` annotation marks this as an agent with a description. The `@UserMessage` provides the prompt template. `@V` binds the method parameter to a template variable. We will see shortly why this annotation exists, as it becomes essential when agents communicate through shared state.
 
 To instantiate an agent, you use the builder:
 
 ```java
 SithNameGenerator sithNamer = AgenticServices
     .agentBuilder(SithNameGenerator.class)
-    .chatModel(myChatModel)
+    .chatModel(model)
     .outputKey("sithName")
     .build();
+
+String sithName = sithNamer.darken("Obi-Wan Kenobi");
 ```
 
 Two details matter here. First, every agent has a **name** that uniquely identifies it in a system (derived from the method name or set explicitly). Second, every agent has an **output key**, a named slot in shared state where it writes its result. That output key is how agents communicate with each other without direct coupling.
@@ -43,9 +84,9 @@ This is the fundamental contract: an agent reads inputs, does its work, and writ
 
 ## Shared State with AgenticScope
 
-If agents communicate through named keys rather than direct method calls, there needs to be a shared container holding those keys. That container is the `AgenticScope`.
+Once you have more than one agent, the question becomes: how do they exchange data? If agents communicate through named keys rather than direct method calls, there needs to be a shared container holding those keys. That container is the `AgenticScope`.
 
-The AgenticScope implements the blackboard pattern: a shared state object that all agents in a system can read from and write to. When the root agent is invoked, the scope is created automatically. Each subsequent agent reads what it needs, does its work, and writes its output back.
+The AgenticScope implements the blackboard pattern: a shared state object that multiple independent components read from and write to, with no direct coupling between them. When the root agent is invoked, the scope is created automatically. Each subsequent agent reads what it needs, does its work, and writes its output back.
 
 The core operations are straightforward:
 
@@ -54,9 +95,20 @@ The core operations are straightforward:
 - `readState(key, defaultValue)`: retrieve with a fallback
 - `hasState(key)`: check if a key exists
 
-This pattern enables loose coupling. Agent A does not call Agent B. Agent A writes `"imperialPlans"` to the scope. Agent B reads `"imperialPlans"` from the scope. Neither knows about the other. The orchestration layer decides the order.
+This pattern enables loose coupling. Agent A does not call Agent B. Agent A writes `"interceptedTransmission"` to the scope. Agent B reads `"interceptedTransmission"` from the scope. Neither knows about the other. The orchestration layer decides the order.
 
 The scope also maintains an invocation history: `invocations()` returns the full list of agent executions and their responses, giving you a built-in audit trail.
+
+### `@V` vs `@K`: External Input vs Scope Input
+
+Before we look at more examples, one distinction is critical. LangChain4j uses two annotations to feed data into agents:
+
+- **`@V("name")`** binds a method parameter directly. It is used when calling an agent from outside or when an agent is the entry point of a pipeline. The value you pass becomes the template variable.
+- **`@K(Key.class)`** reads a value from the AgenticScope. It is used when an agent runs inside a workflow and consumes data written by a previous agent.
+
+When `@V` is used on a pipeline's entry method, the parameter value is written to the scope under that key, making it available to downstream agents via `@K`.
+
+### Typed Keys
 
 For production use, LangChain4j offers typed keys to prevent spelling errors and type mismatches:
 
@@ -64,12 +116,43 @@ For production use, LangChain4j offers typed keys to prevent spelling errors and
 public static class InterceptedTransmission implements TypedKey<String> { }
 
 public interface ThreatClassifier {
-    @Agent(typedOutputKey = ThreatLevel.class)
-    ThreatLevel classify(@K(InterceptedTransmission.class) String transmission);
+    @Agent("Classifies the threat level of an intercepted Imperial transmission")
+    @UserMessage("""
+            You are a Rebel Alliance intelligence analyst. \
+            Classify the threat level of this intercepted Imperial transmission as \
+            LOW, MEDIUM, HIGH, or CRITICAL. Respond with the level and a brief justification.
+
+            Transmission: {{InterceptedTransmission}}""")
+    String classify(@K(InterceptedTransmission.class) String transmission);
 }
 ```
 
-Typed keys enforce constraints at compile time. When your system grows to dozens of agents processing intercepted Imperial transmissions, accidentally reading a `ThreatLevel` as a `String` is not optional: it is survival.
+The `@K` annotation maps a method parameter to a typed scope variable. The `TypedKey` class it references defines both the key name and the expected type, letting the compiler catch mismatches rather than your production logs.
+
+Typed keys can also define a `defaultValue()` that is returned when the key has not been written to the scope yet:
+
+```java
+public static class MasterApprovals implements TypedKey<Integer> {
+    @Override
+    public Integer defaultValue() {
+        return 0;
+    }
+}
+```
+
+You can chain agents together in a typed sequence. A `TransmissionInterceptor` agent receives scrambled input via `@V`, decodes it, and writes the result to the `InterceptedTransmission` key. The `ThreatClassifier` then reads that value via `@K` and writes its assessment:
+
+```java
+IntelPipeline pipeline = AgenticServices
+    .sequenceBuilder(IntelPipeline.class)
+    .subAgents(interceptor, classifier)
+    .outputKey(ThreatLevel.class)
+    .build();
+
+String threatAssessment = pipeline.analyze(scrambledInput);
+```
+
+Typed keys enforce name and type safety throughout the scope. When your system grows to dozens of agents processing intercepted Imperial transmissions, catching a `ThreatLevel` misread as a `String` at compile time is not a convenience. It is survival.
 
 
 ## Workflow Pattern 1: Sequential
@@ -77,27 +160,76 @@ Typed keys enforce constraints at compile time. When your system grows to dozens
 The simplest orchestration pattern is the sequential workflow. Agents execute one after another in a defined order, each reading from and writing to the AgenticScope:
 
 ```java
-UntypedAgent jediTrainingPipeline = AgenticServices
-    .sequenceBuilder()
-    .subAgents(aptitudeTester, masterAssigner, lightsaberGuide)
-    .outputKey("jediKnight")
-    .build();
+public static class AptitudeReport implements TypedKey<String> { }
+public static class AssignedMaster implements TypedKey<String> { }
+public static class LightsaberRecommendation implements TypedKey<String> { }
+
+public interface AptitudeTester {
+    @Agent("Evaluates a youngling's Force sensitivity and aptitudes")
+    @UserMessage("""
+            You are a Jedi Temple instructor. Evaluate this youngling's Force aptitude. \
+            Provide a short report covering their strengths.
+
+            Youngling: {{name}}""")
+    String test(@V("name") String name);
+}
+
+public interface MasterAssigner {
+    @Agent("Assigns the most suitable Jedi Master based on the youngling's aptitudes")
+    @UserMessage("""
+            You are the Jedi Council. Based on this aptitude report, assign the most \
+            suitable Jedi Master from the Order.
+
+            Aptitude report: {{AptitudeReport}}""")
+    String assign(@K(AptitudeReport.class) String aptitude);
+}
+
+public interface LightsaberGuide {
+    @Agent("Recommends lightsaber form and crystal based on master assignment and aptitude")
+    @UserMessage("""
+            You are the Jedi Temple lightsaber instructor. Based on the assigned master \
+            and training path, recommend a lightsaber form and kyber crystal color.
+
+            Assigned master: {{AssignedMaster}}""")
+    String guide(@K(AssignedMaster.class) String master);
+}
 ```
 
-Here, `aptitudeTester` measures midi-chlorian count and Force aptitude, flagging applicants who show "tendency toward attachment and anger" for special review. Then `masterAssigner` reads the profile and pairs the Padawan with a compatible Master — rejecting the pairing if both are known to be emotionally unstable. Finally, `lightsaberGuide` produces the weapon construction specifications, including recommended crystal color.
+Each agent declares what it reads (`@K`) and writes (`outputKey`). The pipeline chains them together:
+
+```java
+AptitudeTester aptitudeTester = AgenticServices
+    .agentBuilder(AptitudeTester.class)
+    .chatModel(model)
+    .outputKey(AptitudeReport.class)
+    .build();
+
+MasterAssigner masterAssigner = AgenticServices
+    .agentBuilder(MasterAssigner.class)
+    .chatModel(model)
+    .outputKey(AssignedMaster.class)
+    .build();
+
+LightsaberGuide lightsaberGuide = AgenticServices
+    .agentBuilder(LightsaberGuide.class)
+    .chatModel(model)
+    .outputKey(LightsaberRecommendation.class)
+    .build();
+
+JediTrainingPipeline pipeline = AgenticServices
+    .sequenceBuilder(JediTrainingPipeline.class)
+    .subAgents(aptitudeTester, masterAssigner, lightsaberGuide)
+    .outputKey(LightsaberRecommendation.class)
+    .build();
+
+String result = pipeline.train("Ahsoka Tano");
+```
+
+Here, `aptitudeTester` measures Force aptitude and writes an `AptitudeReport` to the scope. Then `masterAssigner` reads the report via `@K` and pairs the Padawan with a compatible Master. Finally, `lightsaberGuide` reads the `AssignedMaster` and produces the weapon construction specifications.
 
 This is the pattern you reach for when tasks have a natural ordering and each step depends on the previous one. Think of content pipelines, multi-stage data processing, or any chain-of-thought decomposition where you want explicit control over each step.
 
-LangChain4j also provides a declarative equivalent using annotations:
-
-```java
-@SequenceAgent(
-    outputKey = "missionBriefing",
-    subAgents = { IntelAnalystAgent.class, SquadAssemblerAgent.class })
-MissionBriefing planAttack(String imperialInstallation);
-```
-
-The annotation-driven approach is cleaner for straightforward cases and integrates well with CDI frameworks like Quarkus.
+One note on the builder: `sequenceBuilder(JediTrainingPipeline.class)` creates a typed pipeline, giving you a concrete interface to call. When you don't need a typed interface (for example, when a workflow is only used as a sub-agent inside another workflow), you can use `sequenceBuilder()` without a type argument, which returns an `UntypedAgent`. We will see this in the composing patterns section.
 
 
 ## Workflow Pattern 2: Loop
@@ -105,23 +237,45 @@ The annotation-driven approach is cleaner for straightforward cases and integrat
 Not every problem is solved in a single pass. Sometimes you need iterative refinement: write a draft, score it, revise, score again, until the quality threshold is met. That is the loop workflow:
 
 ```java
-UntypedAgent attackPlanReview = AgenticServices
-    .loopBuilder()
-    .subAgents(generalAckbar, planReviser)
-    .maxIterations(5)
-    .exitCondition(scope -> scope.readState("planApproved", false))
+public interface AdmiralAckbar {
+    @Agent("Reviews an attack plan for traps and tactical weaknesses")
+    @UserMessage("""
+            You are Admiral Ackbar. Review this attack plan. If you find issues, \
+            explain them briefly and say REJECTED. If the plan is solid, say APPROVED.
+
+            Attack plan: {{AttackPlan}}""")
+    String review(@K(AttackPlan.class) String plan);
+}
+
+public interface PlanReviser {
+    @Agent("Revises the attack plan based on Admiral Ackbar's feedback")
+    @UserMessage("""
+            You are a Rebel Alliance battle strategist. Revise the attack plan \
+            to address Admiral Ackbar's concerns.
+
+            Current plan: {{AttackPlan}}
+
+            Ackbar's feedback: {{ReviewFeedback}}""")
+    String revise(@K(AttackPlan.class) String plan, @K(ReviewFeedback.class) String feedback);
+}
+
+AttackPlanReviewPipeline pipeline = AgenticServices
+    .loopBuilder(AttackPlanReviewPipeline.class)
+    .subAgents(ackbar, reviser)
+    .maxIterations(3)
+    .outputKey(AttackPlan.class)
     .build();
 ```
 
-The loop runs `generalAckbar` (reviews the current attack plan, sets `planApproved = true` when no critical weaknesses remain, otherwise produces a list of concerns — ideally including at least one "It's a trap!") then `planReviser` (addresses the concerns and updates the plan). After each round, the exit condition is evaluated. If `planApproved` flips to `true`, the fleet launches. After five attempts, they fly in anyway and trust the Force.
+The loop runs `ackbar` (reviews the current attack plan, says APPROVED when no critical weaknesses remain, otherwise produces a list of concerns, ideally including at least one "It's a trap!") then `reviser` (addresses the concerns and updates the plan). After three iterations, they fly in anyway and trust the Force.
 
 Three configuration points matter:
 
 - **`maxIterations(n)`**: a hard safety cap. Without this, a loop that never satisfies its exit condition runs forever. Always set this.
-- **`exitCondition(Predicate<AgenticScope>)`**: the condition that ends the loop. It has access to the full scope, so you can base it on scores, flags, booleans, or any combination.
-- **`testExitAtLoopEnd(boolean)`**: controls whether the condition is checked at the beginning or end of each iteration.
+- **`exitCondition(Predicate<AgenticScope>)`**: an optional condition that ends the loop early. It has access to the full scope, so you can base it on scores, flags, booleans, or any combination. The example above relies solely on `maxIterations`, but the composing patterns section will show `exitCondition` in action.
+- **`testExitAtLoopEnd(boolean)`**: controls whether the exit condition is evaluated before or after the agents run each iteration. The default is `true`, meaning the condition is checked after each full pass. Set it to `false` to test the condition first, which short-circuits the loop immediately if the goal is already met on entry.
 
-The loop pattern is powerful for quality gates. A gatekeeper agent evaluates the output, a refinement agent improves it, and the loop continues until the bar is cleared.
+The loop pattern is powerful for quality gates. A gatekeeper agent evaluates the output, a refinement agent improves it, and the loop continues until the bar is cleared or the maximum iterations are reached.
 
 
 ## Workflow Pattern 3: Parallel
@@ -129,65 +283,123 @@ The loop pattern is powerful for quality gates. A gatekeeper agent evaluates the
 When agents are independent and can work without each other's results, running them sequentially wastes time. The parallel workflow executes agents simultaneously:
 
 ```java
-BattleOfEndorAgent battlePlanner = AgenticServices
-    .parallelBuilder(BattleOfEndorAgent.class)
+SpaceFleetStrategist spaceFleetStrategist = AgenticServices
+    .agentBuilder(SpaceFleetStrategist.class)
+    .chatModel(model)
+    .outputKey("fleetDisposition")
+    .build();
+
+GroundAssaultAgent groundAssaultAgent = AgenticServices
+    .agentBuilder(GroundAssaultAgent.class)
+    .chatModel(model)
+    .outputKey("ewokGroundStrategy")
+    .build();
+
+JediMissionPlanner jediMissionPlanner = AgenticServices
+    .agentBuilder(JediMissionPlanner.class)
+    .chatModel(model)
+    .outputKey("lukeObjective")
+    .build();
+
+BattleOfEndorPipeline pipeline = AgenticServices
+    .parallelBuilder(BattleOfEndorPipeline.class)
     .subAgents(spaceFleetStrategist, groundAssaultAgent, jediMissionPlanner)
     .executor(Executors.newFixedThreadPool(3))
-    .outputKey("battleOfEndor")
     .output(scope -> assembleBattlePlan(
-        scope.readState("fleetDisposition"),
-        scope.readState("ewokGroundStrategy"),
-        scope.readState("lukeObjective")))
+            (String) scope.readState("fleetDisposition"),
+            (String) scope.readState("ewokGroundStrategy"),
+            (String) scope.readState("lukeObjective")))
+    .outputKey("battleOfEndor")
     .build();
 ```
 
-`spaceFleetStrategist`, `groundAssaultAgent`, and `jediMissionPlanner` run simultaneously on separate threads. The fleet engagement above Endor, the Ewok ground coordination, and Luke's solo mission into the Death Star are all planned at the same time. When all three finish, the output function assembles the final battle order. If each agent takes 3 seconds, the total is 3 seconds, not 9. The Emperor never saw it coming.
+Note that this example uses string-based output keys for brevity; typed keys work identically and are recommended for production code.
+
+`spaceFleetStrategist`, `groundAssaultAgent`, and `jediMissionPlanner` run simultaneously on separate threads. The fleet engagement above Endor, the Ewok ground coordination, and Luke's solo mission into the Death Star are all planned at the same time. When all three finish, the `output()` function assembles the final battle order. If each agent takes 3 seconds, the total is 3 seconds, not 9.
 
 You provide the thread pool via `executor()`, so you control the concurrency model. The `output()` function is where you merge the parallel results into a single coherent output. LangChain4j also offers a parallel mapper variant where the same agent processes multiple items concurrently, useful for batch operations like simultaneously assessing every Rebel pilot's combat readiness.
+
+One important consideration: because agents run on separate threads, treat the `AgenticScope` as the single point of coordination. Each agent should write to its own distinct output key, avoiding any external shared mutable state. The scope handles concurrent writes safely.
 
 
 ## Workflow Pattern 4: Conditional
 
-When different inputs require different processing paths, you need conditional branching. The conditional workflow routes execution based on the current state:
+When different inputs require different processing paths, you need conditional branching. The conditional workflow routes execution based on the current state.
+
+A notable LangChain4j feature at play here: agents can return Java enums directly. The framework maps the LLM's text response to the enum value, which makes enums natural for conditional routing predicates:
 
 ```java
-UntypedAgent missionBriefing = AgenticServices
-    .conditionalBuilder()
-    .subAgent(scope -> scope.readState("alignment") == LIGHT_SIDE,  jediCouncilAgent)
-    .subAgent(scope -> scope.readState("alignment") == DARK_SIDE,   sithLordAgent)
-    .subAgent(scope -> scope.readState("alignment") == NEUTRAL,     mandalorianAgent)
+public enum AlignmentType {
+    LIGHT_SIDE, DARK_SIDE, NEUTRAL, UNKNOWN;
+}
+
+public interface AlignmentClassifier {
+    @Agent(value = "Classifies a Star Wars character's Force alignment")
+    @UserMessage("""
+            You are a Force-sensitive oracle. Classify this character's alignment as
+            exactly one of: LIGHT_SIDE, DARK_SIDE, or NEUTRAL.
+            Respond with ONLY the alignment label, nothing else.
+
+            Character: {{CharacterName}}""")
+    AlignmentType classify(@V("CharacterName") String name);
+}
+```
+
+The classifier writes its result to the scope. Then the conditional router dispatches to the right specialist:
+
+```java
+var conditionalRouter = AgenticServices.conditionalBuilder()
+    .subAgents(scope -> scope.readState(Alignment.class) == AlignmentType.LIGHT_SIDE, jediCouncilAgent)
+    .subAgents(scope -> scope.readState(Alignment.class) == AlignmentType.DARK_SIDE, sithLordAgent)
+    .subAgents(scope -> scope.readState(Alignment.class) == AlignmentType.NEUTRAL, mandalorianAgent)
+    .build();
+
+MissionRouter router = AgenticServices
+    .sequenceBuilder(MissionRouter.class)
+    .subAgents(alignmentClassifier, conditionalRouter)
+    .outputKey(MissionBriefing.class)
     .build();
 ```
 
-Each sub-agent is paired with a predicate. The predicates are evaluated against the AgenticScope, and only the matching agent is invoked. The conditions can examine the full accumulated state of the workflow, making this far more expressive than a simple switch on a single variable.
+Each sub-agent is paired with a predicate. The predicates are evaluated against the AgenticScope, and only the matching agent is invoked. The `.subAgents()` method in the conditional builder is overloaded: it accepts a predicate-agent pair, unlike the plain list version used in sequential and parallel builders.
 
-Conditional workflows are the routing layer. An `AlignmentClassifier` agent reads the inbound request, writes the force alignment to the scope, and the conditional workflow routes to the right specialist. The Mandalorian takes jobs the others refuse. No LLM decides the routing: you do, with explicit predicates.
+The architecture here is worth examining: the conditional router is wrapped inside a sequence. The `AlignmentClassifier` agent reads the inbound request, writes the force alignment to the scope, and the conditional workflow routes to the right specialist. No LLM decides the routing. You do, with explicit predicates.
 
 
 ## Composing Patterns
 
-The real power of these patterns emerges when you combine them. Every workflow is itself an agent, which means it can be a sub-agent in another workflow. A loop inside a sequence. A parallel step inside a conditional. A conditional inside a loop.
+The real power of these patterns emerges when you combine them. In LangChain4j, every workflow is itself an agent, which means it can be used as a sub-agent in another workflow. A loop inside a sequence. A parallel step inside a conditional. A conditional inside a loop.
 
-Consider a Rebel Alliance assault planner: a sequence that first decodes intercepted Imperial transmissions, then loops through Rebel Council debate until the battle plan reaches majority approval, and finally broadcasts the attack order across the fleet.
+Consider a Rebel Alliance assault planner: a sequence that first decodes intercepted Imperial transmissions, then loops through Jedi Council debate until the battle plan reaches approval, and finally broadcasts the attack order across the fleet.
 
 ```java
-RebelCouncilLoop councilLoop = AgenticServices
-    .loopBuilder(RebelCouncilLoop.class)
+// Build the loop: council reviews, reviser improves, repeat.
+// Exits when 4 masters approve or after 3 iterations.
+UntypedAgent councilLoop = AgenticServices
+    .loopBuilder()
     .subAgents(jediCouncilCritic, planReviser)
-    .outputKey("battlePlan")
-    .exitCondition(scope -> scope.readState("masterApprovals", 0) >= 4)
+    .outputKey(BattlePlan.class)
+    .exitCondition(scope -> scope.readState(MasterApprovals.class) >= 4)
     .maxIterations(3)
     .build();
 
-// The loop becomes one step inside a larger sequence
-UntypedAgent rebellionHQ = AgenticServices
-    .sequenceBuilder()
+// Build the full sequence: decode -> loop(critique <-> revise) -> broadcast
+RebellionHQ hq = AgenticServices
+    .sequenceBuilder(RebellionHQ.class)
     .subAgents(imperialDecoder, councilLoop, holonetBroadcaster)
-    .outputKey("callToArms")
+    .outputKey(CallToArms.class)
     .build();
+
+String callToArms = hq.plan(interceptedData);
 ```
 
-`imperialDecoder` cracks the intercepted transmissions and writes the intel to the scope. `councilLoop` bounces the strategy between `jediCouncilCritic` (tallies approvals, flags disturbances in the Force) and `planReviser` (addresses them) until four Jedi Masters sign off — or three rounds expire and they fly in anyway. `holonetBroadcaster` then sends the call to arms across the galaxy. This composability is what separates a framework from a collection of utilities. You build complex behaviors from simple, well-understood pieces.
+Notice `loopBuilder()` without a type argument. It returns an `UntypedAgent` because the loop is only used as a sub-agent inside the outer sequence, not invoked directly.
+
+`imperialDecoder` cracks the intercepted transmissions and writes the intel to the scope. `councilLoop` bounces the strategy between `jediCouncilCritic` (each Jedi Master votes APPROVE or REJECT with a brief reason, then tallies the total approvals) and `planReviser` (addresses their concerns) until four Jedi Masters sign off, or three rounds expire.
+
+Here the `exitCondition` is at work: `scope.readState(MasterApprovals.class) >= 4` reads the typed key (which defaults to `0` via its `defaultValue()`) and checks whether enough masters have approved. `holonetBroadcaster` then sends the call to arms across the galaxy.
+
+This composability is what separates a framework from a collection of utilities. You build complex behaviors from simple, well-understood pieces.
 
 
 ## Error Handling as a First-Class Concern
@@ -197,99 +409,105 @@ In any system that involves network calls, LLM responses, and multi-step process
 Error handlers receive the full context (the exception, the agent name, and the current AgenticScope) and return an `ErrorRecoveryResult` that dictates the recovery strategy:
 
 ```java
-.errorHandler(errorContext -> {
-    if (errorContext.agentName().equals("darken")) {
-        // The council could not agree — retry with something universally menacing
-        errorContext.agenticScope().writeState("jediName", "Dave");
-        return ErrorRecoveryResult.retry();
-    }
-    return ErrorRecoveryResult.throwException();
-})
-```
-
-Four recovery strategies are available:
-
-1. **`retry()`**: re-execute the failed agent. The handler can modify scope state before retrying, effectively correcting the input that caused the failure.
-2. **`skip()`**: move to the next agent. For non-critical steps where the workflow can continue without this agent's output.
-3. **`complete(value)`**: provide a fallback value as the agent's result. The workflow continues as if the agent succeeded.
-4. **`throwException()`**: propagate the exception. For truly unrecoverable failures.
-
-The handler can inspect the scope, check which agent failed, and make an informed decision. This is error handling as workflow logic, not as exception plumbing.
-
-
-## Going Agentic: The Supervisor Pattern
-
-Everything described so far has been deterministic. You define the sequence, the branches, the loops. You control the flow. But what happens when the flow itself is not predictable?
-
-The supervisor pattern hands control to an LLM-based planner. Instead of a fixed sequence, the supervisor decides which agents to invoke and in what order:
-
-```java
-SupervisorAgent darthVader = AgenticServices
-    .supervisorBuilder()
-    .chatModel(plannerModel)
-    .subAgents(stormtrooperRegiment, bountyHunterAgent, starDestroyerAgent, deathStarAgent)
-    .responseStrategy(SupervisorResponseStrategy.SUMMARY)
+SithPipeline pipeline = AgenticServices
+    .sequenceBuilder(SithPipeline.class)
+    .subAgents(jediProfiler, sithNamer, sithAnnouncer)
+    .outputKey(Announcement.class)
+    .errorHandler(errorContext -> {
+        if (errorContext.agentName().equals("darken")) {
+            // The Sith namer failed, retry with a known-good fallback name
+            errorContext.agenticScope().writeState("JediName", "Dave");
+            return ErrorRecoveryResult.retry();
+        }
+        return ErrorRecoveryResult.throwException();
+    })
     .build();
 ```
 
-Vader receives the situation report, reads the available assets and their descriptions, and decides what to deploy. For a small Rebel cell on Tatooine: `bountyHunterAgent`. For a planetary uprising: `stormtrooperRegiment`. For "the Rebels have the Death Star plans and a farm boy with a lightsaber": all four — with `deathStarAgent` reserved as the Emperor's preferred solution to disagreements. The sequence is not coded: it is reasoned.
+Three recovery strategies are available:
 
-Response strategies control how the final answer is assembled:
+1. **`retry()`**: re-execute the failed agent. The handler can modify scope state before retrying, effectively correcting the input that caused the failure.
+2. **`result(value)`**: provide a fallback value as the agent's result and continue the workflow as if the agent had succeeded. Useful for non-critical steps with a sensible default.
+3. **`throwException()`**: propagate the exception. For truly unrecoverable failures.
 
-- **LAST**: returns whatever the last agent produced.
-- **SUMMARY**: generates a summary of all operations performed.
-- **SCORED**: uses a scoring agent to select the best response.
-
-Context strategies control what information flows between agents: full chat memory, summarized context, or a custom approach you define.
-
-The supervisor is the most flexible pattern, but it comes with costs: higher latency, higher token consumption, and harder auditability. Use it when the flexibility genuinely justifies these trade-offs.
+The handler can inspect the scope, check which agent failed via `errorContext.agentName()` (which defaults to the method name, in this case `"darken"`), and make an informed decision. This is error handling as workflow logic, not as exception plumbing.
 
 
 ## Goal-Oriented Agents
 
-Between fully deterministic workflows and fully autonomous supervisors lies the goal-oriented pattern. Inspired by Goal-Oriented Action Planning (GOAP), this approach uses deterministic graph-based planning rather than LLM-based planning.
+> **Note:** The goal-oriented planner (`GoalOrientedPlanner`) is not yet released at the time of writing. It lives in the `langchain4j-agentic-patterns` module, currently available as a `1.12.0-beta20-SNAPSHOT`. It is expected to ship with the next stable LangChain4j release. The API shown here may evolve before then.
 
-Each agent declares what it needs (preconditions) and what it produces (postconditions) through its required inputs and output keys. The planner builds a dependency graph, examines the current scope state, and calculates the shortest path to the goal. The declarative agent definitions, with their `@K` input annotations and `outputKey` declarations, serve as the specification the planner uses to construct the execution plan.
+Workflows give you full control but require you to hardcode the sequence. The goal-oriented pattern removes that constraint: you declare what each agent produces and what it needs, and a deterministic planner calculates the execution path automatically.
+
+Inspired by Goal-Oriented Action Planning (GOAP), a technique widely used in game AI for NPC decision-making, this approach uses algorithmic graph traversal rather than either a hardcoded sequence or LLM reasoning. Each agent declares its input keys via `@K` annotations and its output key. The planner builds a dependency graph from those declarations, examines the current scope state, and calculates the shortest path to the goal.
 
 Consider a lightsaber forging pipeline where three agents have explicit dependencies:
 
 ```java
+public static class JediName implements TypedKey<String> { }
+public static class KyberCrystal implements TypedKey<String> { }
+public static class HiltDesign implements TypedKey<String> { }
+public static class Lightsaber implements TypedKey<String> { }
+
 // Needs "jediName" in scope, produces "kyberCrystal"
 public interface CrystalForagerAgent {
-    @Agent(description = "Meditates in the Ilum caves to find the attuned kyber crystal")
-    @UserMessage("Find the kyber crystal resonating with this Jedi's Force signature: {{jediName}}")
-    String forage(@K("jediName") String jediName);
+    @Agent("Forages a kyber crystal on Ilum based on the Jedi's Force affinity")
+    @UserMessage("""
+            You are a kyber crystal guide on Ilum. Based on this Jedi's name \
+            and identity, describe the kyber crystal that calls to them through the Force.
+
+            Jedi: {{jediName}}""")
+    String forage(@K(JediName.class) String jediName);
 }
 
 // Needs "kyberCrystal" in scope, produces "hiltDesign"
 public interface HiltCrafterAgent {
-    @Agent(description = "Designs a hilt that channels the crystal without catastrophic feedback")
-    @UserMessage("Design a hilt for this kyber crystal: {{kyberCrystal}}")
-    String craft(@K("kyberCrystal") String kyberCrystal);
+    @Agent("Crafts a lightsaber hilt design based on the kyber crystal properties")
+    @UserMessage("""
+            You are a lightsaber hilt artisan. Design a hilt that complements \
+            this kyber crystal.
+
+            Kyber crystal: {{kyberCrystal}}""")
+    String craft(@K(KyberCrystal.class) String kyberCrystal);
 }
 
 // Needs "hiltDesign" in scope, produces "lightsaber"
 public interface BladeCalibrationAgent {
-    @Agent(description = "Sets blade length, color, and decides whether to go double-bladed")
-    @UserMessage("Calibrate the final lightsaber from this hilt design: {{hiltDesign}}")
-    String calibrate(@K("hiltDesign") String hiltDesign);
+    @Agent("Calibrates and activates the completed lightsaber")
+    @UserMessage("""
+            You are a Jedi weapon master performing the final lightsaber calibration. \
+            Describe the blade's characteristics when ignited.
+
+            Hilt design: {{hiltDesign}}""")
+    String calibrate(@K(HiltDesign.class) String hiltDesign);
 }
 
-UntypedAgent lightsaberForge = AgenticServices
-    .goalOrientedBuilder()
+LightsaberForge forge = AgenticServices
+    .plannerBuilder(LightsaberForge.class)
     .subAgents(crystalForager, hiltCrafter, bladeCalibration)
-    .outputKey("lightsaber")  // the Force wills it
+    .outputKey(Lightsaber.class)
+    .planner(GoalOrientedPlanner::new)
     .build();
 ```
 
-At runtime, the scope contains `"jediName"` (say, `"Luke Skywalker"`). The goal is `"lightsaber"`. The planner resolves: `CrystalForagerAgent` (jediName → kyberCrystal) then `HiltCrafterAgent` (kyberCrystal → hiltDesign) then `BladeCalibrationAgent` (hiltDesign → lightsaber). No hardcoded sequence. Change the goal to `"hiltDesign"` and you get the blueprint without the blade assembly — useful if you just need the schematics. The planner finds the path; you trust the Force.
+At runtime, the scope contains `"jediName"` (say, `"Cal Kestis"`). The goal is `"lightsaber"`. The planner resolves: `CrystalForagerAgent` (jediName → kyberCrystal) then `HiltCrafterAgent` (kyberCrystal → hiltDesign) then `BladeCalibrationAgent` (hiltDesign → lightsaber). No hardcoded sequence. Change the goal to `"hiltDesign"` and you get the blueprint without the blade assembly:
+
+```java
+HiltOnlyForge hiltOnly = AgenticServices
+    .plannerBuilder(HiltOnlyForge.class)
+    .subAgents(crystalForager, hiltCrafter, bladeCalibration)
+    .outputKey(HiltDesign.class)
+    .planner(GoalOrientedPlanner::new)
+    .build();
+```
+
+The planner finds the path; you declare the goal.
 
 The key insight: the planning is algorithmic, not LLM-driven. The agents may use LLMs, but orchestration is a graph traversal problem. This gives you more flexibility than a hardcoded workflow while maintaining full auditability. Note that this pattern does not currently support built-in loops; compose with a loop workflow if you need iterative refinement.
 
+### Custom Orchestration: The Planner Interface
 
-## Custom Orchestration: The Planner Interface
-
-All the patterns described above are implementations of a single abstraction: the `Planner` interface.
+All the patterns described above (sequential, loop, parallel, conditional, and goal-oriented) are implementations of a single abstraction: the `Planner` interface.
 
 ```java
 public interface Planner {
@@ -303,28 +521,144 @@ public interface Planner {
 
 The planner separates the planning layer (which agent comes next?) from the execution layer (actually running the agent). You are not limited to the built-in patterns: implement the `Planner` interface for custom orchestration strategies.
 
-LangChain4j also provides a **peer-to-peer planner** where agents activate when their dependencies in the scope are satisfied, with no central coordinator. The system runs until it reaches a stable state, useful for event-driven architectures.
+
+## Going Agentic: The Supervisor Pattern
+
+Everything described so far has been deterministic. Whether a fixed sequence, a loop, a conditional branch, or a goal-oriented graph, the execution plan is controlled by code or by an algorithm, never by an LLM. But what happens when the plan itself is not predictable?
+
+The supervisor pattern hands control to an LLM-based planner. Rather than following a fixed sequence, the supervisor reads the available agents and their descriptions, reasons about the incoming request, and decides which agents to invoke and in what order:
+
+```java
+DarthVaderCommand vader = AgenticServices
+    .supervisorBuilder(DarthVaderCommand.class)
+    .chatModel(plannerModel)
+    .subAgents(stormtrooperRegiment, bountyHunter, starDestroyer, deathStar)
+    .responseStrategy(SupervisorResponseStrategy.SUMMARY)
+    .build();
+```
+
+Note that the supervisor's `chatModel` is specifically for the planning and routing decisions. Each sub-agent can use its own (potentially different) model.
+
+Vader receives the situation report, reads the available assets and their descriptions, and reasons about what to deploy. For a fugitive Jedi hiding in the lower levels of Coruscant, the supervisor might choose `bountyHunter`. For a confirmed Rebel base on Hoth, it might combine `stormtrooperRegiment` and `starDestroyer`. The sequence is not coded; it is reasoned at runtime by the LLM.
+
+Response strategies control how the final answer is assembled:
+
+- **LAST**: returns whatever the last agent produced.
+- **SUMMARY**: generates a summary of all operations performed.
+- **SCORED**: uses a scoring agent to select the best response.
+
+Context strategies control what information flows between agents: full chat memory, summarized context, or a custom approach you define.
+
+The supervisor is the most flexible pattern, but it comes with costs: higher latency, higher token consumption, and harder auditability. Use it when the flexibility genuinely justifies these trade-offs.
 
 
 ## Mixing AI and Non-AI Agents
 
 Not every step in a workflow requires an LLM. Some steps are pure business logic: data validation, database lookups, formatting, aggregation, routing based on rules. Forcing these through an LLM is wasteful in both cost and latency.
 
-LangChain4j supports `NonAiAgentInstance`: agents that participate in the same orchestration framework, read and write the same AgenticScope, but execute plain Java code instead of LLM calls.
+LangChain4j supports non-AI agents via `AgenticServices.agentAction()`, which wraps a `Consumer<AgenticScope>` into a first-class participant in the same orchestration framework, reading and writing the same scope but executing plain Java code instead of an LLM call:
 
-A hybrid workflow might have an LLM agent analyze a distress signal, a non-AI agent query the Rebel fleet database for nearby ships, another LLM agent draft the rescue coordinates, and a non-AI agent broadcast them on the holonet. This mixing matters because real applications are not pure AI pipelines. Treating both AI and non-AI steps as first-class agents in the same framework keeps your architecture coherent.
+```java
+// A non-AI agent that queries the fleet database
+var fleetLookup = AgenticServices.agentAction(scope -> {
+    String system = scope.readState(TargetSystem.class);
+    List<String> ships;
+    if (system != null && system.toLowerCase().contains("hoth")) {
+        ships = List.of("Millennium Falcon", "Rogue Squadron (12 X-Wings)", "GR-75 Transports");
+    } else if (system != null && system.toLowerCase().contains("endor")) {
+        ships = List.of("Home One (MC80)", "A-Wing Interceptors", "B-Wing Assault Fighters");
+    } else {
+        ships = List.of("X-Wing Squadron", "Millennium Falcon", "Tantive IV");
+    }
+    scope.writeState(AvailableShips.class, ships.toString());
+});
+```
+
+A hybrid workflow chains AI and non-AI agents in the same pipeline. An AI agent analyzes a distress signal, a non-AI `agentAction` parses the structured output, another `agentAction` queries the fleet database, an AI agent drafts the rescue plan, and a final `agentAction` formats and broadcasts the orders:
+
+```java
+RescuePipeline pipeline = AgenticServices
+    .sequenceBuilder(RescuePipeline.class)
+    .subAgents(distressAnalyzer, analysisParser, fleetLookup, rescueCoordinator, broadcastAction)
+    .outputKey("broadcast")
+    .build();
+```
+
+This mixing matters because real applications are not pure AI pipelines. Treating both AI and non-AI steps as first-class agents in the same framework keeps your architecture coherent.
 
 
 ## Human-in-the-Loop
 
-Some decisions should not be automated. Firing the Death Star's superlaser at a populated planet, granting a Padawan the rank of Jedi Knight, or deciding whether to trust a suspiciously helpful protocol droid: these require human judgment. Human-in-the-loop allows agents to pause execution and request human input before continuing.
+Some decisions should not be automated. Firing the Death Star's superlaser at a populated planet, granting a Padawan the rank of Jedi Knight, or deciding whether to trust a suspiciously helpful protocol droid. These require human judgment.
 
-The pattern works like this: a supervisor or conditional workflow includes a human validation step. The agent writes its proposed action to the AgenticScope. Execution pauses. A human reviews the proposal and approves or rejects it. Execution resumes based on the decision. The community is actively developing more sophisticated versions with non-blocking execution and state persistence for resumability across sessions.
+LangChain4j treats human-in-the-loop as a special kind of non-AI agent. The built-in `HumanInTheLoop` class wraps a function that receives the current `AgenticScope` (so it can read context) and returns the human's response. You configure it with a description, an output key, and the function that handles the interaction.
+
+Consider a Death Star firing protocol. A `TargetAnalyzer` agent examines the proposed planet and writes its assessment to the scope. Then a human commander must confirm before the superlaser fires:
+
+```java
+public static class ProposedTarget implements TypedKey<String> { }
+public static class TargetAnalysis implements TypedKey<String> { }
+public static class FiringResult implements TypedKey<String> { }
+
+public interface TargetAnalyzer {
+    @Agent("Analyzes a proposed planetary target for the Death Star's superlaser")
+    @UserMessage("""
+            You are an Imperial Intelligence officer aboard the Death Star. \
+            Analyze this proposed target planet. Provide a brief tactical assessment. \
+            Keep it to 3-4 sentences.
+
+            Proposed target: {{ProposedTarget}}""")
+    String analyze(@K(ProposedTarget.class) String target);
+}
+```
+
+The `HumanInTheLoop` agent sits between the analyzer and the firing agent. Note that `outputKey` currently accepts a string key rather than a `TypedKey`:
+
+```java
+HumanInTheLoop commanderApproval = AgenticServices.humanInTheLoopBuilder()
+    .description("An agent that asks for validation")
+    .outputKey("ConfirmedTarget")
+    .responseProvider(scope -> {
+        String target = scope.readState(ProposedTarget.class);
+        String analysis = scope.readState(TargetAnalysis.class);
+        String message = String.format("""
+                === COMMANDER APPROVAL REQUIRED ===
+
+                Target analysis: %s
+
+                Commander, the Death Star is in position above %s.
+                Confirm target to proceed with superlaser firing? (yes/no)
+                """, analysis, target);
+        return IO.readln(message);
+    })
+    .build();
+```
+
+Because it is just another agent, it plugs into any workflow. The typed pipeline interface and sequence wire everything together:
+
+```java
+public interface DeathStarProtocol {
+    @Agent("Death Star firing protocol")
+    String execute(@V("ProposedTarget") String target);
+}
+
+DeathStarProtocol protocol = AgenticServices
+    .sequenceBuilder(DeathStarProtocol.class)
+    .subAgents(targetAnalyzer, commanderApproval, superlaserAgent)
+    .outputKey(FiringResult.class)
+    .build();
+
+String result = protocol.execute("Alderaan");
+```
+
+The sequence pauses at `commanderApproval`, prints the confirmation prompt to the console via `IO.readln()`, and waits. Once the commander responds, the value is written to the scope under `"ConfirmedTarget"` and the next agent picks it up.
+
+The `responseProvider` function is deliberately generic. It takes the scope and returns an object. In production, you would replace the console I/O with a REST endpoint, a UI callback, or a Quarkus CDI event. Since users may take time to respond, LangChain4j recommends configuring the `HumanInTheLoop` agent as asynchronous, so other agents that do not depend on the human input can proceed in parallel.
 
 
 ## Observability
 
-When you move from a single LLM call to a multi-agent workflow, observability becomes essential. LangChain4j provides the `AgentListener` interface with hooks for `beforeAgentInvocation`, `afterAgentInvocation`, and `onAgentInvocationError`. The built-in `AgentMonitor` records execution trees in memory, and `HtmlReportGenerator` produces visual HTML reports showing the flow of agents, their inputs, outputs, and timing. When a multi-agent workflow produces an unexpected result, these tools let you trace which agent introduced the problem.
+When you move from a single LLM call to a multi-agent workflow, observability becomes essential. LangChain4j provides the `AgentListener` interface with hooks for `beforeAgentInvocation`, `afterAgentInvocation`, and `onAgentInvocationError`. The built-in `AgentMonitor` records execution trees in memory, and `HtmlReportGenerator` produces visual HTML reports showing the flow of agents, their inputs, outputs, and timing. When a multi-agent workflow produces an unexpected result, these tools let you trace exactly which agent introduced the problem.
 
 
 ## When to Use What
@@ -346,8 +680,10 @@ The key principle: do not over-index on autonomy. A workflow that solves 90% of 
 
 ## Conclusion
 
-The transition from AI calls to agentic systems is not about making your prompts smarter. It is about structuring the logic around those prompts so that multi-step processes are explicit, composable, and maintainable.
+The transition from AI calls to agentic systems is not about making your prompts smarter. It is about making your architecture explicit.
 
-LangChain4j's agentic module gives you a spectrum: deterministic workflows at one end, goal-oriented agents in the middle, and LLM-driven supervisors at the other. The shared state model keeps agents decoupled. Error handling offers context-aware recovery. Non-AI agents let you mix reasoning with traditional logic. Human-in-the-loop ensures automation does not mean abdication. And observability makes the whole system debuggable.
+LangChain4j's central insight is the separation of concerns: agents own their LLM calls, the AgenticScope owns the shared state, and the planner owns the execution order. When those responsibilities are clear, a system with a dozen agents becomes as readable and debuggable as any other Java codebase.
 
-Start with workflows. Compose patterns. Add autonomy only when it pays for itself. That is the path from AI to agentic.
+The spectrum from hardcoded sequences to goal-oriented graphs to LLM-driven supervisors is not a ladder you must climb. It is a menu. Most real systems live mostly at the deterministic end and borrow from the other options only where variability genuinely demands it.
+
+Start with workflows. Add autonomy only where the problem requires it. When something goes wrong, follow the `AgentMonitor` trail. And remember: the pattern you do not adopt is the one you do not have to debug.
