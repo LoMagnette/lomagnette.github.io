@@ -5,7 +5,7 @@ tags: [java, langchain4j, ai]
 author: Loïc
 image: ai-to-agent-cover.png
 ---
-You have built AI features into your Java application. Your model is wrapped in a service, RAG is feeding it context, tools are wired, and calls are flCowing. It works. Then requirements evolve. A single prompt-and-response is no longer enough. You need steps that follow each other, branches based on decisions, retries when things fail, and multiple actions running concurrently. The question shifts from "how do I call an LLM?" to "how do I orchestrate multiple LLM-driven tasks into a coherent system?"
+You have built AI features into your Java application. Your model is wrapped in a service, RAG is feeding it context, tools are wired, and calls are flowing. It works. Then requirements evolve. A single prompt-and-response is no longer enough. You need steps that follow each other, branches based on decisions, retries when things fail, and multiple actions running concurrently. The question shifts from "how do I call an LLM?" to "how do I orchestrate multiple LLM-driven tasks into a coherent system?"
 
 This article walks through that transition using LangChain4j's agentic module. We will start from simple agents, move through four workflow patterns and their composition, then progress to goal-oriented planning and fully agentic systems, covering shared state, error handling, non-AI agents, human-in-the-loop, and the critical question of when to use which approach.
 
@@ -20,17 +20,17 @@ LangChain4j's agentic module is currently in beta. Add it alongside the core lib
 <dependency>
     <groupId>dev.langchain4j</groupId>
     <artifactId>langchain4j-agentic</artifactId>
-    <version>1.11.0-beta19</version>
+    <version>1.12.1-beta21</version>
 </dependency>
 ```
 
-The goal-oriented planner lives in a separate module, currently only available as a snapshot (see the Goal-Oriented Agents section for details):
+The goal-oriented planner lives in a separate module:
 
 ```xml
 <dependency>
     <groupId>dev.langchain4j</groupId>
     <artifactId>langchain4j-agentic-patterns</artifactId>
-    <version>1.12.0-beta20-SNAPSHOT</version>
+    <version>1.12.1-beta21</version>
 </dependency>
 ```
 
@@ -40,14 +40,14 @@ The examples configure a chat model like this:
 
 ```java
 ChatModel model = OllamaChatModel.builder()
-    .baseUrl("http://localhost:11434")
-    .modelName("llama3.2:1b")
-    .build();
+        .baseUrl("http://localhost:11434")
+        .modelName("llama3.2:1b")
+        .build();
 ```
 
 Any LangChain4j-supported model provider works. Swap in OpenAI, Anthropic, or Azure as needed. Check the [LangChain4j documentation](https://docs.langchain4j.dev) for the latest artifact coordinates and version.
 
-Code examples use Java 23+ preview features (`IO.println`, `IO.readln`) for concise I/O. Replace with `System.out.println` and `BufferedReader` if you are on an earlier version.
+Code examples use Java 25 features (`IO.println`, `IO.readln`) for concise I/O. Replace with `System.out.println` and `BufferedReader` if you are on an earlier version.
 
 
 ## The Building Block: What Is an Agent?
@@ -64,7 +64,7 @@ public interface SithNameGenerator {
 }
 ```
 
-The `@Agent` annotation marks this as an agent with a description. The `@UserMessage` provides the prompt template. `@V` binds the method parameter to a template variable. We will see shortly why this annotation exists, as it becomes essential when agents communicate through shared state.
+The `@Agent` annotation marks this as an agent with a description. The `@UserMessage` provides the prompt template. `@V` binds the method parameter to a template variable. We will see shortly why `@V` matters, as it becomes essential when agents communicate through shared state.
 
 To instantiate an agent, you use the builder:
 
@@ -268,7 +268,7 @@ AttackPlanReviewPipeline pipeline = AgenticServices
 
 The loop runs `ackbar` (reviews the current attack plan, says APPROVED when no critical weaknesses remain, otherwise produces a list of concerns, ideally including at least one "It's a trap!") then `reviser` (addresses the concerns and updates the plan). After three iterations, they fly in anyway and trust the Force.
 
-Three configuration points matter:
+Two configuration points matter:
 
 - **`maxIterations(n)`**: a hard safety cap. Without this, a loop that never satisfies its exit condition runs forever. Always set this.
 - **`exitCondition(Predicate<AgenticScope>)`**: an optional condition that ends the loop early. It has access to the full scope, so you can base it on scores, flags, or any combination. The composing patterns section will show this in action.
@@ -328,7 +328,7 @@ A notable LangChain4j feature at play here: agents can return Java enums directl
 
 ```java
 public enum AlignmentType {
-    LIGHT_SIDE, DARK_SIDE, NEUTRAL, UNKNOWN;
+    LIGHT_SIDE, DARK_SIDE, NEUTRAL
 }
 
 public interface AlignmentClassifier {
@@ -432,8 +432,6 @@ The handler can inspect the scope, check which agent failed via `errorContext.ag
 
 
 ## Goal-Oriented Agents
-
-> **Note:** The goal-oriented planner (`GoalOrientedPlanner`) is not yet released at the time of writing. It lives in the `langchain4j-agentic-patterns` module, currently available as a `1.12.0-beta20-SNAPSHOT`. It is expected to ship with the next stable LangChain4j release. The API shown here may evolve before then.
 
 Workflows give you full control but require you to hardcode the sequence. The goal-oriented pattern removes that constraint: you declare what each agent produces and what it needs, and a deterministic planner calculates the execution path automatically.
 
@@ -646,11 +644,6 @@ The sequence pauses at `commanderApproval`, prompts the console via `IO.readln()
 The `responseProvider` is deliberately generic: it takes the scope and returns an object. In production, replace the console I/O with a REST endpoint, a UI callback, or a messaging system.
 
 
-## Observability
-
-When you move from a single LLM call to a multi-agent workflow, observability becomes essential. LangChain4j provides the `AgentListener` interface with hooks for `beforeAgentInvocation`, `afterAgentInvocation`, and `onAgentInvocationError`. The built-in `AgentMonitor` records execution trees in memory, and `HtmlReportGenerator` produces visual HTML reports showing the flow of agents, their inputs, outputs, and timing. When a multi-agent workflow produces an unexpected result, these tools let you trace exactly which agent introduced the problem.
-
-
 ## When to Use What
 
 The hardest question is not "how do I build this?" but "which pattern should I use?" Here is a decision framework.
@@ -676,4 +669,6 @@ LangChain4j's central insight is the separation of concerns: agents own their LL
 
 The spectrum from hardcoded sequences to goal-oriented graphs to LLM-driven supervisors is not a ladder you must climb. It is a menu. Most real systems live mostly at the deterministic end and borrow from the other options only where variability genuinely demands it.
 
-Start with workflows. Add autonomy only where the problem requires it. When something goes wrong, follow the `AgentMonitor` trail. And remember: the pattern you do not adopt is the one you do not have to debug.
+Start with workflows. Add autonomy only where the problem requires it. When something goes wrong, use the built-in observability — `AgentListener`, `AgentMonitor`, and `HtmlReportGenerator` — to trace exactly which agent introduced the problem. And remember: the pattern you do not adopt is the one you do not have to debug.
+
+All code examples from this article are available as complete, runnable samples in the [companion repository](https://github.com/LoMagnette/langchain4j-agentic-samples).
