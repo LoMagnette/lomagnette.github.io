@@ -20,7 +20,7 @@ public class TalksList {
                              String slides, String recording, String originalTitle) {
     }
 
-    public record TalkEntry(String title, String description, List<Appearance> appearances, boolean retired) {
+    public record TalkEntry(String id, String slug, String title, String description, List<Appearance> appearances, boolean retired) {
         public RawString descriptionHtml() {
             if (description == null) return null;
             String html = description
@@ -32,6 +32,46 @@ public class TalksList {
                     .replace("\n", "<br>");
             return new RawString("<p>" + html + "</p>");
         }
+
+        public String latestRecordingEmbed() {
+            for (Appearance a : appearances) {
+                if (a.recording() != null) {
+                    return toYouTubeEmbed(a.recording());
+                }
+            }
+            return null;
+        }
+
+        public String latestSlides() {
+            for (Appearance a : appearances) {
+                if (a.slides() != null) {
+                    return a.slides();
+                }
+            }
+            return null;
+        }
+
+        private static String toYouTubeEmbed(String url) {
+            if (url != null && url.contains("youtube.com/watch")) {
+                String videoId = url.replaceAll(".*[?&]v=([^&]+).*", "$1");
+                return "https://www.youtube.com/embed/" + videoId;
+            }
+            return url;
+        }
+    }
+
+    public TalkEntry getById(String id) {
+        return getList().stream()
+                .filter(t -> t.id().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public TalkEntry getBySlug(String slug) {
+        return getList().stream()
+                .filter(t -> t.slug().equals(slug))
+                .findFirst()
+                .orElse(null);
     }
 
     public List<TalkEntry> getList() {
@@ -68,9 +108,16 @@ public class TalksList {
             String canonicalTitle = talkDef != null ? talkDef.title() : id;
             String description = talkDef != null ? talkDef.description() : null;
             boolean retired = talkDef != null && Boolean.TRUE.equals(talkDef.retired());
-            result.add(new TalkEntry(canonicalTitle, description, entry.getValue(), retired));
+            result.add(new TalkEntry(id, toSlug(canonicalTitle), canonicalTitle, description, entry.getValue(), retired));
         }
 
         return result;
+    }
+
+    private static String toSlug(String title) {
+        return title.toLowerCase()
+                .replaceAll("[^a-z0-9\\s-]", "")
+                .replaceAll("[\\s-]+", "-")
+                .replaceAll("^-|-$", "");
     }
 }
