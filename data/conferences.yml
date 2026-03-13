@@ -64,6 +64,7 @@
       flag: "🇩🇪"
       talks:
         - talkId: 2
+          slides: https://speakerdeck.com/magnette/javaland-ai-powered-form-wizards-chat-click-done
 
     - name: "DubJUG"
       url: "https://www.dubjug.org/"
@@ -72,8 +73,10 @@
       flag: "🇮🇪"
       talks:
         - talkId: 2
+          slides: https://speakerdeck.com/magnette/javaland-ai-powered-form-wizards-chat-click-done
         - talkId: 4
           title: "JavaScript (No, Not That One): Modern Automation with Java"
+          recording: https://www.youtube.com/watch?v=MCaAgPeRa24
 
     - name: "BeJUG"
       url: "https://bejug.github.io"
@@ -90,6 +93,8 @@
       flag: "🇨🇭"
       talks:
         - talkId: 7
+          recording: https://www.youtube.com/watch?v=6HR6HzFzVoM
+          slides: https://speakerdeck.com/magnette/vdt-the-future-of-angular-faster-lighter-stronger
 
     - name: "Quarkus Insight"
       url: "https://quarkus.io/insights/"
@@ -142,7 +147,7 @@
           title: "A2A in 30 Minutes: Building Interoperable AI Agents"
           slides: https://speakerdeck.com/magnette/a2a-in-30-minutes-building-interoperable-ai-agents
           recording: https://www.youtube.com/watch?v=BOpzs5AGU50
-        - talkId: bof-java-belgium
+        - talkId: 17
         - talkId: 2
           slides: https://speakerdeck.com/magnette/ai-powered-form-wizards-chat-click-done-bd92e7ee-8557-4081-b6a2-4f6a1096bbcc
           recording: https://www.youtube.com/watch?v=f_5b_qanhzg
