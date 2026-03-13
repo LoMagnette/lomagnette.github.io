@@ -90,7 +90,7 @@ No `javac` needed. No `.class` files cluttering your directory. Just instant exe
 
 ### Multi-File Support
 
-But since **Java 22** (via [JEP 458](https://openjdk.org/jeps/458), you're not limited to single-file programs. You can now write multi-file programs and run them directly. The Java launcher locates and compiles related source files in subdirectories.
+But since **Java 22** (via [JEP 458](https://openjdk.org/jeps/458)), you're not limited to single-file programs. You can now write multi-file programs and run them directly. The Java launcher locates and compiles related source files in subdirectories.
 For instance if you have something like this:
 
 ```java
