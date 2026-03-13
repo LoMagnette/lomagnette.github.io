@@ -1,18 +1,18 @@
 ---
-title: "From AI to Agent with Langchain4j"
+title: "LangChain4j Agentic Workflows: From AI Calls to Multi-Agent Systems in Java"
 description: "Learn how to orchestrate multiple AI agents in Java using LangChain4j's agentic module, from sequential pipelines and loops to goal-oriented planning and LLM-driven supervisors."
 tags: [java, langchain4j, ai]
 author: Loïc
 image: ai-to-agent-cover.png
 ---
-You have built AI features into your Java application. Your model is wrapped in a service, RAG is feeding it context, tools are wired, and calls are flowing. It works. Then requirements evolve. A single prompt-and-response is no longer enough. You need steps that follow each other, branches based on decisions, retries when things fail, and multiple actions running concurrently. The question shifts from "how do I call an LLM?" to "how do I orchestrate multiple LLM-driven tasks into a coherent system?"
+You have built AI features into your Java application. Your model is wrapped in a service, RAG is feeding it context, tools are wired, and calls are flowing. It works. Then requirements evolve. A single prompt-and-response is no longer enough. You need steps that follow each other, branches based on decisions, retries when things fail, and multiple actions running concurrently. The question shifts from "how do I call an LLM?" to "how do I build LangChain4j agentic workflows that orchestrate multiple tasks into a coherent system?"
 
-This article walks through that transition using LangChain4j's agentic module. We will start from simple agents, move through four workflow patterns and their composition, then progress to goal-oriented planning and fully agentic systems, covering shared state, error handling, non-AI agents, human-in-the-loop, and the critical question of when to use which approach.
+This article walks through that transition. We will start from simple agents, move through four workflow patterns and their composition, then progress to goal-oriented planning and fully agentic systems, covering shared state, error handling, non-AI agents, human-in-the-loop, and the critical question of when to use which approach.
 
 The intended audience is Java developers who already have basic AI integration experience. If you know how to call a model and wire a tool, you are ready for what comes next.
 
 
-## Getting Started
+## Getting Started with LangChain4j Agentic Workflows
 
 LangChain4j's agentic module is currently in beta. Add it alongside the core library and your preferred model provider:
 
@@ -40,9 +40,9 @@ The examples configure a chat model like this:
 
 ```java
 ChatModel model = OllamaChatModel.builder()
-        .baseUrl("http://localhost:11434")
-        .modelName("llama3.2:1b")
-        .build();
+    .baseUrl("http://localhost:11434")
+    .modelName("llama3.2:1b")
+    .build();
 ```
 
 Any LangChain4j-supported model provider works. Swap in OpenAI, Anthropic, or Azure as needed. Check the [LangChain4j documentation](https://docs.langchain4j.dev) for the latest artifact coordinates and version.
@@ -50,7 +50,7 @@ Any LangChain4j-supported model provider works. Swap in OpenAI, Anthropic, or Az
 Code examples use Java 25 features (`IO.println`, `IO.readln`) for concise I/O. Replace with `System.out.println` and `BufferedReader` if you are on an earlier version.
 
 
-## The Building Block: What Is an Agent?
+## The Building Block of Agentic Workflows: What Is an Agent?
 
 Before we orchestrate anything, we need a common unit of work. In LangChain4j, an agent is a Java interface with a single method that performs a task, typically backed by an LLM. You define it declaratively:
 
@@ -80,7 +80,7 @@ String sithName = sithNamer.darken("Obi-Wan Kenobi");
 
 Two details matter here. First, every agent has a **name** that uniquely identifies it in a system (derived from the method name or set explicitly). Second, every agent has an **output key**, a named slot in shared state where it writes its result. That output key is how agents communicate with each other without direct coupling.
 
-This is the fundamental contract: an agent reads inputs, does its work, and writes its result to a shared location. Everything else in this article builds on that idea.
+This is the fundamental contract: an agent reads inputs, does its work, and writes its result to a shared location. Every agentic workflow in this article builds on that idea.
 
 
 ## Shared State with AgenticScope
@@ -154,7 +154,7 @@ String threatAssessment = pipeline.analyze(scrambledInput);
 When your system grows to dozens of agents, catching a `ThreatLevel` misread as a `String` at compile time is not a convenience. It is survival.
 
 
-## Workflow Pattern 1: Sequential
+## Agentic Workflow Pattern 1: Sequential
 
 The simplest orchestration pattern is the sequential workflow. Agents execute one after another in a defined order, each reading from and writing to the AgenticScope:
 
@@ -231,7 +231,7 @@ This is the pattern you reach for when tasks have a natural ordering and each st
 One note on the builder: `sequenceBuilder(JediTrainingPipeline.class)` creates a typed pipeline, giving you a concrete interface to call. When you don't need a typed interface (for example, when a workflow is only used as a sub-agent inside another workflow), you can use `sequenceBuilder()` without a type argument, which returns an `UntypedAgent`. We will see this in the composing patterns section.
 
 
-## Workflow Pattern 2: Loop
+## Agentic Workflow Pattern 2: Loop
 
 Not every problem is solved in a single pass. Sometimes you need iterative refinement: write a draft, score it, revise, score again, until the quality threshold is met. That is the loop workflow:
 
@@ -276,7 +276,7 @@ Two configuration points matter:
 The loop pattern is powerful for quality gates. A gatekeeper agent evaluates the output, a refinement agent improves it, and the loop continues until the bar is cleared or the maximum iterations are reached.
 
 
-## Workflow Pattern 3: Parallel
+## Agentic Workflow Pattern 3: Parallel
 
 When agents are independent and can work without each other's results, running them sequentially wastes time. The parallel workflow executes agents simultaneously:
 
@@ -320,7 +320,7 @@ You provide the thread pool via `executor()`, so you control the concurrency mod
 Because agents run on separate threads, treat the `AgenticScope` as the single point of coordination. Each agent should write to its own distinct output key. The scope handles concurrent writes safely.
 
 
-## Workflow Pattern 4: Conditional
+## Agentic Workflow Pattern 4: Conditional
 
 When different inputs require different processing paths, you need conditional branching. The conditional workflow routes execution based on the current state.
 
@@ -328,7 +328,7 @@ A notable LangChain4j feature at play here: agents can return Java enums directl
 
 ```java
 public enum AlignmentType {
-    LIGHT_SIDE, DARK_SIDE, NEUTRAL
+    LIGHT_SIDE, DARK_SIDE, NEUTRAL;
 }
 
 public interface AlignmentClassifier {
@@ -364,7 +364,7 @@ Each sub-agent is paired with a predicate. The predicates are evaluated against 
 The architecture here is worth examining: the conditional router is wrapped inside a sequence. The `AlignmentClassifier` agent reads the inbound request, writes the force alignment to the scope, and the conditional workflow routes to the right specialist. No LLM decides the routing. You do, with explicit predicates.
 
 
-## Composing Patterns
+## Composing Agentic Workflow Patterns
 
 The real power of these patterns emerges when you combine them. In LangChain4j, every workflow is itself an agent, which means it can be used as a sub-agent in another workflow. A loop inside a sequence. A parallel step inside a conditional. A conditional inside a loop.
 
@@ -397,7 +397,7 @@ Notice `loopBuilder()` without a type argument. It returns an `UntypedAgent` bec
 
 Here the `exitCondition` is at work: `scope.readState(MasterApprovals.class) >= 4` reads the typed key (which defaults to `0` via its `defaultValue()`) and checks whether enough masters have approved. `holonetBroadcaster` then sends the call to arms across the galaxy.
 
-This composability is what separates a framework from a collection of utilities. You build complex behaviors from simple, well-understood pieces.
+This composability is what separates a framework from a collection of utilities. You build complex agentic workflows from simple, well-understood pieces.
 
 
 ## Error Handling as a First-Class Concern
@@ -656,19 +656,19 @@ The hardest question is not "how do I build this?" but "which pattern should I u
 | **Auditability** | Excellent | Good | Difficult |
 | **Best for** | Stable, predictable pipelines | Moderate variability | Complex adaptive systems |
 
-**Start with workflows.** If the process is well-defined and you need auditability, a workflow gives you full control at the lowest cost. **Graduate to goal-oriented planning** when the sequence varies based on what is already known. **Use a supervisor** when the sequence is genuinely unpredictable. **Mix approaches**: a conditional workflow that routes to a supervisor for edge cases and a fixed sequence for the common path is often the right architecture.
+**Start with agentic workflows.** If the process is well-defined and you need auditability, a workflow gives you full control at the lowest cost. **Graduate to goal-oriented planning** when the sequence varies based on what is already known. **Use a supervisor** when the sequence is genuinely unpredictable. **Mix approaches**: a conditional workflow that routes to a supervisor for edge cases and a fixed sequence for the common path is often the right architecture.
 
 The key principle: do not over-index on autonomy. A workflow that solves 90% of cases deterministically, with a supervisor handling the remaining 10%, is cheaper, faster, and more debuggable than a supervisor handling everything.
 
 
 ## Conclusion
 
-The transition from AI calls to agentic systems is not about making your prompts smarter. It is about making your architecture explicit.
+The transition from AI calls to LangChain4j agentic workflows is not about making your prompts smarter. It is about making your architecture explicit.
 
 LangChain4j's central insight is the separation of concerns: agents own their LLM calls, the AgenticScope owns the shared state, and the planner owns the execution order. When those responsibilities are clear, a system with a dozen agents becomes as readable and debuggable as any other Java codebase.
 
 The spectrum from hardcoded sequences to goal-oriented graphs to LLM-driven supervisors is not a ladder you must climb. It is a menu. Most real systems live mostly at the deterministic end and borrow from the other options only where variability genuinely demands it.
 
-Start with workflows. Add autonomy only where the problem requires it. When something goes wrong, use the built-in observability — `AgentListener`, `AgentMonitor`, and `HtmlReportGenerator` — to trace exactly which agent introduced the problem. And remember: the pattern you do not adopt is the one you do not have to debug.
+Start with agentic workflows. Add autonomy only where the problem requires it. When something goes wrong, use the built-in observability — `AgentListener`, `AgentMonitor`, and `HtmlReportGenerator` — to trace exactly which agent introduced the problem. And remember: the pattern you do not adopt is the one you do not have to debug.
 
 All code examples from this article are available as complete, runnable samples in the [companion repository](https://github.com/LoMagnette/langchain4j-agentic-samples).
