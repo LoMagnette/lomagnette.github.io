@@ -31,6 +31,12 @@
         - talkId: 4
           title: "Java Script (No, Not That One): Modern Automation with Java"
 
+    - name: "Voxxed days Bucharest"
+      url: "https://romania.voxxeddays.com/"
+      date: "Apr 2026"
+      location: "Bucharest, Romania"
+      flag: "🇷🇴"
+
     - name: "Devoxx France"
       url: "https://www.devoxx.fr/"
       date: "April 2026"
