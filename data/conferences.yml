@@ -36,6 +36,9 @@
       date: "Apr 2026"
       location: "Bucharest, Romania"
       flag: "🇷🇴"
+      talks:
+        - talkId: ToBeAnnounced
+
 
     - name: "Devoxx France"
       url: "https://www.devoxx.fr/"
@@ -62,6 +65,7 @@
       flag: "🇨🇭"
       talks:
         - talkId: 5
+          slides: https://speakerdeck.com/magnette/finding-the-spark-a-career-reset-button
 
     - name: "Javaland"
       url: "https://www.javaland.eu/en/home/"
