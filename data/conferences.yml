@@ -37,7 +37,8 @@
       location: "Bucharest, Romania"
       flag: "🇷🇴"
       talks:
-        - talkId: ToBeAnnounced
+        - talkId: 5
+          slides: https://speakerdeck.com/magnette/finding-the-spark-a-career-reset-button
 
 
     - name: "Devoxx France"
