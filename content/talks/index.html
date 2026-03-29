@@ -1,0 +1,346 @@
+---
+title: Talks
+description: All the talks I've given at conferences.
+layout: :theme/page
+---
+
+<style>
+.talks-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem;
+}
+
+.talks-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.talks-header h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.talks-header p {
+    color: var(--text-secondary);
+}
+
+.talk-card {
+    background: var(--card-gradient);
+    border-radius: 10px;
+    padding: 0.75rem;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.talk-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.talk-card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.75rem 0;
+    border-left: 6px solid var(--color-primary);
+    padding-left: 1rem;
+}
+
+.talk-card-link {
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.talk-card-link:hover {
+    color: var(--color-primary);
+}
+
+.appearances-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    border-top: 2px solid var(--border-color);
+    border-spacing: 0;
+}
+
+.appearances-table col.col-event   { width: 35%; }
+.appearances-table col.col-date    { width: 15%; }
+.appearances-table col.col-location { width: 40%; }
+.appearances-table col.col-links   { width: 10%; }
+
+.appearances-table,
+.appearances-table thead,
+.appearances-table tbody,
+.appearances-table th,
+.appearances-table tr,
+.appearances-table td {
+    border: none !important;
+    background: transparent !important;
+}
+
+.appearances-table tr {
+    transition: background 0.2s ease;
+}
+
+.appearances-table tr:hover,
+.appearances-table tr:hover td {
+    background: var(--hover-bg) !important;
+}
+
+.appearances-table td {
+    padding: 0.35rem 0.5rem;
+    font-size: 0.9rem;
+    vertical-align: middle;
+}
+
+.appearances-table .col-event {
+    font-weight: 600;
+    color: var(--text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.appearances-table .col-event a {
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.appearances-table .col-event a:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+
+.appearances-table .col-date {
+    color: var(--text-tertiary);
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+.appearances-table .col-location {
+    color: var(--text-tertiary);
+    font-size: 0.85rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.appearances-table .col-links {
+    white-space: nowrap;
+    text-align: right;
+}
+
+.appearance-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.15rem 0.3rem;
+    background: none;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.appearance-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(20, 184, 166, 0.4);
+}
+
+.appearance-count {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 12px;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+}
+
+.badge-retired {
+    display: inline-block;
+    background: var(--text-tertiary);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 12px;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+    opacity: 0.7;
+}
+
+.talk-card.retired {
+    opacity: 0.6;
+}
+
+.talks-filter {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 1.5rem;
+}
+
+.talks-filter button {
+    padding: 0.4rem 1.2rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 2px solid var(--color-primary);
+    background: transparent;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.talks-filter button:first-child {
+    border-radius: 6px 0 0 6px;
+}
+
+.talks-filter button:last-child {
+    border-radius: 0 6px 6px 0;
+    border-left: none;
+}
+
+.talks-filter button.active {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+    color: white;
+}
+
+.talks-container.hide-retired .talk-card.retired {
+    display: none;
+}
+
+.talk-abstract {
+    margin: 0.5rem 0 0.25rem 0;
+    padding-left: 1rem;
+}
+
+.talk-abstract summary {
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    list-style: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.talk-abstract summary::-webkit-details-marker {
+    display: none;
+}
+
+.talk-abstract summary::before {
+    content: "\25B6";
+    font-size: 0.6rem;
+    transition: transform 0.2s ease;
+    display: inline-block;
+}
+
+.talk-abstract[open] summary::before {
+    transform: rotate(90deg);
+}
+
+.talk-abstract p {
+    margin: 0.5rem 0 0 0;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+    .talks-header h1 {
+        font-size: 2rem;
+    }
+
+    .appearances-table .col-event {
+        white-space: normal;
+    }
+
+    .appearances-table .col-location {
+        display: none;
+    }
+}
+</style>
+
+<div class="talks-container hide-retired" id="talksContainer">
+    <div class="talks-header">
+        <h1>Talks</h1>
+        <p>All the talks I've given, grouped by topic</p>
+    </div>
+
+    <div class="talks-filter">
+        <button class="active" data-filter="active">Active</button>
+        <button data-filter="all">All</button>
+    </div>
+
+    {#for talk in cdi:talksList.list}
+        <div class="talk-card{#if talk.retired} retired{/if}">
+            <h2 class="talk-card-title"><a href="/talks/{talk.slug}" class="talk-card-link">{talk.title}</a><span class="appearance-count">{talk.appearances.size}x</span>{#if talk.retired}<span class="badge-retired">Retired</span>{/if}</h2>
+            {#if talk.description}
+                <details class="talk-abstract">
+                    <summary>Abstract</summary>
+                    {talk.descriptionHtml}
+                </details>
+            {/if}
+            <table class="appearances-table">
+                <colgroup>
+                    <col class="col-event">
+                    <col class="col-date">
+                    <col class="col-location">
+                    <col class="col-links">
+                </colgroup>
+                {#for appearance in talk.appearances}
+                    <tr>
+                        <td class="col-event">
+                            {#if appearance.eventUrl}
+                                <a href="{appearance.eventUrl}" target="_blank" rel="noopener noreferrer">{appearance.eventName}</a>
+                            {#else}
+                                {appearance.eventName}
+                            {/if}
+                        </td>
+                        <td class="col-date">{appearance.date}</td>
+                        <td class="col-location">{#if appearance.flag}{appearance.flag} {/if}{appearance.location}</td>
+                        <td class="col-links">
+                            {#if appearance.slides}
+                                <a href="{appearance.slides}" target="_blank" class="appearance-link">
+                                    <img src="/images/slides.png" alt="" width="18"/>
+                                </a>
+                            {/if}
+                            {#if appearance.recording}
+                                <a href="{appearance.recording}" target="_blank" class="appearance-link">
+                                    <img src="/images/camera.png" alt="" width="18"/>
+                                </a>
+                            {/if}
+                        </td>
+                    </tr>
+                {/for}
+            </table>
+        </div>
+    {/for}
+</div>
+
+<script>
+document.querySelectorAll('.talks-filter button').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.talks-filter button').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        var container = document.getElementById('talksContainer');
+        if (btn.dataset.filter === 'active') {
+            container.classList.add('hide-retired');
+        } else {
+            container.classList.remove('hide-retired');
+        }
+    });
+});
+</script>

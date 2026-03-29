@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{talk.title}</title>
+    <meta name="description" content="{talk.description ?: ''}">
+    {#bundle /}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XJP40L6W16"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag()\{dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XJP40L6W16');
+    </script>
+</head>
+<body class="default">
+<div class="wrapper">
+    <header class="top-nav" role="banner">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="/" class="brand-link">
+                    <span class="brand-name text-gradient">{cdi:siteConfig.name}</span>
+                </a>
+            </div>
+            <nav class="nav-menu" role="navigation" aria-label="Main navigation">
+                <ul class="nav-links">
+                    {#for item in cdi:siteConfig.menuItems}
+                    <li class="nav-item">
+                        <a href="{item.path}"
+                           class="nav-link {#if currentPath == item.path}active{#else if item.path != '/' && currentPath.startsWith(item.path)}active{/if}">
+                            <i class="{item.icon}" aria-hidden="true"></i>
+                            <span>{item.title}</span>
+                        </a>
+                    </li>
+                    {/for}
+                </ul>
+            </nav>
+            <div class="nav-social">
+                <button class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+                    <i class="fa-solid fa-sun sun-icon"></i>
+                    <i class="fa-solid fa-moon moon-icon"></i>
+                </button>
+                {#for social in cdi:siteConfig.socials}
+                <a href="{social.url}" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="{social.label}">
+                    <i class="{social.icon}"></i>
+                </a>
+                {/for}
+            </div>
+            <button class="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <div class="content-box clearfix">
+        <style>
+            .talk-detail-container {
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 1.5rem 1rem;
+            }
+
+            .talk-back-link {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.35rem;
+                color: var(--text-tertiary);
+                text-decoration: none;
+                font-size: 0.9rem;
+                font-weight: 500;
+                margin-bottom: 1.5rem;
+                transition: color 0.2s ease;
+            }
+
+            .talk-back-link:hover {
+                color: var(--color-primary);
+            }
+
+            .talk-detail-title {
+                font-size: 2.5rem;
+                font-weight: 800;
+                margin: 0 0 1.5rem 0;
+                background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                line-height: 1.2;
+            }
+
+            .talk-detail-title .badge-retired {
+                display: inline-block;
+                background: var(--text-tertiary);
+                color: white;
+                font-size: 0.75rem;
+                font-weight: 600;
+                padding: 0.2rem 0.6rem;
+                border-radius: 12px;
+                vertical-align: middle;
+                opacity: 0.7;
+                -webkit-text-fill-color: white;
+            }
+
+            .talk-detail-description {
+                font-size: 1rem;
+                line-height: 1.8;
+                color: var(--text-secondary);
+                margin-bottom: 2rem;
+            }
+
+            .talk-detail-description p {
+                margin: 0 0 1rem 0;
+            }
+
+            .talk-detail-section-title {
+                font-size: 1.4rem;
+                font-weight: 700;
+                color: var(--text-primary);
+                margin: 2rem 0 1rem 0;
+                border-left: 4px solid var(--color-primary);
+                padding-left: 0.75rem;
+            }
+
+            .talk-video-container {
+                position: relative;
+                width: 100%;
+                padding-bottom: 56.25%;
+                margin-bottom: 2rem;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: var(--shadow-md);
+            }
+
+            .talk-video-container iframe {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                border: none;
+            }
+
+            .talk-slides-card {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                background: var(--card-gradient);
+                border: 1px solid var(--border-color);
+                border-radius: 10px;
+                padding: 1rem 1.25rem;
+                margin-bottom: 2rem;
+                text-decoration: none;
+                color: var(--text-primary);
+                font-weight: 600;
+                font-size: 1rem;
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+                box-shadow: var(--shadow-md);
+            }
+
+            .talk-slides-card:hover {
+                transform: translateY(-3px);
+                box-shadow: var(--shadow-lg);
+                color: var(--color-primary);
+            }
+
+            .talk-slides-card img {
+                width: 24px;
+                height: 24px;
+            }
+
+            .talk-detail-appearances {
+                width: 100%;
+                table-layout: fixed;
+                border-collapse: collapse;
+                border-spacing: 0;
+                margin-bottom: 2rem;
+            }
+
+            .talk-detail-appearances col.col-event    { width: 35%; }
+            .talk-detail-appearances col.col-date     { width: 15%; }
+            .talk-detail-appearances col.col-location { width: 40%; }
+            .talk-detail-appearances col.col-links    { width: 10%; }
+
+            .talk-detail-appearances,
+            .talk-detail-appearances thead,
+            .talk-detail-appearances tbody,
+            .talk-detail-appearances th,
+            .talk-detail-appearances tr,
+            .talk-detail-appearances td {
+                border: none !important;
+                background: transparent !important;
+            }
+
+            .talk-detail-appearances tr {
+                transition: background 0.2s ease;
+            }
+
+            .talk-detail-appearances tr:hover,
+            .talk-detail-appearances tr:hover td {
+                background: var(--hover-bg) !important;
+            }
+
+            .talk-detail-appearances td {
+                padding: 0.5rem 0.5rem;
+                font-size: 0.9rem;
+                vertical-align: middle;
+            }
+
+            .talk-detail-appearances .col-event {
+                font-weight: 600;
+                color: var(--text-primary);
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .talk-detail-appearances .col-event a {
+                color: var(--text-primary);
+                text-decoration: none;
+                transition: color 0.2s ease;
+            }
+
+            .talk-detail-appearances .col-event a:hover {
+                color: var(--color-primary);
+                text-decoration: underline;
+            }
+
+            .talk-detail-appearances .col-date {
+                color: var(--text-tertiary);
+                font-size: 0.85rem;
+                white-space: nowrap;
+            }
+
+            .talk-detail-appearances .col-location {
+                color: var(--text-tertiary);
+                font-size: 0.85rem;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .talk-detail-appearances .col-links {
+                white-space: nowrap;
+                text-align: right;
+            }
+
+            .talk-appearance-link {
+                display: inline-flex;
+                align-items: center;
+                padding: 0.15rem 0.3rem;
+                background: none;
+                text-decoration: none;
+                border-radius: 4px;
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+
+            .talk-appearance-link:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(20, 184, 166, 0.4);
+            }
+
+            @media (max-width: 768px) {
+                .talk-detail-title {
+                    font-size: 1.8rem;
+                }
+
+                .talk-detail-appearances .col-event {
+                    white-space: normal;
+                }
+
+                .talk-detail-appearances .col-location {
+                    display: none;
+                }
+            }
+        </style>
+
+        <div class="talk-detail-container">
+            <a href="/talks" class="talk-back-link">&larr; Back to talks</a>
+
+            <h1 class="talk-detail-title">
+                {talk.title}
+                {#if talk.retired}<span class="badge-retired">Retired</span>{/if}
+            </h1>
+
+            {#if talk.description}
+                <div class="talk-detail-description">
+                    {talk.descriptionHtml}
+                </div>
+            {/if}
+
+            {#if talk.latestRecordingEmbed}
+                <h2 class="talk-detail-section-title">Recording</h2>
+                <div class="talk-video-container">
+                    <iframe src="{talk.latestRecordingEmbed}" title="{talk.title}" allowfullscreen
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+                    </iframe>
+                </div>
+            {/if}
+
+            {#if talk.latestSlides}
+                <h2 class="talk-detail-section-title">Slides</h2>
+                <a href="{talk.latestSlides}" target="_blank" rel="noopener noreferrer" class="talk-slides-card">
+                    <img src="/images/slides.png" alt="">
+                    View latest slides
+                </a>
+            {/if}
+
+            <h2 class="talk-detail-section-title">Appearances</h2>
+            <table class="talk-detail-appearances">
+                <colgroup>
+                    <col class="col-event">
+                    <col class="col-date">
+                    <col class="col-location">
+                    <col class="col-links">
+                </colgroup>
+                {#for appearance in talk.appearances}
+                    <tr>
+                        <td class="col-event">
+                            {#if appearance.eventUrl}
+                                <a href="{appearance.eventUrl}" target="_blank" rel="noopener noreferrer">{appearance.eventName}</a>
+                            {#else}
+                                {appearance.eventName}
+                            {/if}
+                        </td>
+                        <td class="col-date">{appearance.date}</td>
+                        <td class="col-location">{#if appearance.flag}{appearance.flag} {/if}{appearance.location}</td>
+                        <td class="col-links">
+                            {#if appearance.slides}
+                                <a href="{appearance.slides}" target="_blank" class="talk-appearance-link">
+                                    <img src="/images/slides.png" alt="" width="18"/>
+                                </a>
+                            {/if}
+                            {#if appearance.recording}
+                                <a href="{appearance.recording}" target="_blank" class="talk-appearance-link">
+                                    <img src="/images/camera.png" alt="" width="18"/>
+                                </a>
+                            {/if}
+                        </td>
+                    </tr>
+                {/for}
+            </table>
+        </div>
+    </div>
+</div>
+
+<footer id="footer">
+    <div class="footer-copyright">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <p class="copyright-text">
+                        &copy; 2025 {cdi:siteConfig.name} All rights reserved.
+                    </p>
+                    <p class="footer-tagline">
+                        Built with <a href="https://quarkus.io" target="_blank" rel="noopener noreferrer">Quarkus</a>
+                        &amp; <a href="https://iamroq.com" target="_blank" rel="noopener noreferrer">Roq</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
