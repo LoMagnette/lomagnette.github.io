@@ -1,5 +1,13 @@
 - year: "2026"
   events:
+    - name: "Devoxx Poland"
+      url: "https://www.devoxx.pl/"
+      date: "Jun 2026"
+      location: "Kraków, Poland"
+      flag: "🇵🇱"
+      talks:
+        - talkId: 4
+          title: "Java Script (No, Not That One): Modern Automation with Java"
     - name: "MakeIT / JCON OpenBlend Slovenia"
       url: "https://slovenia.jcon.one/en/"
       date: "May 2026"
