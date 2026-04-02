@@ -1,13 +1,12 @@
 ---
-title: "Developer Career Apathy: How Community Restored What Code Couldn't"
+title: "Reigniting the Spark: What Community Taught Me That Code Never Could"
 description: "A senior developer's journey from career apathy back to passion, and the neuroscience that explains why developer community, not a new framework, was the fix."
 tags: [community, apathy, spark, developer, JUG]
 author: Loïc
 image: spark-cover.png
 ---
-# Reigniting the Spark: What Community Taught Me That Code Never Could
 
-*How a developer community pulled me out of career apathy when no framework, language, or job change could.*
+*I tried new frameworks, new languages, even a new career path. The fix turned out to be a beer after a meetup.*
 
 The first time I wrote a Hello World program, something clicked inside me. A spark. That feeling that said: *this is it, this is what I want to do with my life*. It carried me through university, through my first jobs, through years of building software.
 
@@ -49,15 +48,33 @@ But I went. I gave a short practice talk. I got feedback. Most of that feedback,
 
 What I remember is the people.
 
-After the meetup, we went for a beer. I'm from Belgium, what did you expect? Kevin was there. Tom, who's now the JUG leader. Ronald from JobRunner. And sitting there, in that completely ordinary pub, I felt something I hadn't felt in a long time. Energy. Warmth. Something I'd been missing without knowing I was missing it.
+That's where everything shifted. After the meetup, we went for a beer. I'm from Belgium, what did you expect? Kevin was there. Tom, who's now the JUG leader. Ronald from JobRunner. And sitting there, in that completely ordinary pub, I felt something I hadn't felt in a long time. Energy. Warmth. Something I'd been missing without knowing I was missing it.
 
 Something in that moment told me: *there's hope after all*.
+
+<div style="text-align: center; margin: 2rem 0;">
+
+![The beer that changed everything: Kevin, Tom, Ronald, and me after my first BeJUG meetup.](pub-bejug.jpg)
+
+</div>
 
 ## Drawing My Way In
 
 The Belgian Java User Group runs like an open source project. There's a GitHub repository, and every meetup is an issue. During that first meetup, Tom said: "If you want to contribute, come on in. We're open." I figured I'd give it a try.
 
+<div style="text-align: center; margin: 2rem 0;">
+
+![My first BeJUG issue on GitHub: the group needed a new logo.](bejug-issue.png)
+
+</div>
+
 I found an issue: the group needed a new logo. The old one was a coffee grinder, not exactly the most evocative image for a developer community. I happen to like drawing. So I drew a new logo for the BeJUG.
+
+<div style="text-align: center; margin: 2rem 0;">
+
+![The BeJUG logo I drew to replace the old coffee grinder.](bejug-logo.png)
+
+</div>
 
 It was a tiny contribution. I wasn't writing code. I wasn't giving a keynote. I was just doing something small with a skill I had. But it was received with such warmth and kindness that I thought: *okay, let me try one more step*.
 
@@ -91,6 +108,18 @@ It's not. It really isn't.
 
 The missing pillar was relatedness: the ability to connect with others, to feel part of something larger than yourself. When I drew that logo, organized that meetup, stayed for those beers, I was finally feeding the need my brain had been starving for. Research confirms this: when developers help colleagues, they experience higher levels of *both* competence and relatedness. Helping someone fills two of your three fundamental needs at once.
 
+But relatedness doesn't just happen because you're in the same room as other people. It takes deliberate action. Looking back, three things made the difference for me.
+
+**Active listening.** Not waiting for your turn to talk. Actually hearing someone. When a fellow developer explains a problem they're stuck on and you give them your full attention, no glancing at your phone, no mentally composing your answer before they finish, something shifts. They feel seen, and you feel connected. It sounds simple, but in a world of half-read Slack messages and multitasked video calls, genuinely listening has become a rare gift.
+
+**Collective contribution.** Drawing that logo wasn't just about the logo. It was about adding my piece to something we were building together. When you contribute to a shared goal, organizing a meetup, maintaining a community repo, even just helping set up chairs before a talk, you stop being an audience member and become part of the story. That shift from consumer to contributor is where relatedness really takes root.
+
+**Sharing vulnerability.** This one is the hardest. Saying "I don't know" or "I'm struggling" in a room full of developers feels risky. But every time someone at a meetup shared a failure, a doubt, or a lesson learned the hard way, it gave everyone else permission to be human too. Vulnerability is the shortcut to trust, and trust is the foundation relatedness is built on.
+
+This is also why mentoring hits differently inside a community. Before the JUG, I was already reviewing pull requests, helping less experienced developers. It was "part of my job." I did it dutifully, without understanding its real impact. But now that you know about dopamine and oxytocin working together, it makes sense: when you help someone achieve something and you see them light up, your brain registers their success as partly your own. Helping looks selfless, but your brain reaps the full reward. As Gandhi put it: "The best way to find yourself is to lose yourself in the service of others."
+
+Much like my four-year-old daughter, junior developers ask the questions you've stopped asking. They're not formatted by years of assumptions. They can challenge you in ways that make you bigger, precisely because they don't know the "right" way yet. And we forget that the knowledge we carry isn't natural. We spent years acquiring it. We can pass it on.
+
 ## The Happiness That Doesn't Fade
 
 There's a distinction in psychology that changed how I think about my career: hedonic versus eudaimonic happiness.
@@ -113,19 +142,9 @@ We're at a strange point in our industry. The shift to remote work gave us flexi
 
 Then there's AI. When you open ChatGPT or Claude or any LLM and ask a question, something subtle happens. It gives you an answer, and then it asks: *Can I help you with anything else?* It's warm. It's available. It never judges you. Without you realizing it, it's trying to replace the human connection you'd normally get by walking over to a colleague and saying, "Hey, can you look at this with me?"
 
-Social networks hijack your dopamine. LLMs hijack your oxytocin.
+Social networks are built to capture your dopamine. LLMs are starting to do the same with your oxytocin.
 
 The two neurochemicals that together produce the deepest sense of reward and belonging your brain can generate, both targeted by systems designed to keep you engaged with screens instead of people. I'm not saying stop using them. I use them. But we need to be conscious of what we're trading away when we choose the machine over the human sitting next to us.
-
-## What Community Changed About Mentoring
-
-Before the JUG, I was already mentoring. Reviewing pull requests, helping less experienced developers. It was "part of my job." I did it dutifully, without understanding its real impact.
-
-Community changed that entirely. I started seeing what happens when you invest in someone and they grow. When you help someone achieve something and you see them light up, your brain registers their success as partly your own. Helping looks selfless, but your brain reaps the full reward. As Gandhi put it: "The best way to find yourself is to lose yourself in the service of others."
-
-The best example I can give is my four-year-old daughter. I have never been challenged the way she challenges me. Not about authority. She asks questions I've never considered.
-
-Junior developers do the same thing. They're not formatted by years of assumptions. They can challenge you in ways that make you bigger, precisely because they don't know the "right" way yet. And we forget that the knowledge we carry isn't natural. We spent years acquiring it. We can pass it on.
 
 ## The Rejection Post
 
