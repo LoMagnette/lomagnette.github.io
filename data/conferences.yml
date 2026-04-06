@@ -57,6 +57,9 @@
       talks:
         - talkId: 1
           title: "A2A en 30 Minutes: Construire des agent IA qui communiquent"
+        - talkId: 5
+          title: "Retrouver l’étincelle : un \"Reboot\" de carrière"
+          slides: https://speakerdeck.com/magnette/finding-the-spark-a-career-reset-button
 
     - name: "JCON EUROPE"
       url: "https://jcon.one/"
@@ -75,6 +78,7 @@
       talks:
         - talkId: 5
           slides: https://speakerdeck.com/magnette/finding-the-spark-a-career-reset-button
+          recording: https://www.youtube.com/watch?v=1i_f8h4WzdA
 
     - name: "Javaland"
       url: "https://www.javaland.eu/en/home/"
