@@ -17,7 +17,7 @@
         - talkId: 1
           title: "A2A in 45 Minutes: Building Interoperable AI Agents"
         - talkId: 3
-          title: "From AI to Agent with 3"
+          title: "From AI to Agent with Langchain4j"
 
     - name: "JNation"
       url: "https://www.jnation.pt/"
