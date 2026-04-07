@@ -48,7 +48,7 @@ But I went. I gave a short practice talk. I got feedback. Most of that feedback,
 
 What I remember is the people.
 
-That's where everything shifted. After the meetup, we went for a beer. I'm from Belgium, what did you expect? Kevin was there. Tom, who's now the JUG leader. Ronald from JobRunner. And sitting there, in that completely ordinary pub, I felt something I hadn't felt in a long time. Energy. Warmth. Something I'd been missing without knowing I was missing it.
+That's where everything shifted. After the meetup, we went for a beer. I'm from Belgium, what did you expect? [Kevin](https://www.linkedin.com/in/kevindubois/) was there. [Tom](https://www.linkedin.com/in/tom-cools-17547548/), who's the JUG leader. [Ronald](https://www.linkedin.com/in/ronalddehuysser/) from [JobRunr](https://www.jobrunr.io/en/). And sitting there, in that completely ordinary pub, I felt something I hadn't felt in a long time. Energy. Warmth. Something I'd been missing without knowing I was missing it.
 
 Something in that moment told me: *there's hope after all*.
 
