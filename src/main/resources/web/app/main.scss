@@ -1829,24 +1829,165 @@ a:focus, button:focus, input:focus, textarea:focus {
   padding: 0 var(--spacing-lg);
 }
 
-// Improved Print Styles
+// Print Styles
 @media print {
-  body {
-    background: #ffffff !important;
+  *,
+  *::before,
+  *::after {
+    background: transparent !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
   }
 
-  .menu, #footer, .giscus {
+  body {
+    font-size: 12pt;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+  }
+
+  // Hide non-content elements
+  .top-nav,
+  .menu,
+  #footer,
+  .giscus,
+  .page-share,
+  .theme-toggle {
     display: none !important;
   }
 
-  .article-page, .post {
-    box-shadow: none !important;
+  // Remove wrapper padding/constraints
+  .wrapper,
+  .content-box {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  // Article layout
+  .article-page,
+  .page-content {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
     border: none !important;
   }
 
-  a {
+  .wrap-content {
+    padding: 0 !important;
+  }
+
+  // Cover image: limit height so it doesn't eat a whole page
+  .page-cover-image {
+    margin-bottom: 1.5rem;
+
+    img.page-image {
+      max-height: 300px;
+      width: auto;
+      max-width: 100%;
+      object-fit: contain;
+    }
+  }
+
+  // Article header
+  .header-page {
+    border-bottom: 1pt solid #ccc !important;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    page-break-after: avoid;
+  }
+
+  .page-title {
+    font-size: 22pt !important;
+    line-height: 1.2 !important;
+  }
+
+  .page-date {
+    font-size: 10pt !important;
+  }
+
+  // Links: show href for external links
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: #555 !important;
+    word-break: break-all;
+  }
+
+  // But not for share/nav links (they're hidden anyway) nor anchors
+  a[href^="#"]::after,
+  a[href^="/"]::after {
+    content: none;
+  }
+
+  // Code blocks: prevent overflow, use monospace
+  pre,
+  code {
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    border: 1pt solid #ddd !important;
+    font-size: 9pt !important;
+    background: #f8f8f8 !important;
     color: #000 !important;
-    text-decoration: underline !important;
+  }
+
+  pre {
+    padding: 0.5rem !important;
+    page-break-inside: avoid;
+  }
+
+  // Images
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+
+  // Page breaks
+  h2, h3 {
+    page-break-after: avoid;
+  }
+
+  p, blockquote, li {
+    orphans: 3;
+    widows: 3;
+  }
+
+  blockquote {
+    border-left: 3pt solid #ccc !important;
+    padding-left: 1rem;
+    margin-left: 0;
+  }
+
+  // Author block
+  .author {
+    border: 1pt solid #ccc !important;
+    border-radius: 0 !important;
+    margin-top: 1rem;
+    padding: 0.5rem !important;
+    page-break-inside: avoid;
+
+    img {
+      width: 40px !important;
+      height: 40px !important;
+    }
+  }
+
+  // Tags: keep them visible but plain
+  .page-tag .tag {
+    background: none !important;
+    color: #000 !important;
+    border: 1pt solid #888 !important;
+    padding: 1pt 4pt !important;
+    font-size: 9pt !important;
+  }
+
+  // Page footer
+  .page-footer {
+    border-top: 1pt solid #ccc !important;
+    margin-top: 1rem !important;
+    padding-top: 0.5rem !important;
   }
 }
 
