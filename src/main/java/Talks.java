@@ -5,5 +5,5 @@ import java.util.List;
 @DataMapping(value = "talks", parentArray = true)
 public record Talks(List<Talk> list) {
 
-    public record Talk(String id, String title, Boolean retired, String description) {}
+    public record Talk(String id, String title, Boolean retired, String description, String article) {}
 }

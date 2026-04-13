@@ -1,5 +1,6 @@
 - id: 1
   title: "A2A: Building Interoperable AI Agents"
+  article: "/posts/from-lonely-agents-to-talking-teams-an-introduction-to-a2a/"
   description: "
   Until recently, AI agents were advancing in intelligence but remained isolated. Developers attempted to make them collaborate by repurposing protocols like MCP, which connects language models to external tools and data. However, MCP was never intended for agent-to-agent communication. This gap became clear as agents grew more complex and collaboration became essential. In April, Google and its partners announced the A2A protocol, an open standard specifically designed to let agents discover each other, communicate, and collaborate across ecosystems.
   \n\n
@@ -11,6 +12,7 @@
   description: "Forms are everywhere — and everywhere, they're frustrating. What if users could just say what they need, and an AI-powered wizard would handle the rest? In this session, we'll build an intelligent form system that combines conversational AI with traditional form UIs. Users can chat naturally, click through guided steps, or mix both — the wizard adapts. We'll explore how to use LLMs to understand intent, extract structured data, validate inputs, and drive dynamic form flows. Live coding included."
 - id: 3
   title: "From AI to Agent with Langchain4J"
+  article: "/posts/langchain4j-agentic-workflows-from-ai-calls-to-multi-agent-systems-in-java/"
   description: "
   You’ve built AI features into your application. Models are wrapped in services, RAG is in place, tools are wired, and calls are flowing. Then requirements evolve. A single response is no longer enough. You need steps that follow each other, branches based on decisions, retries when things fail, and sometimes multiple actions happening at the same time. At that point, it becomes unclear how to structure the logic without losing control or readability.
   \n\n
@@ -19,9 +21,11 @@
   You’ll leave with a concrete understanding of when to use workflows and when to rely on agents, how to combine both without confusion, and how to keep state, goals, and responsibilities explicit. The goal is not to build smarter prompts, but systems that are easier to reason about, easier to evolve, and better aligned with real-world application needs."
 - id: 4
   title: "Java Script (No, Not That One): Modern Automation with Java"
+  article: "/posts/javascript-no-not-that-one-modern-automation-with-java/"
   description: "Java has quietly become a powerful scripting language. With JBang, single-file programs, and modern Java features, you can write quick automation scripts, CLI tools, and one-off utilities — all in Java. No project setup, no build tool, no boilerplate. In this session, we'll explore how to use Java for the kind of tasks you'd normally reach for Python or Bash. From file processing to API calls to system automation, Java scripting is fast, type-safe, and surprisingly fun."
 - id: 5
   title: "Finding the Spark: A Career Reset Button."
+  article: "/posts/reigniting-the-spark-what-community-taught-me-that-code-never-could/"
   description: "Ever felt stuck in your career? Like you're going through the motions but the spark is gone? This talk is a personal story about hitting that wall — and finding a way through. We'll explore what it means to reset your career, rediscover what drives you, and take concrete steps to reignite your passion for tech. Not a framework talk, not a tutorial — just an honest conversation about growth, change, and finding your way back to loving what you do."
 - id: 6
   title: "Unleashing the power of Angular: Navigating the latest releases and transformations"
