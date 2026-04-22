@@ -69,6 +69,7 @@
       talks:
         - talkId: 1
           title: "A2A in 45 Minutes: Building Interoperable AI Agents"
+          slides: https://speakerdeck.com/magnette/a2a-in-45-minutes-building-interoperable-ai-agents
 
     - name: "Voxxed Days Zurich"
       url: "https://zurich.voxxeddays.com/"
