@@ -20,7 +20,7 @@ public class TalksList {
                              String slides, String recording, String originalTitle) {
     }
 
-    public record TalkEntry(String id, String slug, String title, String description, String article, List<Appearance> appearances, boolean retired) {
+    public record TalkEntry(String id, String slug, String title, String description, String article, String github, List<Appearance> appearances, boolean retired) {
         public RawString descriptionHtml() {
             if (description == null) return null;
             String html = description
@@ -108,8 +108,9 @@ public class TalksList {
             String canonicalTitle = talkDef != null ? talkDef.title() : id;
             String description = talkDef != null ? talkDef.description() : null;
             String article = talkDef != null ? talkDef.article() : null;
+            String github = talkDef != null ? talkDef.github() : null;
             boolean retired = talkDef != null && Boolean.TRUE.equals(talkDef.retired());
-            result.add(new TalkEntry(id, toSlug(canonicalTitle), canonicalTitle, description, article, entry.getValue(), retired));
+            result.add(new TalkEntry(id, toSlug(canonicalTitle), canonicalTitle, description, article, github, entry.getValue(), retired));
         }
 
         return result;

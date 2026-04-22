@@ -317,6 +317,14 @@
                 </a>
             {/if}
 
+            {#if talk.github}
+                <h2 class="talk-detail-section-title">Repository</h2>
+                <a href="{talk.github}" target="_blank" rel="noopener noreferrer" class="talk-slides-card">
+                    <i class="fa-brands fa-github" aria-hidden="true" style="font-size: 1.25rem;"></i>
+                    View on GitHub
+                </a>
+            {/if}
+
             <h2 class="talk-detail-section-title">Appearances</h2>
             <table class="talk-detail-appearances">
                 <colgroup>

@@ -7,6 +7,7 @@
   This talk introduces the A2A protocol and shows how it enables agents to work together in multi-agent, multi-modal, and even long-running scenarios. We will explain its core principles, such as open standards, secure communication, and capability discovery through Agent Cards. You will also see how agents negotiate tasks, exchange context and artifacts, and coordinate their user experiences. We will highlight how A2A complements protocols like MCP by enabling agents to orchestrate one another while still using MCP internally to access tools and data.
   \n\n
   By the end of this session, you will understand what problems A2A solves, how it fits into the broader agent ecosystem, and how it improves on previous approaches. You will leave with a clear understanding of how to design agents that can truly interoperate and contribute to the emerging Internet of Agents."
+  github: https://github.com/LoMagnette/A2A-Interoperable-AI-Agent
 - id: 2
   title: "AI-Powered Form Wizards: Chat, Click, Done"
   description: "Forms are everywhere — and everywhere, they're frustrating. What if users could just say what they need, and an AI-powered wizard would handle the rest? In this session, we'll build an intelligent form system that combines conversational AI with traditional form UIs. Users can chat naturally, click through guided steps, or mix both — the wizard adapts. We'll explore how to use LLMs to understand intent, extract structured data, validate inputs, and drive dynamic form flows. Live coding included."
