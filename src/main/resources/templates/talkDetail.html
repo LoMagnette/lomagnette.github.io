@@ -144,32 +144,43 @@
                 border: none;
             }
 
-            .talk-slides-card {
+            .talk-resource-links {
                 display: flex;
-                align-items: center;
+                flex-wrap: wrap;
                 gap: 0.75rem;
+                margin-bottom: 2rem;
+            }
+
+            .talk-resource-link {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
                 background: var(--card-gradient);
                 border: 1px solid var(--border-color);
-                border-radius: 10px;
-                padding: 1rem 1.25rem;
-                margin-bottom: 2rem;
+                border-radius: 50px;
+                padding: 0.55rem 1.1rem;
                 text-decoration: none;
                 color: var(--text-primary);
                 font-weight: 600;
-                font-size: 1rem;
-                transition: transform 0.2s ease, box-shadow 0.2s ease;
-                box-shadow: var(--shadow-md);
+                font-size: 0.9rem;
+                transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+                box-shadow: var(--shadow-sm);
             }
 
-            .talk-slides-card:hover {
-                transform: translateY(-3px);
-                box-shadow: var(--shadow-lg);
+            .talk-resource-link:hover {
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-md);
+                border-color: var(--color-primary);
                 color: var(--color-primary);
             }
 
-            .talk-slides-card img {
-                width: 24px;
-                height: 24px;
+            .talk-resource-link img {
+                width: 18px;
+                height: 18px;
+            }
+
+            .talk-resource-link i {
+                font-size: 1.1rem;
             }
 
             .talk-detail-appearances {
@@ -286,6 +297,29 @@
                 {#if talk.retired}<span class="badge-retired">Retired</span>{/if}
             </h1>
 
+            {#if talk.latestSlides || talk.article || talk.github}
+                <div class="talk-resource-links">
+                    {#if talk.latestSlides}
+                        <a href="{talk.latestSlides}" target="_blank" rel="noopener noreferrer" class="talk-resource-link">
+                            <img src="/images/slides.png" alt="">
+                            Slides
+                        </a>
+                    {/if}
+                    {#if talk.article}
+                        <a href="{talk.article}" rel="noopener noreferrer" class="talk-resource-link">
+                            <i class="fa-solid fa-newspaper" aria-hidden="true"></i>
+                            Article
+                        </a>
+                    {/if}
+                    {#if talk.github}
+                        <a href="{talk.github}" target="_blank" rel="noopener noreferrer" class="talk-resource-link">
+                            <i class="fa-brands fa-github" aria-hidden="true"></i>
+                            GitHub
+                        </a>
+                    {/if}
+                </div>
+            {/if}
+
             {#if talk.description}
                 <div class="talk-detail-description">
                     {talk.descriptionHtml}
@@ -299,30 +333,6 @@
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
                     </iframe>
                 </div>
-            {/if}
-
-            {#if talk.latestSlides}
-                <h2 class="talk-detail-section-title">Slides</h2>
-                <a href="{talk.latestSlides}" target="_blank" rel="noopener noreferrer" class="talk-slides-card">
-                    <img src="/images/slides.png" alt="">
-                    View latest slides
-                </a>
-            {/if}
-
-            {#if talk.article}
-                <h2 class="talk-detail-section-title">Article</h2>
-                <a href="{talk.article}" target="_blank" rel="noopener noreferrer" class="talk-slides-card">
-                    <i class="fa-solid fa-newspaper" aria-hidden="true" style="font-size: 1.25rem;"></i>
-                    Read the article
-                </a>
-            {/if}
-
-            {#if talk.github}
-                <h2 class="talk-detail-section-title">Repository</h2>
-                <a href="{talk.github}" target="_blank" rel="noopener noreferrer" class="talk-slides-card">
-                    <i class="fa-brands fa-github" aria-hidden="true" style="font-size: 1.25rem;"></i>
-                    View on GitHub
-                </a>
             {/if}
 
             <h2 class="talk-detail-section-title">Appearances</h2>
