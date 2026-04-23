@@ -1,9 +1,9 @@
 ---
 layout: layouts/roq-default/default
 ---
-{@io.quarkiverse.roq.frontmatter.runtime.model.Site site}
+{@io.quarkiverse.roq.frontmatter.runtime.model.Page page}
 
-{#include partials/navbar-menu menu=cdi:menu.items /}
+{#include partials/navbar-menu currentPath=page.url.path /}
 
 <div class="content-box clearfix">
   {#insert /}
