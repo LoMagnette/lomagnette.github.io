@@ -18,44 +18,7 @@
 </head>
 <body class="default">
 <div class="wrapper">
-    <header class="top-nav" role="banner">
-        <div class="nav-container">
-            <div class="nav-brand">
-                <a href="/" class="brand-link">
-                    <span class="brand-name text-gradient">{cdi:siteConfig.name}</span>
-                </a>
-            </div>
-            <nav class="nav-menu" role="navigation" aria-label="Main navigation">
-                <ul class="nav-links">
-                    {#for item in cdi:siteConfig.menuItems}
-                    <li class="nav-item">
-                        <a href="{item.path}"
-                           class="nav-link {#if currentPath == item.path}active{#else if item.path != '/' && currentPath.startsWith(item.path)}active{/if}">
-                            <i class="{item.icon}" aria-hidden="true"></i>
-                            <span>{item.title}</span>
-                        </a>
-                    </li>
-                    {/for}
-                </ul>
-            </nav>
-            <div class="nav-social">
-                <button class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
-                    <i class="fa-solid fa-sun sun-icon"></i>
-                    <i class="fa-solid fa-moon moon-icon"></i>
-                </button>
-                {#for social in cdi:siteConfig.socials}
-                <a href="{social.url}" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="{social.label}">
-                    <i class="{social.icon}"></i>
-                </a>
-                {/for}
-            </div>
-            <button class="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-    </header>
+    {#include partials/navbar-standalone /}
 
     <div class="content-box clearfix">
         <style>
@@ -110,10 +73,15 @@
                 line-height: 1.8;
                 color: var(--text-secondary);
                 margin-bottom: 2rem;
+                max-width: 75ch;
             }
 
             .talk-detail-description p {
-                margin: 0 0 1rem 0;
+                margin: 0 0 1.25rem 0;
+            }
+
+            .talk-detail-description p:last-child {
+                margin-bottom: 0;
             }
 
             .talk-detail-section-title {
@@ -368,23 +336,7 @@
     </div>
 </div>
 
-<footer id="footer">
-    <div class="footer-copyright">
-        <div class="footer-container">
-            <div class="footer-content">
-                <div class="footer-info">
-                    <p class="copyright-text">
-                        &copy; 2025 {cdi:siteConfig.name} All rights reserved.
-                    </p>
-                    <p class="footer-tagline">
-                        Built with <a href="https://quarkus.io" target="_blank" rel="noopener noreferrer">Quarkus</a>
-                        &amp; <a href="https://iamroq.com" target="_blank" rel="noopener noreferrer">Roq</a>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
+{#include partials/footer-standalone /}
 
 </body>
 </html>

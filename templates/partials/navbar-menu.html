@@ -26,11 +26,6 @@
         </nav>
 
         <div class="nav-social">
-            <button class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
-                <i class="fa-solid fa-sun sun-icon"></i>
-                <i class="fa-solid fa-moon moon-icon"></i>
-            </button>
-
             {#if site.data.get('social-github')??}
             <a href="https://github.com/{site.data.get('social-github')}" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="GitHub">
                 <i class="fa-brands fa-github"></i>
@@ -52,6 +47,11 @@
             </a>
             {/if}
         </div>
+
+        <button class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+            <i class="fa-solid fa-sun sun-icon"></i>
+            <i class="fa-solid fa-moon moon-icon"></i>
+        </button>
 
         <button class="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false">
             <span></span>

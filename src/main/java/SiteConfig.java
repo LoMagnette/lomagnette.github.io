@@ -32,7 +32,7 @@ public class SiteConfig {
                 new MenuItem("Blog", "/", "fa-regular fa-newspaper"),
                 new MenuItem("Talks", "/talks", "fa-solid fa-microphone-lines"),
                 new MenuItem("Conferences", "/conferences", "fa-solid fa-calendar-days"),
-                new MenuItem("About", "/about", "fa fa-thumbs-up")
+                new MenuItem("About", "/about", "fa-solid fa-user")
         );
     }
 }

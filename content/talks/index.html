@@ -296,7 +296,7 @@ layout: :theme/page
 
     {#for talk in cdi:talksList.list}
         <div class="talk-card{#if talk.retired} retired{/if}">
-            <h2 class="talk-card-title"><a href="/talks/{talk.slug}" class="talk-card-link">{talk.title}</a><span class="appearance-count">{talk.appearances.size}x</span>{#if talk.retired}<span class="badge-retired">Retired</span>{/if}</h2>
+            <h2 class="talk-card-title"><a href="/talks/{talk.slug}" class="talk-card-link">{talk.title}</a><span class="appearance-count">{talk.appearances.size} {#if talk.appearances.size == 1}event{#else}events{/if}</span>{#if talk.retired}<span class="badge-retired">Retired</span>{/if}</h2>
             {#if talk.description}
                 <details class="talk-abstract">
                     <summary>Abstract</summary>

@@ -10,4 +10,4 @@ items:
     icon: "fa-solid fa-calendar-days"
   - title: "About"
     path: "/about"
-    icon: "fa fa-thumbs-up"
+    icon: "fa-solid fa-user"

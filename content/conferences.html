@@ -192,6 +192,35 @@ layout: :theme/page
     text-align: center;
 }
 
+.year-nav {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.year-nav-link {
+    display: inline-block;
+    padding: 0.35rem 1rem;
+    border-radius: 6px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.year-nav-link:hover {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+    color: white;
+    border-color: transparent;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
 @media (max-width: 768px) {
     .talks-header h1 {
         font-size: 2rem;
@@ -214,8 +243,8 @@ layout: :theme/page
     }
 
     .event-meta {
-        gap: 0.75rem;
-        flex-wrap: wrap;
+        flex-direction: column;
+        gap: 0.25rem;
     }
 
     .event-meta-item {
@@ -244,8 +273,14 @@ layout: :theme/page
         <p>All the conferences I've spoken at</p>
     </div>
 
+    <nav class="year-nav" aria-label="Jump to year">
+        {#for year in cdi:conferencesList.list}
+            <a href="#year-{year.year}" class="year-nav-link">{year.year}</a>
+        {/for}
+    </nav>
+
     {#for year in cdi:conferencesList.list}
-        <div class="year-section">
+        <div class="year-section" id="year-{year.year}">
             <h2 class="year-title">{year.year}</h2>
 
             <div class="events-grid">
