@@ -6,7 +6,7 @@
     <title>{talk.title}</title>
     <meta name="description" content="{talk.description ?: ''}">
     {#bundle /}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XJP40L6W16"></script>
     <script>
@@ -174,11 +174,6 @@
                 color: var(--color-primary);
             }
 
-            .talk-resource-link img {
-                width: 18px;
-                height: 18px;
-            }
-
             .talk-resource-link i {
                 font-size: 1.1rem;
             }
@@ -301,7 +296,7 @@
                 <div class="talk-resource-links">
                     {#if talk.latestSlides}
                         <a href="{talk.latestSlides}" target="_blank" rel="noopener noreferrer" class="talk-resource-link">
-                            <img src="/images/slides.png" alt="">
+                            <i class="fa-solid fa-display" aria-hidden="true"></i>
                             Slides
                         </a>
                     {/if}
@@ -357,12 +352,12 @@
                         <td class="col-links">
                             {#if appearance.slides}
                                 <a href="{appearance.slides}" target="_blank" class="talk-appearance-link">
-                                    <img src="/images/slides.png" alt="" width="18"/>
+                                    <i class="fa-solid fa-display" aria-hidden="true" style="color: var(--color-primary); font-size: 1rem;"></i>
                                 </a>
                             {/if}
                             {#if appearance.recording}
                                 <a href="{appearance.recording}" target="_blank" class="talk-appearance-link">
-                                    <img src="/images/camera.png" alt="" width="18"/>
+                                    <i class="fa-solid fa-video" aria-hidden="true" style="color: var(--color-primary); font-size: 1rem;"></i>
                                 </a>
                             {/if}
                         </td>

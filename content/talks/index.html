@@ -185,35 +185,45 @@ layout: :theme/page
 }
 
 .talks-filter {
-    display: flex;
+    display: inline-flex;
     justify-content: center;
     gap: 0;
     margin-bottom: 1.5rem;
+    background: var(--bg-tertiary);
+    border-radius: 8px;
+    padding: 3px;
+    border: 1px solid var(--border-color);
+    width: auto;
+}
+
+.talks-container > .talks-filter {
+    display: flex;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .talks-filter button {
     padding: 0.4rem 1.2rem;
     font-size: 0.85rem;
     font-weight: 600;
-    border: 2px solid var(--color-primary);
+    border: none;
     background: transparent;
-    color: var(--text-primary);
+    color: var(--text-tertiary);
     cursor: pointer;
-    transition: background 0.2s ease, color 0.2s ease;
+    transition: all 0.2s ease;
+    border-radius: 6px;
 }
 
-.talks-filter button:first-child {
-    border-radius: 6px 0 0 6px;
-}
-
-.talks-filter button:last-child {
-    border-radius: 0 6px 6px 0;
-    border-left: none;
+.talks-filter button:hover:not(.active) {
+    color: var(--text-primary);
+    background: var(--hover-bg);
 }
 
 .talks-filter button.active {
     background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
     color: white;
+    box-shadow: var(--shadow-sm);
 }
 
 .talks-container.hide-retired .talk-card.retired {
@@ -314,12 +324,12 @@ layout: :theme/page
                         <td class="col-links">
                             {#if appearance.slides}
                                 <a href="{appearance.slides}" target="_blank" class="appearance-link">
-                                    <img src="/images/slides.png" alt="" width="18"/>
+                                    <i class="fa-solid fa-display" aria-hidden="true" style="color: var(--color-primary); font-size: 1rem;"></i>
                                 </a>
                             {/if}
                             {#if appearance.recording}
                                 <a href="{appearance.recording}" target="_blank" class="appearance-link">
-                                    <img src="/images/camera.png" alt="" width="18"/>
+                                    <i class="fa-solid fa-video" aria-hidden="true" style="color: var(--color-primary); font-size: 1rem;"></i>
                                 </a>
                             {/if}
                         </td>
