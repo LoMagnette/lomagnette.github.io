@@ -1,7 +1,10 @@
+package be.lomagnette.blog;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
+import java.time.Year;
 import java.util.List;
 
 /**
@@ -21,6 +24,10 @@ public class SiteConfig {
 
     public String name() {
         return "Loïc Magnette";
+    }
+
+    public int copyrightYear() {
+        return Year.now().getValue();
     }
 
     public List<Socials.Social> socials() {

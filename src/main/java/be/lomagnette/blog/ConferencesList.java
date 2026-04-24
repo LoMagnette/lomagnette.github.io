@@ -1,3 +1,5 @@
+package be.lomagnette.blog;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;

@@ -1,3 +1,5 @@
+package be.lomagnette.blog;
+
 import io.quarkiverse.roq.generator.runtime.RoqSelection;
 import io.quarkiverse.roq.generator.runtime.SelectedPath;
 import jakarta.enterprise.context.ApplicationScoped;

@@ -1,3 +1,5 @@
+package be.lomagnette.blog;
+
 import io.quarkiverse.roq.data.runtime.annotations.DataMapping;
 
 import java.util.List;

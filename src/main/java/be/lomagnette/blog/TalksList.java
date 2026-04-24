@@ -1,3 +1,6 @@
+package be.lomagnette.blog;
+
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -15,6 +18,8 @@ public class TalksList {
 
     @Inject
     Conferences conferences;
+
+    private List<TalkEntry> cachedList;
 
     public record Appearance(String eventName, String eventUrl, String date, String location, String flag,
                              String slides, String recording, String originalTitle) {
@@ -60,21 +65,8 @@ public class TalksList {
         }
     }
 
-    public TalkEntry getById(String id) {
-        return getList().stream()
-                .filter(t -> t.id().equals(id))
-                .findFirst()
-                .orElse(null);
-    }
-
-    public TalkEntry getBySlug(String slug) {
-        return getList().stream()
-                .filter(t -> t.slug().equals(slug))
-                .findFirst()
-                .orElse(null);
-    }
-
-    public List<TalkEntry> getList() {
+    @PostConstruct
+    void init() {
         // Build a lookup map from talk id to Talk definition
         Map<String, Talks.Talk> talkById = new LinkedHashMap<>();
         for (Talks.Talk talk : talks.list()) {
@@ -113,7 +105,25 @@ public class TalksList {
             result.add(new TalkEntry(id, toSlug(canonicalTitle), canonicalTitle, description, article, github, entry.getValue(), retired));
         }
 
-        return result;
+        cachedList = Collections.unmodifiableList(result);
+    }
+
+    public TalkEntry getById(String id) {
+        return getList().stream()
+                .filter(t -> t.id().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public TalkEntry getBySlug(String slug) {
+        return getList().stream()
+                .filter(t -> t.slug().equals(slug))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public List<TalkEntry> getList() {
+        return cachedList;
     }
 
     private static String toSlug(String title) {

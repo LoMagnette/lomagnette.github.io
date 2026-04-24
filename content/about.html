@@ -14,22 +14,12 @@ layout: :theme/page
       <h1 class="author-name-large">{author.name}</h1>
       <p class="author-job">{author.job}</p>
       <div class="author-social-links">
-        <a href="https://github.com/lomagnette" target="_blank" rel="noopener noreferrer" class="author-social-link" aria-label="GitHub">
-          <i class="fa-brands fa-github"></i>
-          <span>GitHub</span>
+        {#for social in cdi:siteConfig.socials}
+        <a href="{social.url}" target="_blank" rel="noopener noreferrer" class="author-social-link" aria-label="{social.label}">
+          <i class="{social.icon}"></i>
+          <span>{social.label}</span>
         </a>
-        <a href="https://linkedin.com/in/lomagnette" target="_blank" rel="noopener noreferrer" class="author-social-link" aria-label="LinkedIn">
-          <i class="fa-brands fa-linkedin"></i>
-          <span>LinkedIn</span>
-        </a>
-        <a href="https://bsky.app/profile/lomagnette.bsky.social" target="_blank" rel="noopener noreferrer" class="author-social-link" aria-label="Bluesky">
-          <i class="fa-brands fa-bluesky"></i>
-          <span>Bluesky</span>
-        </a>
-        <a href="https://twitter.com/lomagnette" target="_blank" rel="noopener noreferrer" class="author-social-link" aria-label="Twitter">
-              <i class="fa-brands fa-twitter"></i>
-              <span>Twitter</span>
-        </a>
+        {/for}
       </div>
     </div>
   </div>

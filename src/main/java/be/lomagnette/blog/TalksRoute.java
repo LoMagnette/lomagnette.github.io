@@ -1,3 +1,5 @@
+package be.lomagnette.blog;
+
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import jakarta.enterprise.context.ApplicationScoped;
