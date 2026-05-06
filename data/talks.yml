@@ -24,6 +24,7 @@
   title: "Java Script (No, Not That One): Modern Automation with Java"
   article: "/posts/javascript-no-not-that-one-modern-automation-with-java/"
   description: "Java has quietly become a powerful scripting language. With JBang, single-file programs, and modern Java features, you can write quick automation scripts, CLI tools, and one-off utilities — all in Java. No project setup, no build tool, no boilerplate. In this session, we'll explore how to use Java for the kind of tasks you'd normally reach for Python or Bash. From file processing to API calls to system automation, Java scripting is fast, type-safe, and surprisingly fun."
+  github: https://github.com/LoMagnette/java-script-no-not-that-one
 - id: 5
   title: "Finding the Spark: A Career Reset Button."
   article: "/posts/reigniting-the-spark-what-community-taught-me-that-code-never-could/"
