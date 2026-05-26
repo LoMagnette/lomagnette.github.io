@@ -1,5 +1,12 @@
 - year: "2026"
   events:
+    - name: "Voxxed days Luxembourg"
+      url: "https://luxembourg.voxxeddays.com"
+      date: "Jun 2026"
+      location: "Mondorf-les-Bains, Grand-Duchy of Luxembourg"
+      flag: "🇱🇺"
+      talks:
+        - talkId: 1
     - name: "Devoxx Poland"
       url: "https://www.devoxx.pl/"
       date: "Jun 2026"
@@ -27,6 +34,7 @@
       talks:
         - talkId: 1
           title: "A2A in 50 Minutes: Building Interoperable AI Agents"
+          slides: "https://speakerdeck.com/magnette/a2a-in-50-minutes-building-interoperable-ai-agents"
 
     - name: "Devoxx UK"
       url: "https://www.devoxx.co.uk/"
@@ -36,8 +44,10 @@
       talks:
         - talkId: 1
           title: "Building Interoperable AI Agents in 30 Minutes"
+          slides: "https://speakerdeck.com/magnette/a2a-in-50-minutes-building-interoperable-ai-agents"
         - talkId: 4
           title: "Java Script (No, Not That One): Modern Automation with Java"
+
 
     - name: "Voxxed days Bucharest"
       url: "https://romania.voxxeddays.com/"
@@ -57,9 +67,11 @@
       talks:
         - talkId: 1
           title: "A2A en 30 Minutes: Construire des agent IA qui communiquent"
+          recording: https://www.youtube.com/watch?v=YrO8tF0UpJw
         - talkId: 5
           title: "Retrouver l’étincelle : un \"Reboot\" de carrière"
           slides: https://speakerdeck.com/magnette/finding-the-spark-a-career-reset-button
+          recording: https://www.youtube.com/watch?v=ban8bVpFMRc
 
     - name: "JCON EUROPE"
       url: "https://jcon.one/"
