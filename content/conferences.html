@@ -169,7 +169,6 @@ layout: :theme/page
     align-items: center;
     gap: 0.25rem;
     padding: 0.25rem 0.65rem;
-    //background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
     background: none;
     color: white;
     text-decoration: none;
@@ -267,8 +266,9 @@ layout: :theme/page
                             <div class="talks-list">
                                 {#for talk in event.talks}
                                     <div class="talk-item">
-                                        <div class="talk-bullet"></div>
+
                                         <div class="talk-content">
+                                            <div class="talk-bullet"></div>
                                             <div class="talk-title">{talk.title}</div>
                                             {#if talk.slides || talk.recording}
                                                 <div class="talk-links">
