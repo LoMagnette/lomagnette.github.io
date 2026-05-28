@@ -25,6 +25,7 @@
           title: "A2A in 45 Minutes: Building Interoperable AI Agents"
         - talkId: 3
           title: "From AI to Agent with Langchain4j"
+          slides: "https://speakerdeck.com/magnette/jcon-slovenia-from-ai-to-agent-with-langchain4j"
 
     - name: "JNation"
       url: "https://www.jnation.pt/"
