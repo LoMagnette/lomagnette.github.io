@@ -7,16 +7,28 @@ hljs.highlightAll();
 mermaid.initialize({ startOnLoad: true });
 
 // Dark Mode Toggle
+function applyTheme(theme) {
+  const isDark = theme === 'dark';
+  document.documentElement.setAttribute('data-theme', theme);
+
+  // The Roq theme's Tailwind styles are keyed on a `dark` class on <html>, which its
+  // head.html partial sets from prefers-color-scheme / its own `darkMode` key. Without
+  // syncing, a visitor whose OS is dark gets the theme's dark colors (e.g. white prose
+  // links) on top of our light palette. Writing `darkMode` also keeps the theme's
+  // pre-paint script in agreement on the next page load.
+  document.documentElement.classList.toggle('dark', isDark);
+  localStorage.setItem('darkMode', String(isDark));
+}
+
 function initTheme() {
-  const savedTheme = localStorage.getItem('theme') || 'light';
-  document.documentElement.setAttribute('data-theme', savedTheme);
+  applyTheme(localStorage.getItem('theme') || 'light');
 }
 
 function toggleTheme() {
   const currentTheme = document.documentElement.getAttribute('data-theme');
   const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
 
-  document.documentElement.setAttribute('data-theme', newTheme);
+  applyTheme(newTheme);
   localStorage.setItem('theme', newTheme);
 }
 
