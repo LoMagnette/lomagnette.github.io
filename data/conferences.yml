@@ -1,5 +1,21 @@
 - year: "2026"
   events:
+    - name: "DevDay"
+      url: "https://devday.be/"
+      date: "Dec 2026"
+      location: "Mons, Belgium"
+      flag: "🇧🇪"
+      talks:
+        - talkId: 18
+
+    - name: "JavaCro"
+      url: "https://2026.javacro.hr/eng/"
+      date: "Oct 2026"
+      location: "Croatia"
+      flag: "🇭🇷"
+      talks:
+        - talkId: 4
+        - talkId: 3
     - name: "Voxxed days Luxembourg"
       url: "https://luxembourg.voxxeddays.com"
       date: "Jun 2026"

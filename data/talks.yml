@@ -68,3 +68,12 @@
   retired: true
 - id: 17
   title: "BOF: Java and JVM lovers in Belgium, let's unite!"
+- id: 18
+  title: "Angular sans Zone : quand le futur devient la valeur par défaut"
+  description: "
+  Pendant des années, ngZone a servi de pilote automatique à Angular. Pratique pour déclencher la détection de changements, mais au prix de re-rendus inutiles, d'un contrôle approximatif sur l'état, et d'applications qui ralentissaient sans qu'on sache toujours pourquoi. On a longtemps parlé du jour où Angular se passerait enfin de tout ça. Ce jour est arrivé.
+  \n\n
+  Avec Angular 22, le zoneless n'est plus une option réservée aux curieux, c'est la valeur par défaut. zone.js disparaît des nouveaux projets, OnPush devient le comportement standard, et la réactivité passe entièrement par les signaux. Autour d'eux, tout un écosystème a mûri : les Signal Forms, l'API resource et httpResource pour un data-fetching réactif, et un control flow (@if, @for, @switch) désormais ancré dans le langage. Dans cette session, on construit ensemble une application Angular 22 réellement zoneless, à coups de démos et de code qui tourne. On verra comment penser en signaux plutôt qu'en cycles de détection, comment migrer un projet existant en douceur (car le vrai travail, c'est moderniser, pas repartir de zéro), et quels pièges éviter au passage. On gardera aussi un œil sur ce qui se prépare pour la fin d'année et au-delà, avec les composants selectorless et l'API de Mutations.
+  \n\n
+  Vous repartirez avec un modèle mental signal-first clair, des recettes concrètes pour adopter le zoneless sans tout casser sur un projet existant, et de quoi aborder la prochaine version d'Angular sans appréhension.
+  "
