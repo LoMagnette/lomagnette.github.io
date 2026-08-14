@@ -7,7 +7,15 @@
       flag: "🇧🇪"
       talks:
         - talkId: 18
-
+    - name: "Devoxx Belgium"
+      url: "https://devoxx.be/"
+      date: "Oct 2026"
+      location: "Belgium"
+      flag: "🇧🇪"
+      talks:
+        - talkId: 4
+        - talkId: 3
+          title: "From AI to Agent: A Field Guide to Agentic Patterns in LangChain4j"
     - name: "JavaCro"
       url: "https://2026.javacro.hr/eng/"
       date: "Oct 2026"
@@ -16,6 +24,14 @@
       talks:
         - talkId: 4
         - talkId: 3
+    - name: "Quarkus Club"
+      url: "https://quarkusclub.github.io/"
+      date: "Aug 2026"
+      location: "Online"
+      flag: "🌐"
+      talks:
+        - talkId: 3
+          recording: https://www.youtube.com/watch?v=j-monNEEWvg
     - name: "Voxxed days Luxembourg"
       url: "https://luxembourg.voxxeddays.com"
       date: "Jun 2026"
