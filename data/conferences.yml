@@ -7,6 +7,13 @@
       flag: "🇧🇪"
       talks:
         - talkId: 18
+    - name: "Ya!vaConf 2026"
+      url: "https://yavaconf.com/"
+      date: "Oct 2026"
+      location: "Online"
+      flag: "🌐"
+      talks:
+        - talkId: 4
     - name: "Devoxx Belgium"
       url: "https://devoxx.be/"
       date: "Oct 2026"
@@ -23,6 +30,13 @@
       flag: "🇭🇷"
       talks:
         - talkId: 4
+        - talkId: 3
+    - name: "DevTalks Cluj-Napoca"
+      url: "https://www.devtalks.ro/cluj"
+      date: "Sep 2026"
+      location: "Cluj-Napoca, Romania"
+      flag: "🇷🇴"
+      talks:
         - talkId: 3
     - name: "Quarkus Club"
       url: "https://quarkusclub.github.io/"
