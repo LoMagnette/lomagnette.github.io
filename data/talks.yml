@@ -20,6 +20,7 @@
   In this talk, we move from AI calls to agentic systems using LangChain4j. We’ll explore common workflow patterns such as sequential, loop, parallel, and conditional flows, along with error handling as a first-class concern. From there, we’ll zoom out to agentic concepts like shared state with an AgenticScope, goal-oriented agents, and pure agentic setups. We’ll also look beyond AI-only approaches, mixing in non-AI agents and human-in-the-loop interactions. All of this will be built live, step by step, to show how these ideas work in practice.
   \n\n
   You’ll leave with a concrete understanding of when to use workflows and when to rely on agents, how to combine both without confusion, and how to keep state, goals, and responsibilities explicit. The goal is not to build smarter prompts, but systems that are easier to reason about, easier to evolve, and better aligned with real-world application needs."
+  github: https://github.com/LoMagnette/deep-dive-langchain4j-devoxx-2026
 - id: 4
   title: "Java Script (No, Not That One): Modern Automation with Java"
   article: "/posts/javascript-no-not-that-one-modern-automation-with-java/"
