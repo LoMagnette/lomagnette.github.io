@@ -38,6 +38,7 @@
       flag: "🇷🇴"
       talks:
         - talkId: 3
+          slides: "https://speakerdeck.com/magnette/devtalks-from-ai-to-agent-with-langchain4j"
     - name: "Quarkus Club"
       url: "https://quarkusclub.github.io/"
       date: "Aug 2026"
