@@ -31,6 +31,8 @@
         - talkId: 3
           title: "From AI to Agent: A Field Guide to Agentic Patterns in LangChain4j"
           slides: https://speakerdeck.com/magnette/devoxxbe-from-ai-to-agent-a-field-guide-to-agentic-patterns-in-langchain4j
+        - talkId: 19
+        - talkId: 20
     - name: "JavaCro"
       url: "https://2026.javacro.hr/eng/"
       date: "Oct 2026"
