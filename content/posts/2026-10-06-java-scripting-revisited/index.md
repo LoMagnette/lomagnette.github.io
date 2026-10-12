@@ -12,10 +12,11 @@ I haven't rewritten my whole toolbox since then. But a few things crossed my pat
 
 ## Why JBang Moved Its CLI to Æsh
 
-
 In my first post, I used [Picocli](https://picocli.info/) as the go-to for giving scripts proper options, help text, and type conversion. It's still a solid choice. But while poking around the JBang repository, I found out the project had recently moved its *own* CLI off it and onto [Æsh](https://aeshell.github.io/), and the reasoning is worth unpacking.
 
 The culprit is reflection. Picocli discovers your commands and options at startup by inspecting annotated fields. Fine for a script you launch a few times a day. Less fine when the tool is called constantly, like JBang during shell tab-completion, where it can be triggered by almost every key you press. Æsh instead generates the parsing code at compile time via annotation processing, so there's no discovery cost to pay.
+
+To be fair to Picocli, it ships an annotation processor too (`picocli-codegen`). Its main job, though, is catching mistakes at compile time and generating GraalVM native-image configuration. On a regular JVM, parsing still relies on runtime introspection.
 
 The project's migration report backs this up with numbers. These are **JBang's CLI startup measurements before and after the switch**, comparing the two libraries as its command-line parser, not a general-purpose verdict on Picocli for every app.
 
@@ -72,9 +73,88 @@ jbang duke-prompt.java
 
 And you've got a working REPL, history and line editing included, without any `BufferedReader` gymnastics.
 
+That REPL never touches the command framework, though, and that's where the speed story from JBang's migration lives. So here's the other half of Æsh: `dog`, a small `cat` clone (it fetches files, obviously) running inside an interactive console of its own:
+
+```java
+///usr/bin/env jbang "$0" "$@" ; exit $?
+//JAVA 25+
+//DEPS org.aesh:aesh:3.18.3
+//DEPS org.aesh:aesh-processor:3.18.3
+//JAVAC_OPTIONS -proc:full
+//JAVA_OPTIONS --enable-native-access=ALL-UNNAMED
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import org.aesh.AeshConsoleRunner;
+import org.aesh.command.Command;
+import org.aesh.command.CommandDefinition;
+import org.aesh.command.CommandResult;
+import org.aesh.command.invocation.CommandInvocation;
+import org.aesh.command.option.Argument;
+import org.aesh.command.option.Option;
+
+@CommandDefinition(name = "dog", description = "fetch a file's contents, dog-style", generateHelp = true)
+public class DogAesh implements Command<CommandInvocation> {
+
+    @Option(shortName = 'n', name = "number", hasValue = false,
+            description = "number the output lines")
+    boolean numbers;
+
+    @Argument(description = "the file to fetch")
+    String file;
+
+    public static void main(String... args) {
+        AeshConsoleRunner.builder()
+                .command(DogAesh.class)
+                .prompt("[dog]$ ")
+                .addExitCommand()
+                .start();
+    }
+
+    @Override
+    public CommandResult execute(CommandInvocation inv) {
+        var path = Path.of(file);
+        if (!Files.isRegularFile(path)) {
+            IO.println("🐕 can't fetch " + file + ": no such file");
+            return CommandResult.FAILURE;
+        }
+        printFile(path);
+        return CommandResult.SUCCESS;
+    }
+
+    private void printFile(Path path) {
+        IO.println("🐕 " + path);
+        try (BufferedReader reader = new BufferedReader(new FileReader(path.toString()))) {
+            String line;
+            int lineNumber = 1;
+            while ((line = reader.readLine()) != null) {
+                if (numbers) {
+                    IO.print("\t" + lineNumber);
+                }
+                IO.println("\t" + line);
+                lineNumber++;
+            }
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+    }
+}
+```
+
+Save it as `DogAesh.java` and run `jbang DogAesh.java`. You land on a `[dog]$` prompt where `dog -n DogAesh.java` prints the file with line numbers, `dog --help` shows the generated usage text, and `exit` leaves.
+
+If you've used Picocli, this will feel familiar: an annotated class, an `@Option` for the flag, an `@Argument` for the file, help for free. The twist is that parsing happens inside a prompt that stays open between commands. A few header lines deserve a closer look, though:
+
+- **`aesh-processor` and `-proc:full`** are what take the runtime lookups out of parsing. Since JDK 23, `javac` no longer runs annotation processors it finds on the classpath unless you ask, and Æsh doesn't complain when its processor is missing: it silently falls back to inspecting your class at runtime. Leave either one out and you get exactly the behavior JBang moved away from.
+- **Package-private fields** follow the same logic. Private ones still have to be set through `setAccessible()` at runtime, and the processor warns you about it at compile time.
+- **`--enable-native-access=ALL-UNNAMED`** silences a JDK 25 warning: Æsh's terminal layer calls into libc through the Foreign Function & Memory API, and the JVM wants you to allow that explicitly.
+
 ## Quarkus and the Joy of Live Reload
 
-Ahead of my session at the Quarkus Club, I reopened the framework to build the demo and was reminded how pleasant its dev loop feels, even for a scripting or CLI tool, not just a web app.
+Ahead of [my session at the Quarkus Club](https://www.youtube.com/watch?v=j-monNEEWvg), I reopened the framework to build the demo and was reminded how pleasant its dev loop feels, even for a scripting or CLI tool, not just a web app.
 
 I went with a Maven project to keep everything tidy: commands, services, tests. Single-file JBang scripts also work through the framework's [preview scripting integration](https://quarkus.io/guides/scripting/), so that layout was a personal choice, not a requirement.
 
@@ -97,7 +177,7 @@ public class GreetCommand implements Runnable {
 }
 ```
 
-Run `mvn quarkus:dev`, and per the guide, *"the application is executed and restarted every time the Space bar key is pressed"* in the terminal. Press space. Your command reruns with your latest code, no manual rebuild needed. You do give up the single-file format, but in exchange you get a project structure that keeps a growing tool maintainable as it picks up new features. For a live demo on stage? Worth it.
+Run `mvn quarkus:dev`, and per the guide, *"the application is executed and restarted every time the Space bar key is pressed"* in the terminal. Press space. Your command reruns with your latest code, no manual rebuild needed. You do give up the single-file format, but in exchange you get a project structure that keeps a growing tool maintainable as it picks up new features. For a live demo on stage, that's a trade worth making.
 
 ## TamboUI and a Duke Who Dodges Cacti
 
@@ -105,13 +185,15 @@ Terminal UIs are having a moment. Go has Bubble Tea, Python offers Textual, Rust
 
 I used it to build a small, entirely unnecessary take on the Chrome dinosaur game, starring Duke instead: **[Duke Runner](https://github.com/LoMagnette/DukeRunner)**. Jump over obstacles, and every hundred points the game reskins itself through a bit of platform history, the accent and ground colors cycling Java 1 → 5 → 11 → 21+, a little wink built into an `enum` rather than anything deep in the rendering.
 
-Clone the repository, then run this from its root:
+![Duke Runner in a terminal window, mid-jump over a cactus.](duke-runner.gif)
+
+No need to clone anything. JBang can run the released jar straight from its URL:
 
 ```bash
-jbang run src/main/java/be/lomagnette/duke/runner/tui/DukeRunner.java
+jbang --java 26+ https://github.com/LoMagnette/DukeRunner/releases/download/v0.2.1-alpha/duke-runner-tui.jar
 ```
 
-(Needs Java 26+ and [JBang](https://www.jbang.dev/documentation/guide/latest/installation.html). `Space`/`↑` to jump, hold for a higher one, `Shift` to throw, `Q` to quit.)
+(Needs Java 26+, for no better reason than that I could, and [JBang](https://www.jbang.dev/documentation/guide/latest/installation.html). `Space`/`↑` to jump, hold for a higher one, `Shift` to throw, `Q` to quit.)
 
 My biggest takeaway from the build: with the `TuiRunner` API, your callback receives key, tick, and resize events and returns whether to redraw, while rendering lives in a separate function invoked with your state each frame. So I kept everything (score, era, player position, the list of obstacles) in a plain `Game` object, updated on each tick and key press, and handed it to `Renderer.render(frame, game)` to draw.
 
@@ -121,9 +203,28 @@ Worth noting: TamboUI is still young, so expect some rough edges and APIs still 
 
 ## Crema: `javac` Without the Warm-Up
 
-Last one, and the most experimental. I would probably never have heard of it on my own. While I was preparing my talk on Java scripting for Devoxx Belgium, Thomas Wuerthinger from the GraalVM team reached out to me on LinkedIn. He walked me through what his team was working on and shared a demo to show it in action. That's the kind of exchange I love about this community.
+Last one, and the most experimental. I would probably never have heard of it on my own. While I was preparing my talk on Java scripting for Devoxx Belgium, [Thomas Wuerthinger](https://www.linkedin.com/in/thomaswue/) from the GraalVM team reached out to me on LinkedIn. He walked me through what his team was working on and shared a demo to show it in action. That's the kind of exchange I love about this community.
 
 It's called [Crema](https://github.com/thomaswue/crema-source-launcher). The idea is to take the Java compiler itself and build it ahead of time into a native binary, bundled with a launcher. What you get is a single executable that can turn a source file into a running program on the spot, without booting a traditional JVM just to do the compiling.
+
+Trying it yourself takes GraalVM 25.4.4 and a C toolchain (Xcode Command Line Tools on macOS). Clone the repository, then build the launcher and run the bundled hello world:
+
+```bash
+sdk use java 25.4.4+1-graal
+./build.sh
+./run.sh examples/HelloWorld.java
+```
+
+The remaining samples accept arguments, like any regular script:
+
+```bash
+./run.sh examples/ListDirectory.java .
+./run.sh examples/WordCount.java README.md
+./run.sh examples/FindFiles.java '*.java' examples
+./run.sh examples/Sha256.java README.md
+```
+
+Keep the build output together: the native executable needs its companion libraries next to it at runtime. These are the same five scripts used in the benchmark below.
 
 Its [benchmark data](https://github.com/thomaswue/crema-source-launcher/blob/1b35cdb36fd73214b9b8604619c122804cf34d11/benchmarks/latest/timings.json) is public, collected on macOS ARM64. Here are the mean end-to-end timings per example, compilation and execution included:
 
@@ -139,6 +240,6 @@ On these sample scripts, the published total runtimes drop from between 203 and 
 
 ## Wrap-Up
 
-If I had to turn this into a decision rule rather than a tool list: stay with a plain JBang file for anything you'd finish in one sitting. Reach for Æsh once the script needs to hold a conversation instead of just running once and exiting. Move to a full Quarkus project when the tool benefits from multiple classes, dedicated tests, and a structured build, or you're about to demo it in front of people and want the dev loop back. And pull out something like TamboUI when the output genuinely deserves a screen instead of a few lines of stdout.
+If I had to turn this into a decision rule rather than a tool list: stay with a plain JBang file for anything you'd finish in one sitting. Reach for Æsh once the script needs to hold a conversation instead of just running once and exiting. Move to a full Quarkus project when the tool benefits from multiple classes, dedicated tests, and a structured build, or you're about to demo it in front of people and want the dev loop back. And pull out something like TamboUI when the output genuinely deserves a screen instead of a few lines of stdout. Crema isn't something to pick yet, but if JVM startup is the reason you still write throwaway scripts in Bash, it's worth following.
 
-None of this changes the core pitch from my first post. These experiments show how the ecosystem keeps evolving: a faster CLI parser inside JBang itself, a dev experience worth going back to Maven for, and a terminal UI library letting Duke outrun cacti. I'll keep poking at this corner of the ecosystem and report back when something else sticks.
+None of this changes the core pitch from my first post. These experiments show how the ecosystem keeps evolving: a faster CLI parser inside JBang itself, a dev experience worth going back to Maven for, a terminal UI library letting Duke outrun cacti, and a natively compiled `javac` that brings a script's total runtime down to a few dozen milliseconds. I'll keep poking at this corner of the ecosystem and report back when something else sticks.
