@@ -3,6 +3,7 @@ title: "JavaScript Strikes Back (No, Still Not That One): More Adventures in Jav
 description: "A follow-up on modern Java scripting: why JBang swapped Picocli for Æsh, what Quarkus's dev loop brings back to CLI tools, building a terminal UI with TamboUI, and GraalVM's experimental Crema launcher."
 tags: [java, jbang, quarkus, aesh, graalvm]
 author: Loïc
+image: java-script-revisited.png
 ---
 ## Picking Up Where We Left Off
 
