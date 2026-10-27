@@ -11,6 +11,8 @@ A while back, I wrote about how modern Java had quietly become a legitimate scri
 
 I haven't rewritten my whole toolbox since then. But a few things crossed my path, some out of curiosity, others while preparing talks, and they changed how I think about where Java scripting is headed. So let's go through them.
 
+If you'd rather follow along in code, the demos from my talk live in [java-script-no-not-that-one](https://github.com/LoMagnette/java-script-no-not-that-one), one commit per step, including the Æsh, Quarkus, and TamboUI examples below.
+
 ## Why JBang Moved Its CLI to Æsh
 
 In my first post, I used [Picocli](https://picocli.info/) as the go-to for giving scripts proper options, help text, and type conversion. It's still a solid choice. But while poking around the JBang repository, I found out the project had recently moved its *own* CLI off it and onto [Æsh](https://aeshell.github.io/). The team explains why in [an article on the JBang site](https://www.jbang.dev/learn/from-picocli-to-sh-how-porting-jbang-s-cli-made-everything-better/), and the reason is interesting.
