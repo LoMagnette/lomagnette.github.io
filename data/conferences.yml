@@ -7,6 +7,13 @@
       flag: "🇧🇪"
       talks:
         - talkId: 18
+    - name: "DevFest Belgium"
+      url: "https://devfest-belgium.be/"
+      date: "Nov 2026"
+      location: "Dampremy, Belgium"
+      flag: "🇧🇪"
+      talks:
+        - talkId: 5
     - name: "Codeur en Seine"
       url: "https://www.codeursenseine.com/2026"
       date: "Nov 2026"
