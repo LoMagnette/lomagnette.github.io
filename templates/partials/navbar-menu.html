@@ -16,7 +16,7 @@
                 <li class="nav-item">
                     <a href="{site.url(item.path)}"
                        {#if item.target??}target="{item.target}" rel="noopener noreferrer"{/if}
-                       class="nav-link {#if page.url.path == item.path}active{#else if item.path != '/' && page.url.path.startsWith(item.path)}active{/if}">
+                       class="nav-link {#if page.url.path == item.path}active{#else if item.path != '/' && page.url.path.startsWith(item.path)}active{#else if item.path == '/' && page.url.path.startsWith('/posts')}active{/if}">
                         <i class="{item.icon}" aria-hidden="true"></i>
                         <span>{item.title}</span>
                     </a>

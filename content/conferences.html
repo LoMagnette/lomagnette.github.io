@@ -8,26 +8,7 @@ layout: page
 .talks-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 1.5rem 1rem;
-}
-
-.talks-header {
-    text-align: center;
-    margin-bottom: 2rem;
-}
-
-.talks-header h1 {
-    font-size: 2.5rem;
-    font-weight: 800;
-    margin-bottom: 0.5rem;
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.talks-header p {
-    color: var(--text-secondary);
+    padding: 0 1rem 1.5rem;
 }
 
 .year-section {
@@ -37,29 +18,42 @@ layout: page
 .year-title {
     font-size: 2rem;
     font-weight: 700;
+    margin-top: 0 !important;
     margin-bottom: 1.25rem;
     color: var(--text-primary);
-    border-left: 6px solid var(--color-primary);
-    padding-left: 1rem;
+    letter-spacing: -0.025em;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.year-title::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border-color);
 }
 
 .events-grid {
     display: grid;
+    /* minmax(0, 1fr): let cards shrink to the column instead of growing to their content (overflowed on mobile). */
+    grid-template-columns: minmax(0, 1fr);
     gap: 1rem;
 }
 
 .event-card {
-    background: var(--card-gradient);
-    border-radius: 10px;
-    padding: 0.75rem;
-    box-shadow: var(--shadow-md);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background: var(--card-bg);
+    border-radius: var(--radius-xl);
+    padding: 1.25rem 1.5rem;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     border: 1px solid var(--border-color);
 }
 
 .event-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-2px);
     box-shadow: var(--shadow-lg);
+    border-color: var(--border-color-hover);
 }
 
 .event-header {
@@ -73,7 +67,7 @@ layout: page
 
 .event-name {
     font-size: 1.25rem;
-    font-weight: 700;
+    font-weight: 700 !important;
     color: var(--text-primary);
     margin: 0;
     flex: 1;
@@ -83,6 +77,7 @@ layout: page
 }
 
 .event-name a {
+    font-weight: inherit !important;
     color: var(--text-primary);
     text-decoration: none;
     transition: color 0.2s ease;
@@ -113,7 +108,7 @@ layout: page
 .talks-list {
     margin-top: 1rem;
     padding-top: 1rem;
-    border-top: 2px solid var(--border-color);
+    border-top: 1px solid var(--border-color);
 }
 
 .talk-item {
@@ -192,9 +187,10 @@ layout: page
 }
 
 @media (max-width: 768px) {
-    .talks-header h1 {
-        font-size: 2rem;
+    .event-card {
+        padding: 1rem 1.125rem;
     }
+
 
     .year-title {
         font-size: 1.75rem;
@@ -219,12 +215,21 @@ layout: page
 
     .event-meta-item {
         font-size: 0.85rem;
+        white-space: normal;
     }
 
+    /* Bullet lines up with the first line of a wrapped title. */
+    .talk-content {
+        align-items: flex-start;
+    }
+
+    .talk-bullet {
+        margin-top: 0.55rem;
+    }
+
+    /* Keep the bullet on the same line as the title. */
     .talk-title {
-        min-width: unset;
-        width: 100%;
-        flex-basis: 100%;
+        min-width: 0;
     }
 
     .talk-content {
@@ -238,10 +243,6 @@ layout: page
 </style>
 
 <div class="talks-container">
-    <div class="talks-header">
-        <h1>Conferences</h1>
-        <p>All the conferences I've spoken at</p>
-    </div>
 
     {#for year in cdi:conferencesList.list}
         <div class="year-section">

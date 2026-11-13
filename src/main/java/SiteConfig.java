@@ -1,6 +1,7 @@
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;
 
+import java.time.Year;
 import java.util.List;
 
 /**
@@ -10,6 +11,11 @@ import java.util.List;
 @ApplicationScoped
 @Named("siteConfig")
 public class SiteConfig {
+
+    /** Year shown in the footer copyright; the static site is regenerated on each deploy. */
+    public int currentYear() {
+        return Year.now().getValue();
+    }
 
     public String name() {
         return "Loïc Magnette";

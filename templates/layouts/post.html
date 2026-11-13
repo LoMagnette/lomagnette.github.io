@@ -8,6 +8,16 @@ layout: main
 <article class="article-page" xmlns="http://www.w3.org/1999/html">
   {#insert article-start /}
   <section class="page-content">
+    <header class="header-page">
+      <div class="page-meta">
+        <span class="page-date"><i class="fa-regular fa-calendar" aria-hidden="true"></i>{page.date.format('MMM d, yyyy')}</span>
+        <span class="page-read"><i class="fa-regular fa-clock" aria-hidden="true"></i>{page.readTime} min read</span>
+      </div>
+      <h1 class="page-title">{page.title}</h1>
+      {#if page.description}
+      <p class="page-lead">{page.description}</p>
+      {/if}
+    </header>
     {#if page.image}
     <div class="page-cover-image">
       <figure>
@@ -19,10 +29,6 @@ layout: main
     </div> <!-- End Page Cover Image -->
     {/if}
     <section class="wrap-content">
-      <header class="header-page">
-        <h1 class="page-title">{page.title}</h1>
-        <div class="page-date"><span>{page.date.format('yyyy, MMM dd')}&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
-      </header>
       <section>
         {#insert /}
       </section>
