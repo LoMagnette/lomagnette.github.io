@@ -84,12 +84,12 @@
     &:hover {
       transform: translateY(-2px);
       box-shadow: var(--shadow-md);
-      background: var(--gradient-strong);
-      color: #fff;
+      background: var(--gradient-brand);
+      color: var(--on-primary);
       border-color: transparent;
 
       i {
-        color: #fff;
+        color: var(--on-primary);
         transform: scale(1.1);
       }
     }

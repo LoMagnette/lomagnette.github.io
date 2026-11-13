@@ -48,11 +48,10 @@ $bp-lg: 1024px;
   --color-accent: #06b6d4 !important;
   --color-accent-dark: #0891b2 !important;
   --gradient-brand: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
-  // Bright teal fails contrast behind white text (2.5:1). Solid fills that carry white text
-  // use these darker teals instead (5.4:1+).
-  --fill-strong: #0f766e;
-  --gradient-strong: linear-gradient(135deg, #0f766e 0%, #0e7490 100%);
-  --badge-muted-bg: #475569;
+  // Label color on teal fills (--color-primary, --gradient-brand). White is only 2.5:1 on the
+  // brand teal (fails WCAG AA even for large text); deep teal (teal-950) is 5.8:1 and keeps the
+  // button reading as teal.
+  --on-primary: #042f2e;
 
   // Light mode (slate neutrals, teal accents)
   --bg-primary: #ffffff;
@@ -75,7 +74,9 @@ $bp-lg: 1024px;
   --tint-bg: rgba(20, 184, 166, 0.1);
   --tint-border: rgba(20, 184, 166, 0.25);
   --tint-text: #0f766e;
-  --link-hover: #115e59;
+  // Bright teal text is 2.5:1 on white, so light-mode hover *text* uses the link teal; the bright
+  // teal shows up as the hover underline instead (decorations have no contrast requirement).
+  --link-hover: var(--tint-text);
   --nav-bg: rgba(255, 255, 255, 0.82);
   --footer-bg: transparent;
   --footer-border: var(--border-color);
@@ -105,7 +106,7 @@ $bp-lg: 1024px;
   --tint-bg: rgba(45, 212, 191, 0.12);
   --tint-border: rgba(45, 212, 191, 0.3);
   --tint-text: #5eead4;
-  --link-hover: var(--color-primary-light);
+  --link-hover: var(--color-primary);
   --nav-bg: rgba(17, 23, 27, 0.86);
   --footer-bg: linear-gradient(135deg, #111111 0%, #0a0a0a 100%);
   --footer-border: rgba(255, 255, 255, 0.05);

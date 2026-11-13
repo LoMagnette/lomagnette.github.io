@@ -58,8 +58,8 @@ hr {
   z-index: 2000;
   padding: var(--spacing-xs) var(--spacing-md);
   border-radius: var(--radius-sm);
-  background: var(--fill-strong);
-  color: #fff;
+  background: var(--color-primary);
+  color: var(--on-primary);
   font-weight: 600;
   text-decoration: none;
   transform: translateY(-200%);

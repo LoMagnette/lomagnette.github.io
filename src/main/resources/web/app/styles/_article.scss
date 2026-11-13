@@ -61,7 +61,7 @@
 
     &:hover {
       color: var(--link-hover) !important;
-      text-decoration-color: currentColor;
+      text-decoration-color: var(--color-primary);
     }
   }
 
@@ -268,8 +268,8 @@ h1.page-title,
     transition: background var(--transition-fast), color var(--transition-fast);
 
     &:hover {
-      background: var(--fill-strong);
-      color: #fff !important;
+      background: var(--color-primary);
+      color: var(--on-primary) !important;
     }
   }
 }

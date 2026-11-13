@@ -70,8 +70,10 @@
 .badge-retired {
   @include pill;
   margin-left: 0.5rem;
-  background: var(--badge-muted-bg);
-  color: #fff;
+  // The original grey pill without its 0.7 opacity (which broke contrast); the label uses the
+  // page background color so it reads in both themes.
+  background: var(--text-tertiary);
+  color: var(--bg-primary);
   font-size: 0.7rem;
 }
 
@@ -104,8 +106,8 @@
 
     &[aria-pressed="true"],
     &.active {
-      background: var(--fill-strong);
-      color: #fff;
+      background: var(--color-primary);
+      color: var(--on-primary);
     }
   }
 }
@@ -293,7 +295,7 @@
 
   // The gradient clips text to the background: give the badge its own fill back.
   .badge-retired {
-    -webkit-text-fill-color: #fff;
+    -webkit-text-fill-color: var(--bg-primary);
   }
 
   @include mobile {
