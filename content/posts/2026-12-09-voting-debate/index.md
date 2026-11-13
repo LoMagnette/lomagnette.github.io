@@ -7,11 +7,11 @@ draft: true
 ---
 <!-- TODO(Loïc): add a cover image (image: ...) -->
 
-At home, some decisions go to a vote. Pizza or pasta, park or swimming pool. My daughter votes, my wife votes, I vote, and the dog would vote too if he could hold a pen. Some decisions don't go to a vote. If my wife says the ice on the pond looks too thin, nobody goes on the ice. Even if it's two against one.
+Let's imagine a Saturday at home. Pizza or pasta? My daughter votes, my wife votes, I vote, and the dog would vote too if he could hold a pen. Majority wins, and nobody gets hurt. Now imagine we're next to a frozen pond and my wife says the ice looks too thin. We don't count votes there. One "no" is enough, even if it's two against one.
 
-That difference is what this article is about. When you put several agents in front of the same question, you also need a rule that says how their answers become *one* decision.
+When you put several agents in front of the same question, you have exactly the same problem. You need a rule that says how all their answers become a single decision, and that rule matters more than you would think.
 
-This post is part of a series based on my three-hour deep dive on LangChain4j at Devoxx Belgium 2026. The workflow basics (sequence, loop, parallel, conditional), the goal-oriented planner and the supervisor are already covered in [LangChain4j Agentic Workflows: From AI Calls to Multi-Agent Systems in Java](/posts/langchain4j-agentic-workflows-from-ai-calls-to-multi-agent-systems-in-java/). The [previous article](/posts/when-the-state-is-the-boss-peer-to-peer-and-blackboard-agents-with-langchain4j/) was about agents driven by the shared state. Here, we go to what I called the *political side* of agentic patterns on stage: **voting** and **debate**. You probably know both already. You've lived them, in a meeting room or at an election.
+This post is part of a series based on my three-hour deep dive on LangChain4j at Devoxx Belgium 2026. The workflow basics (sequence, loop, parallel, conditional), the goal-oriented planner and the supervisor are already covered in [LangChain4j Agentic Workflows: From AI Calls to Multi-Agent Systems in Java](/posts/langchain4j-agentic-workflows-from-ai-calls-to-multi-agent-systems-in-java/). The [previous article](/posts/when-the-state-is-the-boss-peer-to-peer-and-blackboard-agents-with-langchain4j/) was about agents driven by the shared state. Here, we go to what I called the political side of agentic patterns on stage: voting and debate. You probably know both already. You've lived them, in a meeting room or at an election.
 
 All the code comes from the talk demo, a rescue team of puppies working in a small town called Barkville. The repository is on GitHub: [deep-dive-langchain4j-devoxx-2026](https://github.com/LoMagnette/deep-dive-langchain4j-devoxx-2026).
 
@@ -32,13 +32,13 @@ The four workflows only need `langchain4j-agentic`. Voting and debate live in a 
 </dependency>
 ```
 
-The agentic modules are still in beta, so check the [LangChain4j documentation](https://docs.langchain4j.dev) for the latest version. Things move fast there. The Friday before my talk, a new release landed (Mario Fusco confirmed it during the Q&A), and I was like, "Hey, I thought I had covered everything."
+The agentic modules are still in beta, so check the [LangChain4j documentation](https://docs.langchain4j.dev) for the latest version. Things move fast there. The Saturday before my talk, I was scrolling Bluesky, saw a new LangChain4j release, and I was like, "Hey, do I need to change my talk again?" During the Q&A, Mario Fusco confirmed they had shipped something new that Friday.
 
 Both patterns are implementations of the `Planner` interface. If you read the first article, you know the idea: a planner decides which agent runs next. You plug one into `plannerBuilder()` and LangChain4j takes care of the rest.
 
 ## Voting: let the agents cast a ballot
 
-The idea is simple. You take a bunch of agents and give them the same question. Each agent reads only the inputs it needs from the `AgenticScope` (the shared state, explained [here](/posts/langchain4j-agentic-workflows-from-ai-calls-to-multi-agent-systems-in-java/)). Your scope can hold twenty values and a voter might only look at one. Every agent gives its vote, without seeing the others. Then a **strategy** reads all the ballots and decides.
+The idea is simple. You take a bunch of agents and give them the same question. Each agent reads only the inputs it needs from the `AgenticScope` (the shared state, explained [here](/posts/langchain4j-agentic-workflows-from-ai-calls-to-multi-agent-systems-in-java/)). Your scope can hold twenty values and a voter might only look at one. Every agent gives its vote, without seeing the others. Then a strategy reads all the ballots and decides.
 
 ### Is the lake ice safe?
 
@@ -134,15 +134,15 @@ static boolean isSafe(Object vote) {
 }
 ```
 
-No magic here. It's a lambda and some string checks. When I ran it live, Sniff saw the ducks and said safe, Rivet measured 12 cm and said safe, and Doc saw the dark patch and said not safe. Two against one, and the answer is still NOT SAFE. With `majority()`, the mayor would have had his skating party. That's why I insist: **the strategy is part of the design**, and you choose it on purpose. Majority is fine to pick the name of the team mascot. For ice, for money, for anything with risk, you probably want a veto. You could also give one voter more weight, or stop as soon as someone sees a risk. You can write whatever you want.
+No magic here. It's a lambda and some string checks. When I ran it live, Sniff saw the ducks and said safe, Rivet measured 12 cm and said safe, and Doc saw the dark patch and said not safe. Two against one, and the answer is still NOT SAFE. With `majority()`, the mayor would have had his skating party. That's why I insist: the strategy is part of the design, and you choose it on purpose. Majority is fine to pick the name of the team mascot. For ice, for money, for anything with risk, you probably want a veto. You could also give one voter more weight, or stop as soon as someone sees a risk. You can write whatever you want.
 
 ### Please make the votes easy to count
 
-Look again at the prompts: "Answer with exactly SAFE or NOT SAFE, then a few words why." At the end, your strategy needs to *read* those ballots. If one agent says "Yes, looks fine!" and another "I would rather not", good luck counting.
+Look again at the prompts: "Answer with exactly SAFE or NOT SAFE, then a few words why." At the end, your strategy needs to read those ballots. If one agent says "Yes, looks fine!" and another "I would rather not", good luck counting.
 
-There's a trap even with `majority()`: it counts *equal* votes. "SAFE, the ducks are on it" and "SAFE, 12 cm" are two different votes for it. In the demo, I reduce every ballot to a single word before counting.
+There's a trap even with `majority()`: it counts votes that are exactly equal. "SAFE, the ducks are on it" and "SAFE, 12 cm" are two different votes for it. In the demo, I reduce every ballot to a single word before counting.
 
-You might say, "Yeah, okay, but I could just put an LLM in the strategy and ask it what the votes mean." You could. But you're adding more non-deterministic behaviour exactly at the place where you want a clear decision. I wouldn't go that way. The better option is the same advice I gave for the conditional workflow in the [first article](/posts/langchain4j-agentic-workflows-from-ai-calls-to-multi-agent-systems-in-java/): have your voters return an **enum**. LangChain4j maps the answer to the enum value for you, the set of possible answers is closed, and your strategy becomes a plain `switch`.
+You might say, "Yeah, okay, but I could just put an LLM in the strategy and ask it what the votes mean." You could. But you're adding more non-deterministic behavior exactly at the place where you want a clear decision. I wouldn't go that way. The better option is the same advice I gave for the conditional workflow in the [first article](/posts/langchain4j-agentic-workflows-from-ai-calls-to-multi-agent-systems-in-java/): have your voters return an enum. LangChain4j maps the answer to the enum value for you, the set of possible answers is closed, and your strategy becomes a plain `switch`.
 
 ### When does voting make sense?
 
@@ -154,7 +154,7 @@ You might say, "Yeah, okay, but I could just put an LLM in the strategy and ask 
 
 On stage, I asked the room: "What's the better language, C# or Java?" At Devoxx, I already know the answer. I didn't need to ask all of them, because they all share the same bias.
 
-Agents are the same. If your four voters use the **same model**, they probably have the same bias. If they use the **same tools**, same problem. If they share the **same context**, the same prompt or the same RAG documents, same problem again. Put the same prompt three times and you get one opinion with a bigger bill, and three voters agreeing on the same mistake.
+Agents are the same. If your four voters use the same model, they probably have the same bias. If they use the same tools, same problem. If they share the same context, the same prompt or the same RAG documents, same problem again. Put the same prompt three times and you get one opinion with a bigger bill, and three voters agreeing on the same mistake.
 
 That's why the three voters in the demo judge in three different ways: a nose, a medic and a ruler. When you design a vote, think about how your voters differ before you think about how many you need.
 
@@ -180,18 +180,18 @@ LakeParty party = AgenticServices.sequenceBuilder(LakeParty.class)
         .build();
 ```
 
-A workflow and an agentic pattern in the same sequence. Honestly, what this demo taught me was mostly about glue. The voters read the `Mission` key because that's the key they declared, so the inspection has to be written back *into* the mission for them to see it. When you reuse an agent, you accept the keys it already declared.
+A workflow and an agentic pattern in the same sequence. Honestly, what this demo taught me was mostly about glue. The voters read the `Mission` key because that's the key they declared, so the inspection has to be written back into the mission for them to see it. When you reuse an agent, you accept the keys it already declared.
 
 ## Debate: the Belgian solution
 
 The next pattern is political too, and when you see how it ends you'll understand why I call it the Belgian solution.
 
-You take a bunch of agents again, but this time they have roles. Some are **debaters**, and one is the **judge**. In LangChain4j, the rule is simple: every sub-agent except the last one is a debater, and the last one is the judge. The order is the contract. And you need at least three agents. I can debate with myself, but it's not the most interesting debate ever. Two debaters and a judge is the minimum.
+You take a bunch of agents again, but this time they have roles. Some are debaters, and one is the judge. In LangChain4j, the rule is simple: every sub-agent except the last one is a debater, and the last one is the judge. So please be careful with the order of your sub-agents. And you need at least three agents. I can debate with myself, but it's not the most interesting debate ever. Two debaters and a judge is the minimum.
 
 A debate runs like this:
 
 1. Each debater gets the inputs it needs and gives its position.
-2. A **convergence strategy** looks at the answers: do they agree?
+2. A convergence strategy looks at the answers: do they agree?
 3. If they do, the debate ends. If not, we start a new round. This time, each debater receives what the others said in the previous round, in a special key of the scope called `debateContext`, and produces a new answer.
 4. This continues until they converge or until we hit the maximum number of rounds.
 5. Then the judge gets the final statements and gives the answer.
@@ -222,7 +222,7 @@ public interface HowlArgues {
 }
 ```
 
-`DebateContext` is a typed key, but its name belongs to the library, not to me. So instead of typing `"debateContext"` by hand and getting it wrong at 10 p.m., I point the key at the library's constant:
+`DebateContext` is a typed key, but its name belongs to the library, not to me. So instead of typing `"debateContext"` by hand and getting it wrong at 9:30 on a Monday morning, I point the key at the library's constant:
 
 ```java
 public record DebateContext() implements TypedKey<String> {
@@ -274,7 +274,7 @@ Same builder again, a different planner. `DebatePlanner` takes the maximum numbe
 
 ### Only the last round, and that's on purpose
 
-The debaters only know what the others said in the *last* round. They don't get a live feed of the debate. There's a good reason for that. If you've ever watched a political debate on TV, all you hear is people screaming over each other. Here, everybody gets the other side's position, takes the time to think, and answers. Maybe we should stop paying politicians and use AI. I'm not sure it's the best solution either.
+The debaters only know what the others said in the last round. They don't get a live feed of the debate. There's a good reason for that. If you've ever watched a political debate on TV, all you hear is people screaming over each other. Here, everybody gets the other side's position, takes the time to think, and answers. Maybe we should stop paying politicians and use AI. I'm not sure it's the best solution either.
 
 One side effect to know: since `debateContext` is overwritten every round, the judge rules on the closing statements, not on the whole debate. If you want the full transcript (I wanted it for the demo), rebuild it from the scope's record of agent invocations.
 
@@ -282,7 +282,7 @@ One side effect to know: since `debateContext` is overwritten every round, the j
 
 `ConvergenceStrategy` is a functional interface too: it receives the debaters' latest answers and returns `true` when you consider they agree. The built-in ones are `unanimous()` and `unanimousLastWord()`.
 
-On stage, I used `unanimous()`: the good consensus, the Belgian way. Let's be honest about it, though. `unanimous()` means the answers are *identical*, and two puppies writing prose on opposite sides never say exactly the same thing. So the demo always runs the three rounds. `unanimousLastWord()` is more forgiving: it converges when every debater ends on the same word, which works well if you ask them to finish with their position.
+On stage, I used `unanimous()`: the good consensus, the Belgian way. Let's be honest about it, though. `unanimous()` means the answers are identical, and two puppies writing prose on opposite sides never say exactly the same thing. So the demo always runs the three rounds. `unanimousLastWord()` is more forgiving: it converges when every debater ends on the same word, which works well if you ask them to finish with their position.
 
 And not every debate needs to end with everybody agreeing with everybody. You could stop when the positions stop changing between rounds, or when a score crosses a threshold. It's a lambda, write the one that fits your problem:
 
@@ -295,7 +295,7 @@ ConvergenceStrategy samePosition = answers -> answers.stream()
 
 ### When does debate make sense?
 
-- Risk analysis: make the case against an option get said out loud before you pick it. Ask a single agent and it picks a side and rationalises it.
+- Risk analysis: make the case against an option get said out loud before you pick it. Ask a single agent and it picks a side and rationalizes it.
 - Architecture decisions: give one agent the product owner's point of view, one the architect's, one the developer's and one the tester's, and let them debate. We already do this when we write prompts with personas. Here you can build it in Java with LangChain4j.
 - Investment analysis: a bull and a bear, and a judge. Again, do what you want with your money. I'm not responsible for that.
 
@@ -308,7 +308,7 @@ ConvergenceStrategy samePosition = answers -> answers.stream()
 
 ## Voting or debate?
 
-Both patterns put several agents on the same question. What changes is whether they talk to each other. In a vote, nobody talks to anybody: each agent answers once, independently, and a rule counts. It's cheap (one round), fast (everyone runs in parallel) and predictable if your strategy is plain code. In a debate, the agents *react* to each other, round after round, and a judge closes. It's slower and more expensive, and you get the arguments along with the result.
+Both patterns put several agents on the same question. What changes is whether they talk to each other. In a vote, nobody talks to anybody: each agent answers once, independently, and a rule counts. It's cheap (one round), fast (everyone runs in parallel) and predictable if your strategy is plain code. In a debate, the agents react to each other, round after round, and a judge closes. It's slower and more expensive, and you get the arguments along with the result.
 
 My rule of thumb: if you can describe the decision as "count the answers", vote. If you want the agents to challenge each other before deciding, debate. And if a single agent does the job well enough, keep a single agent. The pattern you don't use is the one you don't need to debug.
 
@@ -317,7 +317,7 @@ My rule of thumb: if you can describe the decision as "count the answers", vote.
 Three things to remember, only three:
 
 1. The strategy is part of the design. `VotingStrategy` and `ConvergenceStrategy` are one-method interfaces. Majority or veto, unanimous or "same position" can turn the same ballots into opposite decisions, so choose on purpose and keep the strategy in plain Java.
-2. Diversity beats quantity. Voters or debaters with the same model, tools and context share the same bias. Give them different criteria, and have them answer in a closed format, ideally an enum, so the results are easy to count.
+2. Different voters matter more than many voters. Voters or debaters with the same model, tools and context share the same bias. Give them different criteria, and have them answer in a closed format, ideally an enum, so the results are easy to count.
 3. Always put a limit. A round limit for debates, a cost budget for both. Agreement isn't truth, and tokens are not free.
 
 Thanks to Mario Fusco, who builds these patterns in LangChain4j and joined the Q&A at Devoxx with some fresh news. As he said at the end of the session, all these patterns are implementations of the same `Planner` interface and live in the `langchain4j-agentic-patterns` module, so if you build a pattern that's missing, please contribute it back.
