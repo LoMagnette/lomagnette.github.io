@@ -3,7 +3,7 @@ title: "From Lonely Agents to Talking Teams: An introduction to A2A"
 description: "This article introduces A2A, a protocol that lets AI agents stop working in isolation and start collaborating as real “teams.” You’ll learn how agents can discover each other via agent cards, exchange tasks and multimodal artifacts, handle errors and auth, and how A2A compares to MCP. With a practical Java + LangChain4j + Quarkus example (superhero-themed, of course), it shows how to build both an A2A server and client so your agents can coordinate, delegate, and actually work together."
 tags: [ai, chatbot, A2A, java, langchain4j]
 author: Loïc
-image: 2025-11-28-A2A-cover.png
+image: 2025-11-28-A2A-cover.jpg
 ---
 
 ## Why agents need friends?

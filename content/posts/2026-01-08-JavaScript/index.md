@@ -3,7 +3,7 @@ title: "JavaScript (No, Not That One): Modern Automation with Java"
 description: "Discover how modern Java has evolved into a powerful scripting language, eliminating boilerplate and enabling instant execution for automation tasks"
 tags: [java, jbang, picolli]
 author: Loïc
-image: java-script-cover.png
+image: java-script-cover.jpg
 ---
 
 ## The Scripting Dilemma

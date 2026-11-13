@@ -3,7 +3,7 @@ title: "Quarkus 4 Is Here: What Changes, What Breaks, and Why You Should Care"
 description: "A hands-on tour of Quarkus 4.0: the Java 21 baseline, Vert.x 5 and HTTP/3, Hibernate ORM 8 and Quarkus Data, Jackson 3, CDI 5, observability out of the box, Kafka @ExactlyOnce, and a practical migration checklist."
 tags: [java, quarkus]
 author: Loïc
-image: quarkus-4.0.png
+image: quarkus-4.0.jpg
 draft: true
 ---
 <!-- TODO(Loïc): add a header image (image: quarkus-4.png) -->

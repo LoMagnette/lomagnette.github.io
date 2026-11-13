@@ -83,6 +83,15 @@
     }
   }
 
+  // Inline videos (e.g. animated demos encoded as MP4 instead of heavy GIFs).
+  video {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: var(--spacing-xl) auto;
+    border-radius: var(--radius-md);
+  }
+
   blockquote {
     margin: var(--spacing-xl) 0;
     padding: var(--spacing-md) var(--spacing-xl);

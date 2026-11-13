@@ -4,9 +4,14 @@
 <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
  width="809.000000pt" height="842.000000pt" viewBox="0 0 809.000000 842.000000"
  preserveAspectRatio="xMidYMid meet">
+<style>
+  .icon { fill: #1f2937; }
+  /* Light dog on dark browser tabs. */
+  @media (prefers-color-scheme: dark) { .icon { fill: #f1f5f9; } }
+</style>
 
 <g transform="translate(0.000000,842.000000) scale(0.100000,-0.100000)"
-fill="#000000" stroke="none">
+class="icon" stroke="none">
 <path d="M1953 8395 c-69 -19 -101 -36 -311 -164 -594 -363 -1458 -935 -1516
 -1002 -87 -102 -128 -272 -95 -394 6 -22 47 -128 91 -235 177 -430 422 -1017
 438 -1050 29 -56 56 -75 109 -75 41 0 56 6 107 45 86 66 249 233 347 356 308
