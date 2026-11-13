@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {#include partials/roq-default/head.html /}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XJP40L6W16"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag()\{dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XJP40L6W16');
+  </script>
+
+  {#insert head /}
+</head>
+<body class="{page.data.bodyClass ?: 'default'}">
+
+  <div class="wrapper">
+    {#insert /}
+  </div>
+
+  {#insert footer /}
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+<article class="post-card{#if !post.image} post-card--no-image{/if}">
+  {#if post.image}
+  <div class="post-card-bg" style='background-image: url("{post.image}")' aria-hidden="true"></div>
+  {/if}
+  <div class="post-card-overlay">
+    <div class="post-card-meta">
+      <span class="post-card-date"><i class="fa-regular fa-calendar"></i>{post.date.style(post.data('post-date-style'))}</span>
+      <span class="post-card-read"><i class="fa-regular fa-clock"></i>{post.readTime} min read</span>
+    </div>
+    <h2 class="post-card-title"><a href="{post.url}">{post.title}</a></h2>
+    <p class="post-card-excerpt">{post.description ?: post.contentAbstract}</p>
+  </div>
+</article>

@@ -1,0 +1,13 @@
+{! Override of Roq's seoType tag (quarkus-roq-frontmatter 2.1.9). Differences from Roq's version:
+   - the date is printed as ISO-8601 (Roq printed the raw ZonedDateTime, e.g. "...+01:00[GMT+01:00]");
+   - a page or layout can set `seo-type: website` in its front matter. Pages generated from data
+     (the talks collection) get the build time as their date, which is not a publication date. !}
+{@io.quarkiverse.roq.frontmatter.runtime.model.Page page}
+{#if page.date && page.data('seo-type') != 'website'}
+  <!-- SEO TYPE -->
+  <meta property="og:type" content="article" />
+  <meta property="article:published_time" content="{page.date.iso}" />
+{#else}
+  <!-- SEO TYPE -->
+  <meta property="og:type" content="website" />
+{/if}

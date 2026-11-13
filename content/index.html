@@ -8,12 +8,25 @@ social-twitter: lomagnette
 social-github: lomagnette
 social-linkedin: lomagnette
 social-bluesky: lomagnette.bsky.social
+# Used by Roq's SEO tags (twitter:site) and the <meta name="theme-color"> in templates/partials/roq-default/head.html
+twitter: lomagnette
+theme-color: "#0d9488"
 layout: index
 paginate:
     collection: posts
     size: 8
 ---
-<head>
-
-</head>
+{#let author=cdi:authors.get('loic')}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": {site.data.getString('simple-name').jsonLd},
+  "url": {site.url.absolute.jsonLd},
+  "description": {site.description.jsonLd},
+  "inLanguage": "en",
+  "author": {#include partials/person-jsonld /}
+}
+</script>
+{/let}
 

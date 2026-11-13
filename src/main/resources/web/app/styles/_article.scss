@@ -60,7 +60,7 @@
     transition: color var(--transition-fast), text-decoration-color var(--transition-fast);
 
     &:hover {
-      color: var(--color-primary) !important;
+      color: var(--link-hover) !important;
       text-decoration-color: currentColor;
     }
   }
@@ -259,7 +259,7 @@ h1.page-title,
     transition: background var(--transition-fast), color var(--transition-fast);
 
     &:hover {
-      background: var(--color-primary);
+      background: var(--fill-strong);
       color: #fff !important;
     }
   }

@@ -3,11 +3,13 @@ layout: default
 ---
 {@io.quarkiverse.roq.frontmatter.runtime.model.Site site}
 
+<a class="skip-link" href="#main">Skip to content</a>
+
 {#include partials/navbar-menu menu=cdi:menu.items /}
 
-<div class="content-box clearfix">
+<main id="main" class="content-box clearfix">
   {#insert /}
-</div>
+</main>
 
 {#footer}
 <footer id="footer">

@@ -1,0 +1,94 @@
+---
+layout: main
+# Talk pages have no publication date (Roq sets the build time): see templates/tags/seoType.html.
+seo-type: website
+---
+{! Layout of the "talks" collection: one page per entry of data/talks.yml (see application.properties).
+   page.data holds the talk definition; conference appearances come from the TalksList bean. !}
+{@io.quarkiverse.roq.frontmatter.runtime.model.DocumentPage page}
+{#let talk=cdi:talksList.getById(page.data.id)}
+<div class="talk-detail-container">
+    <a href="/talks" class="talk-back-link">&larr; Back to talks</a>
+
+    <h1 class="talk-detail-title">
+        {talk.title}
+        {#if talk.retired}<span class="badge-retired">Retired</span>{/if}
+    </h1>
+
+    {#if talk.latestSlides || talk.article || talk.github}
+        <div class="talk-resource-links">
+            {#if talk.latestSlides}
+                <a href="{talk.latestSlides}" target="_blank" rel="noopener noreferrer" class="talk-resource-link">
+                    <img src="/images/slides.png" alt="" width="18" height="18">
+                    Slides
+                </a>
+            {/if}
+            {#if talk.article}
+                <a href="{talk.article}" rel="noopener noreferrer" class="talk-resource-link">
+                    <i class="fa-solid fa-newspaper" aria-hidden="true"></i>
+                    Article
+                </a>
+            {/if}
+            {#if talk.github}
+                <a href="{talk.github}" target="_blank" rel="noopener noreferrer" class="talk-resource-link">
+                    <i class="fa-brands fa-github" aria-hidden="true"></i>
+                    GitHub
+                </a>
+            {/if}
+        </div>
+    {/if}
+
+    {#if talk.description}
+        <div class="talk-detail-description">
+            {talk.descriptionHtml}
+        </div>
+    {/if}
+
+    {#if talk.latestRecordingEmbed}
+        <h2 class="talk-detail-section-title">Recording</h2>
+        <div class="talk-video-container">
+            <iframe src="{talk.latestRecordingEmbed}" title="{talk.title}" allowfullscreen
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+            </iframe>
+        </div>
+    {/if}
+
+    <h2 class="talk-detail-section-title">Appearances</h2>
+    <table class="appearances-table appearances-table--detail">
+        <caption class="visually-hidden">Conferences where this talk was given</caption>
+        <colgroup>
+            <col class="col-event">
+            <col class="col-date">
+            <col class="col-location">
+            <col class="col-links">
+        </colgroup>
+        {#for appearance in talk.appearances}
+            <tr>
+                <td class="col-event">
+                    {#if appearance.eventUrl}
+                        <a href="{appearance.eventUrl}" target="_blank" rel="noopener noreferrer">{appearance.eventName}</a>
+                    {#else}
+                        {appearance.eventName}
+                    {/if}
+                </td>
+                <td class="col-date">{appearance.date}</td>
+                <td class="col-location">{#if appearance.flag}{appearance.flag} {/if}{appearance.location}</td>
+                <td class="col-links">
+                    {#if appearance.slides}
+                        <a href="{appearance.slides}" target="_blank" rel="noopener noreferrer" class="appearance-link"
+                           aria-label="Slides from {appearance.eventName}" title="Slides">
+                            <img src="/images/slides.png" alt="" width="18" height="18"/>
+                        </a>
+                    {/if}
+                    {#if appearance.recording}
+                        <a href="{appearance.recording}" target="_blank" rel="noopener noreferrer" class="appearance-link"
+                           aria-label="Recording from {appearance.eventName}" title="Recording">
+                            <img src="/images/camera.png" alt="" width="18" height="18"/>
+                        </a>
+                    {/if}
+                </td>
+            </tr>
+        {/for}
+    </table>
+</div>
+{/let}

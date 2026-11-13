@@ -238,7 +238,7 @@ You can find more info on the different states in the [specification](https://a2
 ### States summary
 
 Here you'll find a summary of the states supported by the protocol and how can transition from one state to another.
-![image](A2A-states.svg)
+![State diagram of an A2A task: Submitted, Working, Input Required, Auth Required, and the final states Completed, Failed, Cancelled and Rejected](A2A-states.svg)
 
 
 ## What about MCP?

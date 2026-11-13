@@ -1,0 +1,30 @@
+{! Override of the Roq default theme's head partial (quarkus-roq-theme-default 2.1.9).
+   Changes: the viewport no longer sets maximum-scale=1 (it blocked pinch-zoom, WCAG 1.4.4),
+   and theme-color defaults to the site's teal. Re-check against the theme when upgrading Roq. !}
+{@java.lang.String tag}
+
+<meta charset="utf-8">
+
+<!-- Prevent flash of unstyled content for dark mode -->
+<script>
+  const savedTheme = localStorage.getItem('darkMode');
+  const isDark = savedTheme !== null
+    ? savedTheme === 'true'
+    : window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if (isDark) {
+    document.documentElement.classList.add('dark');
+  }
+</script>
+
+{#seo page site /}
+{#rss site /}
+{#favicon site/}
+
+<base href="{page.url.relative}">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+{#let color=site.data.getString('theme-color').or("#0d9488")}
+<meta name="theme-color" content="{color}">
+{/let}
+
+{#include partials/roq-default/head-scripts /}

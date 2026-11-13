@@ -1,0 +1,20 @@
+{! Override of Roq's seo tag (quarkus-roq-frontmatter 2.1.9). Differences from Roq's version:
+   - seoTitle also receives the short site name ("simple-name" in content/index.html);
+   - descriptions are trimmed to ~155 characters (talk abstracts in data/talks.yml are much longer).
+   Re-check when upgrading Roq. !}
+{@io.quarkiverse.roq.frontmatter.runtime.model.Site site}
+{@io.quarkiverse.roq.frontmatter.runtime.model.Page page}
+
+{#seoTitle pageTitle=page.title siteTitle=site.title siteName=site.data.getString('simple-name') /}
+{#seoDescription pageDescription=page.description.or('').metaDescription siteDescription=site.description.or('').metaDescription /}
+{#seoAuthor pageAuthor=page.data.author?? siteAuthor=site.data.author?? /}
+{#seoRobots page /}
+{#seoUrl url=page.url /}
+{#seoType page /}
+{#seoImage page site /}
+{#seoVerifications webmasterVerifications=site.data.webmasterVerifications?? /}
+{#seoPaginator page site /}
+{#seoFacebook facebook=site.data.facebook?? /}
+{#seoTwitter twitter=site.data.twitter?? /}
+{#seoLocale pageLocale=page.data.lang?? siteLocale=site.data.lang?? defaultLocale=global:locale /}
+{#seoGenerator name="Quarkus Roq" version=global:roqVersion /}

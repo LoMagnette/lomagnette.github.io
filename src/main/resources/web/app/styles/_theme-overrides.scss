@@ -39,7 +39,7 @@
   details > summary,
   details[open] > summary {
     background-color: var(--hover-bg) !important;
-    color: var(--color-primary-dark) !important;
+    color: var(--tint-text) !important;
 
     &::before {
       color: var(--color-primary) !important;

@@ -42,8 +42,10 @@
 .talk-card {
   margin-bottom: 1rem;
 
+  // Retired talks are marked with a dashed border (plus the badge) rather than faded:
+  // fading the whole card dropped its text below readable contrast.
   &.retired {
-    opacity: 0.6;
+    border-style: dashed;
   }
 }
 
@@ -68,10 +70,9 @@
 .badge-retired {
   @include pill;
   margin-left: 0.5rem;
-  background: var(--text-tertiary);
+  background: var(--badge-muted-bg);
   color: #fff;
   font-size: 0.7rem;
-  opacity: 0.7;
 }
 
 .talks-filter {
@@ -101,8 +102,9 @@
       color: var(--text-primary);
     }
 
+    &[aria-pressed="true"],
     &.active {
-      background: var(--color-primary);
+      background: var(--fill-strong);
       color: #fff;
     }
   }
@@ -228,6 +230,17 @@
       display: none;
     }
   }
+
+  // Talk detail page: roomier rows, no top rule.
+  &--detail {
+    margin: 0 0 2rem !important;
+    border-top: none;
+
+    td {
+      padding: 0.5rem;
+      line-height: inherit;
+    }
+  }
 }
 
 .appearance-link {
@@ -244,6 +257,124 @@
     width: 1rem;
     height: 1rem;
     vertical-align: middle;
+  }
+}
+
+// --- Talk detail page (src/main/resources/templates/talkDetail.html) ---------
+
+.talk-detail-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+.talk-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-tertiary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+
+  &:hover {
+    color: var(--link-hover);
+  }
+}
+
+.talk-detail-title {
+  @include gradient-text;
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin: 0 0 1.5rem 0;
+  line-height: 1.2;
+
+  // The gradient clips text to the background: give the badge its own fill back.
+  .badge-retired {
+    -webkit-text-fill-color: #fff;
+  }
+
+  @include mobile {
+    font-size: 1.8rem;
+  }
+}
+
+.talk-detail-description {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+
+  p {
+    margin: 0 0 1rem 0;
+  }
+}
+
+.talk-detail-section-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 2rem 0 1rem 0;
+  border-left: 4px solid var(--color-primary);
+  padding-left: 0.75rem;
+}
+
+.talk-video-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin-bottom: 2rem;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+
+  iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+}
+
+.talk-resource-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.talk-resource-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.1rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-sm);
+  text-decoration: none;
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-primary);
+    color: var(--link-hover);
+  }
+
+  img {
+    width: 18px;
+    height: 18px;
+  }
+
+  i {
+    font-size: 1.1rem;
   }
 }
 

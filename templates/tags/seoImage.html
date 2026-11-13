@@ -1,0 +1,15 @@
+{! Override of Roq's seoImage tag (quarkus-roq-frontmatter 2.1.9).
+   Pages without their own image fall back to the site image, so every page gets a social preview. !}
+{@io.quarkiverse.roq.frontmatter.runtime.model.Site site}
+{@io.quarkiverse.roq.frontmatter.runtime.model.Page page}
+{#let image=(page.image ?: site.image)}
+{#if image}
+  <!-- SEO IMAGE -->
+  <meta name="twitter:card" content="{page.image ? 'summary_large_image' : 'summary'}" />
+  <meta name="twitter:image" content="{image.absolute}" />
+  <meta property="og:image" content="{image.absolute}" />
+{#else}
+  <!-- SEO IMAGE -->
+  <meta name="twitter:card" content="summary">
+{/if}
+{/let}

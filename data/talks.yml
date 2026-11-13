@@ -47,6 +47,8 @@
   description: "LLMs are trained on static data — but the world keeps moving. Retrieval-Augmented Generation (RAG) is the bridge that keeps your AI grounded in reality. In this session, we'll build a RAG pipeline from scratch, exploring how to ingest documents, chunk and embed them, store them in a vector database, and retrieve relevant context at query time. You'll see how RAG transforms a generic LLM into a domain-specific expert that always has the latest information."
 - id: 11
   title: "A Developer's Tale: Migrating an Angular App"
+  # Pinned: keeps the URL published before talks became a Roq collection.
+  slug: a-developers-tale-migrating-an-angular-app
   retired: true
   description: "Migrating a large Angular application across multiple major versions is an epic journey. This is the story of taking a real-world app from Angular 10 all the way to the latest version — the challenges, the breaking changes, the tooling that helped, and the lessons learned along the way. If you're facing a similar migration or just want to understand what's involved, this talk gives you a practical, honest roadmap."
 - id: 12
@@ -59,6 +61,8 @@
   description: "The two heavyweights of Java frameworks go head to head. In this session, we'll compare Quarkus and Spring Boot across multiple dimensions — developer experience, performance, ecosystem, cloud-native features, and more. No fan wars, just facts and demos. Whether you're choosing a framework for your next project or just curious about the differences, this talk gives you an informed, balanced perspective."
 - id: 14
   title: "Dompter le chaos de l'information avec Langchain4J"
+  # Pinned: keeps the URL published before talks became a Roq collection.
+  slug: dompter-le-chaos-de-linformation-avec-langchain4j
   retired: true
   description: "L'information est partout — emails, documents, bases de données, APIs — et elle est chaotique. Comment construire un assistant IA capable de naviguer dans ce chaos et d'en extraire de la valeur ? Dans cette session, nous utiliserons LangChain4j pour construire un allié IA qui ingère, comprend et restitue l'information de manière intelligente. Du RAG aux agents, en passant par les outils et la mémoire conversationnelle."
 - id: 15
@@ -69,8 +73,12 @@
   retired: true
 - id: 17
   title: "BOF: Java and JVM lovers in Belgium, let's unite!"
+  # Pinned: keeps the URL published before talks became a Roq collection.
+  slug: bof-java-and-jvm-lovers-in-belgium-lets-unite
 - id: 18
   title: "Angular sans Zone : quand le futur devient la valeur par défaut"
+  # Pinned: keeps the URL published before talks became a Roq collection.
+  slug: angular-sans-zone-quand-le-futur-devient-la-valeur-par-dfaut
   description: "
   Pendant des années, ngZone a servi de pilote automatique à Angular. Pratique pour déclencher la détection de changements, mais au prix de re-rendus inutiles, d'un contrôle approximatif sur l'état, et d'applications qui ralentissaient sans qu'on sache toujours pourquoi. On a longtemps parlé du jour où Angular se passerait enfin de tout ça. Ce jour est arrivé.
   \n\n

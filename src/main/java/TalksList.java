@@ -2,6 +2,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
+import io.quarkiverse.roq.frontmatter.runtime.RoqTemplateExtension;
 import io.quarkus.qute.RawString;
 
 import java.util.*;
@@ -60,18 +61,22 @@ public class TalksList {
         }
     }
 
-    public TalkEntry getById(String id) {
+    /**
+     * Talk with its appearances, for the talk page layout (templates/layouts/talk.html).
+     * Accepts the raw {@code page.data.id} value, which YAML may parse as a number.
+     * A talk defined in data/talks.yml but never given yet is returned with no appearances.
+     */
+    public TalkEntry getById(Object id) {
+        String key = String.valueOf(id);
         return getList().stream()
-                .filter(t -> t.id().equals(id))
+                .filter(t -> t.id().equals(key))
                 .findFirst()
-                .orElse(null);
-    }
-
-    public TalkEntry getBySlug(String slug) {
-        return getList().stream()
-                .filter(t -> t.slug().equals(slug))
-                .findFirst()
-                .orElse(null);
+                .orElseGet(() -> talks.list().stream()
+                        .filter(t -> t.id().equals(key))
+                        .findFirst()
+                        .map(t -> new TalkEntry(t.id(), slugOf(t), t.title(), t.description(), t.article(),
+                                t.github(), List.of(), Boolean.TRUE.equals(t.retired())))
+                        .orElse(null));
     }
 
     public List<TalkEntry> getList() {
@@ -110,16 +115,19 @@ public class TalksList {
             String article = talkDef != null ? talkDef.article() : null;
             String github = talkDef != null ? talkDef.github() : null;
             boolean retired = talkDef != null && Boolean.TRUE.equals(talkDef.retired());
-            result.add(new TalkEntry(id, toSlug(canonicalTitle), canonicalTitle, description, article, github, entry.getValue(), retired));
+            result.add(new TalkEntry(id, talkDef != null ? slugOf(talkDef) : toSlug(canonicalTitle), canonicalTitle, description, article, github, entry.getValue(), retired));
         }
 
         return result;
     }
 
+    /** The talk page slug, as Roq resolves it: the explicit {@code slug} field, else the slugified title. */
+    private static String slugOf(Talks.Talk talk) {
+        return talk.slug() != null ? talk.slug() : toSlug(talk.title());
+    }
+
+    /** Same slug Roq derives from the title for the talk page URL (/talks/:slug/). */
     private static String toSlug(String title) {
-        return title.toLowerCase()
-                .replaceAll("[^a-z0-9\\s-]", "")
-                .replaceAll("[\\s-]+", "-")
-                .replaceAll("^-|-$", "");
+        return RoqTemplateExtension.slugify(title);
     }
 }

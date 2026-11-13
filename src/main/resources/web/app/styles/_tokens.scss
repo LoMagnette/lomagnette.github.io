@@ -48,6 +48,11 @@ $bp-lg: 1024px;
   --color-accent: #06b6d4 !important;
   --color-accent-dark: #0891b2 !important;
   --gradient-brand: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  // Bright teal fails contrast behind white text (2.5:1). Solid fills that carry white text
+  // use these darker teals instead (5.4:1+).
+  --fill-strong: #0f766e;
+  --gradient-strong: linear-gradient(135deg, #0f766e 0%, #0e7490 100%);
+  --badge-muted-bg: #475569;
 
   // Light mode (slate neutrals, teal accents)
   --bg-primary: #ffffff;
@@ -60,7 +65,8 @@ $bp-lg: 1024px;
   --text-primary: #0f172a;
   --text-secondary: #334155;
   --text-tertiary: #64748b;
-  --text-muted: #94a3b8;
+  // Same as --text-tertiary in light mode: anything lighter drops below 4.5:1 on the page background.
+  --text-muted: #64748b;
   --border-color: rgba(15, 23, 42, 0.08);
   --border-color-hover: rgba(20, 184, 166, 0.35);
   --card-bg: #ffffff;
@@ -69,6 +75,7 @@ $bp-lg: 1024px;
   --tint-bg: rgba(20, 184, 166, 0.1);
   --tint-border: rgba(20, 184, 166, 0.25);
   --tint-text: #0f766e;
+  --link-hover: #115e59;
   --nav-bg: rgba(255, 255, 255, 0.82);
   --footer-bg: transparent;
   --footer-border: var(--border-color);
@@ -89,7 +96,7 @@ $bp-lg: 1024px;
   --text-primary: #f1f5f9;
   --text-secondary: #cbd5e1;
   --text-tertiary: #94a3b8;
-  --text-muted: #64748b;
+  --text-muted: #7c8ba1;
   --border-color: rgba(255, 255, 255, 0.08);
   --border-color-hover: rgba(45, 212, 191, 0.4);
   --card-bg: #11171b;
@@ -98,6 +105,7 @@ $bp-lg: 1024px;
   --tint-bg: rgba(45, 212, 191, 0.12);
   --tint-border: rgba(45, 212, 191, 0.3);
   --tint-text: #5eead4;
+  --link-hover: var(--color-primary-light);
   --nav-bg: rgba(17, 23, 27, 0.86);
   --footer-bg: linear-gradient(135deg, #111111 0%, #0a0a0a 100%);
   --footer-border: rgba(255, 255, 255, 0.05);

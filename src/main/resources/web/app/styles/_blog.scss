@@ -178,9 +178,10 @@
     outline-offset: 3px;
   }
 
-  // No cover image: the teal gradient is the background, so a lighter scrim is enough.
+  // No cover image: the teal gradient is the background, so a lighter scrim is enough
+  // (0.3 keeps the white excerpt above 4.5:1).
   &.post-card--no-image .post-card-overlay {
-    background: rgba(10, 10, 10, 0.15);
+    background: rgba(10, 10, 10, 0.3);
   }
 
   @include mobile {
