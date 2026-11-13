@@ -170,8 +170,8 @@ If you prefer annotations to builders, the same thing fits in one interface. `@P
 ```java
 public interface ZoomsHead {
 
-    @PlannerAgent(subAgents = {ZoomUpTheBank.class, ZoomTreesTheSquirrel.class, ZoomToTheFord.class,
-                               ZoomBringsTheKidBack.class, ZoomNaps.class},
+    @PlannerAgent(subAgents = { ZoomUpTheBank.class, ZoomTreesTheSquirrel.class, ZoomToTheFord.class,
+                               ZoomBringsTheKidBack.class, ZoomNaps.class },
                   typedOutputKey = Keys.Napped.class)
     ResultWithAgenticScope<String> invoke(@K(Keys.Beliefs.class) String beliefs);
 
