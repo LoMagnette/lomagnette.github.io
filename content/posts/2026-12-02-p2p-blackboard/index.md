@@ -11,19 +11,19 @@ At Devoxx Belgium this year, I had the Monday 9:30 slot for a three-hour deep di
 
 Somewhere in the middle of those three hours, I showed a pattern that surprised me the first time I read about it. No agent was in charge: there was no sequence, no supervisor and no graph computed upfront. The agents just watched the shared state, and whenever something they cared about showed up, they jumped in.
 
-This is the first of a short series of articles on the patterns I showed in that talk, the ones that didn't fit in my [first article on LangChain4j agentic workflows](/posts/langchain4j-agentic-workflows-from-ai-calls-to-multi-agent-systems-in-java/). Here we look at two of them, peer-to-peer and blackboard. They look very similar, and the difference between them is a single question: when several agents can act at the same time, who gets to talk?
+This is the first of a short series of articles on the patterns I showed in that talk, the ones that didn't fit in my [first article on LangChain4j agentic workflows](/posts/langchain4j-agentic-workflows-from-ai-calls-to-multi-agent-systems-in-java/). Here we look at two of them, peer-to-peer and blackboard. They look very similar. The only real difference is what happens when several agents can act at the same time: do they all talk, or does someone pick who goes first?
 
 ## Who Decides What Runs Next?
 
 Every agentic system has to answer one question over and over again: "Which agent do I call next?" In LangChain4j, the component that answers it is the `Planner`. Most of the time you don't see it, because the builders create one for you. But every pattern is a different answer to that question:
 
-- In a workflow (sequence, loop, parallel, conditional), *you* decide. The order is written in your code.
-- In the goal-oriented pattern, a *graph algorithm* decides. It computes the shortest path once, then follows it.
-- In the supervisor pattern, an *LLM* decides, at every step.
+- In a workflow (sequence, loop, parallel, conditional), you decide. The order is written in your code.
+- In the goal-oriented pattern, a graph algorithm decides. It computes the shortest path once, then follows it.
+- In the supervisor pattern, an LLM decides, at every step.
 
 If those don't ring a bell, the [previous article](/posts/langchain4j-agentic-workflows-from-ai-calls-to-multi-agent-systems-in-java/) covers all of them, along with the `AgenticScope` (the shared state every agent reads from and writes to) and typed keys.
 
-Peer-to-peer and blackboard give a fourth answer: *the state* decides. Each agent declares what it needs as inputs. When those inputs are in the scope, the agent can run. When it runs, it writes its output to the scope, and that output might be exactly what another agent was waiting for. Nobody writes the order. It falls out of who reads what.
+Peer-to-peer and blackboard give a fourth answer: the state decides. Each agent declares what it needs as inputs. When those inputs are in the scope, the agent can run. When it runs, it writes its output to the scope, and that output might be exactly what another agent was waiting for. You never write the order anywhere; it comes from which agent reads which key.
 
 Both patterns live in a separate module, so you need two dependencies. The workflows only need the first one, so it's an easy one to forget:
 
@@ -74,7 +74,7 @@ public interface ZoomInTheMaze {
 }
 ```
 
-Zoom listens to `Scent`. Dig listens to `Scent` too. Sniff listens to the other two: Zoom's `Clearing` and Dig's `Burrows`. Each puppy has its own key and listens to the *others'* keys, never its own. That's all the coordination there is. Who listens to what *is* the wiring.
+Zoom listens to `Scent`. Dig listens to `Scent` too. Sniff listens to the other two: Zoom's `Clearing` and Dig's `Burrows`. Each puppy has its own key and listens to the keys of the others, never its own. And that's all the coordination you get. No magic here: if you want to know who talks after whom, look at who reads which key.
 
 Now let's put them in the maze:
 
@@ -101,19 +101,19 @@ The order of `subAgents` doesn't mean anything. I registered Zoom first, and Zoo
 
 The rules are simple, and once you know them, you can predict every run:
 
-1. An agent can run when *every* key it reads is in the scope.
+1. An agent can run when every key it reads is in the scope.
 2. All agents that can run, run at the same time.
 3. When an agent writes its output key, every agent that reads that key is woken up again.
 4. An agent is not re-triggered by its own output alone. It needs one of its inputs to be written again.
 5. It stops when the exit condition is true, when the invocation budget is spent, or when nobody can run anymore (a stable state).
 
-So in the maze, Sniff goes first and says the scent splits at the entrance. That writes `Scent`, which wakes up Zoom *and* Dig together. Dig finds a rabbit burrow, a dead end. Zoom finds hoof prints heading for the middle. Both reports wake Sniff again, who now says the trail leads to the middle. That wakes Zoom, who runs there and shouts "FOUND:". That order (Sniff, then Zoom and Dig together, then Sniff, then Zoom) is written nowhere in the code.
+So in the maze, Sniff goes first and says the scent splits at the entrance. That writes `Scent`, which wakes up Zoom and Dig together. Dig finds a rabbit burrow, a dead end. Zoom finds hoof prints heading for the middle. Both reports wake Sniff again, who now says the trail leads to the middle. That wakes Zoom, who runs there and shouts "FOUND:". That order (Sniff, then Zoom and Dig together, then Sniff, then Zoom) is written nowhere in the code.
 
-I had never thought about letting the state drive the agents like that. Watching it run, with the scope updating at every step and puppies lighting up two at a time, is also the moment you realize how little control you have over what happens.
+Honestly, when I discovered this pattern, I was a bit surprised. I had never thought about letting the state drive the agents like that. It's fun to watch, with the scope updating at every step and puppies lighting up two at a time. It's also when you realize how little control you have over what happens.
 
 ### Two Traps I Fell Into
 
-The first trap is the very first move. Look at rule 1 again: an agent runs only when *every* key it reads exists. Sniff reads `Clearing` and `Burrows`. At the start, neither Zoom nor Dig has said anything, so those keys don't exist. Sniff can't run. And since Zoom and Dig are waiting for Sniff, nobody ever moves. The run ends immediately in a "stable state", with an empty result and no error.
+The first trap is the very first move. Look at rule 1 again: an agent runs only when every key it reads exists. Sniff reads `Clearing` and `Burrows`. At the start, neither Zoom nor Dig has said anything, so those keys don't exist. Sniff can't run. And since Zoom and Dig are waiting for Sniff, nobody ever moves. The run ends immediately in a "stable state", with an empty result and no error.
 
 The fix is to seed the scope with what the first agent needs:
 
@@ -123,7 +123,7 @@ var result = search.invoke(mission,
         "(nothing yet, we have just walked in)");  // Burrows
 ```
 
-The second trap is the exit condition. In an earlier version of this demo, my exit condition checked whether a peer's own output key existed, something like `scope -> scope.hasState(Scent.class)`. It reads well: "stop when we have a scent". Except the scent exists the moment Sniff has spoken once. The search ended after one turn, very confident and with no goat. The predicate has to read the *content*:
+The second trap is the exit condition. In an earlier version of this demo, my exit condition checked whether a peer's own output key existed, something like `scope -> scope.hasState(Scent.class)`. It reads well: "stop when we have a scent". Except the scent exists the moment Sniff has spoken once. The search ended after one turn, very confident and with no goat. The predicate has to read what's inside the key:
 
 ```java
 static boolean goatFound(AgenticScope scope) {
@@ -133,7 +133,7 @@ static boolean goatFound(AgenticScope scope) {
 }
 ```
 
-`found` is a small helper that looks for the `FOUND:` marker the prompts ask for. Whoever finds the goat, found it. Please check your exit predicate in both directions: one that can never be true runs until the budget is gone, and one that is always true ends silently after the first step. Neither of them throws an exception.
+`found` is a small helper that looks for the `FOUND:` marker the prompts ask for. It doesn't matter which puppy finds the goat. Please check your exit predicate in both directions: one that can never be true runs until the budget is gone, and one that is always true ends silently after the first step. Neither of them throws an exception.
 
 One more detail that matters: when `P2PPlanner` reaches its maximum invocations, it just stops. You get whatever is in the scope at that moment. So check the result instead of assuming the goal was reached. In the demo, I get a `ResultWithAgenticScope` back and look at the scope before claiming victory.
 
@@ -163,7 +163,7 @@ Five Rangers stand around the board, and each one can only act once the board ho
 - Rivet, the robot dog, needs the crime and pins the camera log.
 - Dig needs Sniff's scent before crawling down the right drain.
 - Doc needs Rivet's cameras before testing the crumb.
-- Zao needs Dig's prints *and* Doc's crumb analysis before naming the culprit.
+- Zao needs Dig's prints and Doc's crumb analysis before naming the culprit.
 
 The agents' `@K` parameters are their preconditions. Here is Zao:
 
@@ -239,7 +239,7 @@ So treat "the planner stopped" and "the goal was reached" as two different thing
 
 ### When to Use the Blackboard
 
-This pattern shines when a problem is solved by specialists adding pieces to a shared picture: technical diagnosis, incident response ("you look at the logs first, then you check the database"), investigations like our sausage heist. It's also often presented for constraint-solving workflows. You can do some of that with it, but if you have a real constraint-solving problem, look at a tool built for it, like [Timefold](https://timefold.ai/). It's still AI, just not an LLM.
+This pattern is a good fit when a problem is solved by specialists adding pieces to a shared picture: technical diagnosis, incident response ("you look at the logs first, then you check the database"), investigations like our sausage heist. It's also often presented for constraint-solving workflows. You can do some of that with it, but if you have a real constraint-solving problem, look at a tool built for it, like [Timefold](https://timefold.ai/). It's still AI, just not an LLM.
 
 The catch is that your strategy becomes your bottleneck. The whole system's behavior depends on who you pick, and a bad strategy can make you go around in circles or never call on the agent holding the clue that matters. It's also slower than peer-to-peer, since one agent at a time means no parallelism: you trade speed for control. And as the dry run showed, a stable state is not an answer.
 
@@ -259,7 +259,7 @@ If you want ideas to bounce around and you can afford the tokens, go peer-to-pee
 
 And if you're unsure, let's be honest: you probably need neither yet. In my experience with my clients, most real agentic systems are still workflows, and most of the rest are fine with a goal-oriented planner. These two patterns are great when the problem really is open-ended and collaborative. Don't choose them because they look cool on a dashboard. The pattern you don't use is the one you don't need to debug.
 
-A big thank you to Mario Fusco, who builds the agentic patterns module in LangChain4j and was in the room (pair programming from the audience when my fingers weren't awake yet). As he said at the end of the session, the module is a collection of `Planner` implementations, and he's very open to contributions if you come up with a pattern of your own.
+A big thank you to Mario Fusco, who builds the agentic patterns module in LangChain4j and was in the room that morning. As he said at the end of the session, the module is a collection of `Planner` implementations, and he's very open to contributions if you come up with a pattern of your own.
 
 ## Wrap Up
 
@@ -269,4 +269,4 @@ Three things to remember, only three:
 2. Check your exit condition in both directions. One that can't be true burns your budget, one that can't be false ends after the first step, and neither tells you. Read the content of the scope, not just whether a key exists.
 3. "It stopped" is not "it worked". Both planners can reach a stable state with no answer. Check the result before you trust it.
 
-All the demos from the talk are in the [deep-dive-langchain4j-devoxx-2026 repository](https://github.com/LoMagnette/deep-dive-langchain4j-devoxx-2026). Everything runs on a local model with Ollama, so no API key and no tokens to pay for. Go play with the puppies, break the exit predicate on purpose, and see what happens. And if you have questions or a pattern of your own, come chat with me on social media or at the next BeJUG meetup.
+All the demos from the talk are in the [deep-dive-langchain4j-devoxx-2026 repository](https://github.com/LoMagnette/deep-dive-langchain4j-devoxx-2026). Everything runs on a local model with Ollama, so no API key and no tokens to pay for. Go play with the puppies, break the exit predicate on purpose, and see what happens. If you have questions or a pattern of your own, come chat with me on social media or at the next BeJUG meetup. And if you were in the room at Devoxx, please take a minute to rate the talks you saw. Speakers really use that feedback.
