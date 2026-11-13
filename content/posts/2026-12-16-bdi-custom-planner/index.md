@@ -31,16 +31,16 @@ The name describes the pattern quite well, so let's take it word by word.
 
 **Desires** are the goals. A desire needs three things:
 
-- An **activation condition**: the minimal state you need to be in before you can even try. If tomorrow I want a kid, I first need a partner, and probably a good relationship with that partner. Otherwise we end up in a bad place.
-- A **definition of done**: when do we say this desire is fulfilled? If I want to be on stage at Devoxx, I can't say, "Hey, I submitted the CFP, I'm done." That's not how it works. You need a clear boundary.
-- A **priority**: maybe you love playing video games, but you'd rather take care of your family first. The planner needs to know which desire matters most.
+- An activation condition: the minimal state you need to be in before you can even try. If tomorrow I want a kid, I first need a partner, and probably a good relationship with that partner. Otherwise we end up in a bad place.
+- A definition of done: when do we say this desire is fulfilled? If I want to be on stage at Devoxx, I can't say, "Hey, I submitted the CFP, I'm done." That's not how it works. You need a clear boundary.
+- A priority: maybe you love playing video games, but you'd rather take care of your family first. The planner needs to know which desire matters most.
 
 **Intentions** are how you plan to fulfil a desire: an ordered list of agents you think will get you there.
 
 With those three ingredients, the planner can run a loop:
 
 1. Look at the beliefs. Are all desires already fulfilled? If so, lucky you, there's nothing to do.
-2. Find the desires that are *achievable*: their activation condition matches the current beliefs. The others are ignored for now.
+2. Find the desires that are achievable: their activation condition matches the current beliefs. The others are ignored for now.
 3. Among those, pick the one with the highest priority.
 4. Run the next step of its intention. The first time, that's the first agent. If we come back to that desire later, we continue with the second.
 5. The agent writes to the scope, so the beliefs have changed. Go back to step 1.
@@ -58,7 +58,7 @@ flowchart TD
 
 There's a subtlety in step 3, and it's the part that surprised me when I first saw it run. The highest-priority achievable desire can change between two iterations. You start working on desire number three, the agent updates the scope, and suddenly desire number one becomes achievable. The planner drops what it was doing and switches. Next round, it might switch back.
 
-In French we say someone runs around "comme un poulet sans tête", like a headless chicken. That's what it looks like the first time you watch it, but it always does the most important thing it *can* do, given what it knows now.
+In French we say someone runs around "comme un poulet sans tête", like a headless chicken. That's what it looks like the first time you watch it, but it always does the most important thing it can do, given what it knows at that moment.
 
 ## Squirrel!
 
@@ -68,7 +68,7 @@ So the demo is about Zoom, a greyhound from my rescue team of puppies. Zoom has 
 
 | Desire | Priority | Achievable when… | Done when… | Intention |
 |---|---|---|---|---|
-| Rescue the kid | 100 | he has *seen* a stranded kid | `Rescued` is in the scope | go to the ford, bring the kid back |
+| Rescue the kid | 100 | he has seen a stranded kid | `Rescued` is in the scope | go to the ford, bring the kid back |
 | Chase that squirrel | 50 | the radio mentioned a squirrel | `Treed` is in the scope | run up the bank, chase it up a tree |
 | Nap | 10 | always | `Napped` is in the scope | nap |
 
@@ -138,7 +138,7 @@ static boolean sees(AgenticScope scope, String phrase) {
 }
 ```
 
-I made a deliberate choice here: deciding what Zoom *believes* is done in Java, not by the model. If an LLM decided whether the kid was seen, the intention would change for reasons nobody can point at. The agents can be as creative as they want in what they write. The decision to switch desires stays readable.
+I made a deliberate choice here: deciding what Zoom believes is done in Java, not by the model. If an LLM decided whether the kid was seen, the intention would change for reasons nobody can point at. The agents can be as creative as they want in what they write. The decision to switch desires stays readable.
 
 Finally, the planner. It's the same `plannerBuilder` you saw with the goal-oriented pattern, with a `BDIPlanner` plugged in:
 
@@ -153,7 +153,7 @@ var result = zoom.invoke("Radio: a squirrel has just run off towards the riverba
         + "Also, the old bridge over the river came down in the storm last night.");
 ```
 
-One thing to be careful about: the desires reference agent *classes*, but the builder receives agent *instances*. If you list an agent in a desire and forget to pass its instance to `subAgents`, it will fail. Trust me, I've done that.
+One thing to be careful about: the desires reference agent classes, but the builder receives agent instances. If you list an agent in a desire and forget to pass its instance to `subAgents`, it will fail. So double-check that list every time you add a step to an intention.
 
 Try changing the radio message to say that Officer Jo already has the kid safe. Zoom never sees anyone stranded, the rescue never becomes achievable, and the squirrel plan runs straight through.
 
@@ -189,7 +189,7 @@ I like this form for BDI in particular. The desires are the logic of the agent, 
 
 ## When to Use BDI (and When Not To)
 
-BDI shines when you know *what* you want to achieve but don't want to describe *how* as a fixed path. A few use cases I find convincing:
+BDI is a good fit when you know what you want to achieve but don't want to describe how as a fixed path. A few use cases I find convincing:
 
 - Autonomous incident response: "restore the service" outranks "notify the team", which outranks "write the post-mortem". When the situation changes, priorities follow.
 - Game characters: give an NPC desires (eat, flee, explore, defend) and let it react to the state of the world. This is where BDI comes from, and it fits naturally.
@@ -197,13 +197,13 @@ BDI shines when you know *what* you want to achieve but don't want to describe *
 
 Now the caveats.
 
-Designing desires is hard. You need the right mental model, you need to figure out which agents serve which desire, and you need activation and done conditions that are neither too loose nor too strict. The demo repository also notes that an intention that runs to its end without satisfying its desire is treated as an error, not a retry. So your definition of done must match what your agents actually produce.
+Designing desires is hard. You need the right mental model, you need to figure out which agents serve which desire, and you need activation and done conditions that are neither too loose nor too strict. Also, in the version I used, an intention that runs to its end without satisfying its desire is treated as an error, not as a reason to try again. So your definition of done must match what your agents actually produce.
 
 The plans are predefined. BDI won't invent a new path. It only calls the agents you put in the intentions. That's good for control, but don't expect a supervisor's flexibility.
 
 You can also get starvation. If a desire with the highest priority is very complex, it can keep the planner busy for a long time while five small, low-priority desires never get a turn.
 
-And priorities are a guess: we set them based on what we *think* matters. In practice, finishing five small tasks may be worth more than finishing the big one. Expect to tweak them.
+And priorities are a guess: we set them based on what we think matters. In practice, finishing five small tasks may be worth more than finishing the big one. Expect to tweak them.
 
 So please don't start with BDI. Start with the workflows from my [first article](/posts/langchain4j-agentic-workflows-from-ai-calls-to-multi-agent-systems-in-java/), and reach for BDI when you really have competing goals that should take over from each other as the world changes.
 
