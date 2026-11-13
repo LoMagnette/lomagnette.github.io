@@ -9,7 +9,7 @@ draft: true
 
 ## The Demo Works. Now What?
 
-A few weeks ago, a client asked me to build an AI agent. The job: read an Excel file, do some computation, write another Excel file. I was like, "Hey, you don't need an agent for that. We can write code." And they said, "Yeah, but can we try with an agent?" They're the client, so I said yes. But please, don't do that.
+Not long ago, a client asked me to build an AI agent. The job: read an Excel file, do some computation, write another Excel file. I was like, "Hey, you don't need an agent for that. We can write code." And they said, "Yeah, but can we try with an agent?" They're the client, so I said yes. But please, don't do that.
 
 I'm starting with that story because this article is about the unglamorous part of agentic systems. Over this series, we went through a lot of patterns: [peer-to-peer and blackboard](/posts/when-the-state-is-the-boss-peer-to-peer-and-blackboard-agents-with-langchain4j/), [voting and debate](/posts/agent-democracy-voting-and-debate-patterns-with-langchain4j/), [BDI and custom planners](/posts/beliefs-desires-intentions-bdi-agents-and-custom-planners-with-langchain4j/), and before that, [the workflows, goal-oriented planning and the supervisor](/posts/langchain4j-agentic-workflows-from-ai-calls-to-multi-agent-systems-in-java/). They make great demos. But once a system leaves your laptop, other questions show up. What is it doing right now? Why is it so slow? Why did this month's bill double? What happens when the model drops a call at 3 a.m.?
 
@@ -102,11 +102,11 @@ var monitor = new AgentMonitor();
 HtmlReportGenerator.generateReport(monitor, Path.of("human-in-the-loop.html"));
 ```
 
-Open that file in a browser and you get two things. First, the topology of your agentic system: which agent contains which, drawn for you. With four agents it's cute. With twenty, it's the map you need. Second, the execution: every step and the time spent in it. If someone tells you, "Hey, the system takes five minutes and I don't know why," plug in the monitor and you'll see where the time goes, without setting up Grafana or tracing. It's just a file.
+Open that file in a browser and you get two things. First, the topology of your agentic system: which agent contains which, drawn for you. With four agents, you could draw it yourself. With twenty, you'll be happy to have it. Second, the execution: every step and the time spent in it. If someone tells you, "Hey, the system takes five minutes and I don't know why," plug in the monitor and you'll see where the time goes, without setting up Grafana or tracing. It's just a file.
 
 <!-- TODO(Loïc): add a screenshot of the generated HTML report (the one from the human-in-the-loop demo). -->
 
-Let's be honest, it won't replace real observability in production. But for development, for a code review, or for explaining the system to a colleague, I use it all the time.
+Let's be honest, it won't replace real observability in production. But for development, for a code review, or for explaining the system to a colleague, it's really useful.
 
 ## Pay Less: Choose the Model per Call
 
@@ -139,7 +139,7 @@ NightPhone phone = AgenticServices.sequenceBuilder(NightPhone.class)
 
 No magic here. It's a good old lambda, and you can put any logic you want in it: a category, a score from a previous agent, the customer's plan, the time of day.
 
-One caveat that I didn't see coming. Your classifier is now a cost decision as well as a routing decision, and its mistakes aren't symmetric. Using the strong model when the cheap one was enough costs you a few cents. Using the cheap model on the swollen ankle is the expensive mistake, and it's the silent one: you get an answer, just a worse one. So when the classifier can't decide, please fall back to the strong model. And as with [conditional routing](/posts/langchain4j-agentic-workflows-from-ai-calls-to-multi-agent-systems-in-java/), have the classifier return an enum instead of free text: a typo like `Hurt` instead of `hurt` shouldn't decide which model you pay for.
+One caveat to keep in mind. Your classifier is now a cost decision as well as a routing decision, and its mistakes aren't symmetric. Using the strong model when the cheap one was enough costs you a few cents. Using the cheap model on the swollen ankle is the expensive mistake, and it's the silent one: you get an answer, just a worse one. So when the classifier can't decide, please fall back to the strong model. And as with [conditional routing](/posts/langchain4j-agentic-workflows-from-ai-calls-to-multi-agent-systems-in-java/), have the classifier return an enum instead of free text: a typo like `Hurt` instead of `hurt` shouldn't decide which model you pay for.
 
 ## Survive Failures: Optional Agents and Bounded Retries
 
@@ -147,7 +147,7 @@ Models are non-deterministic, and they'll fail. Probably in production, not on y
 
 ### Optional agents: when an input is missing
 
-During the talk, I presented `optional` as a way to skip an agent that fails. Mario Fusco, who builds the agentic module, was in the room and corrected me: he introduced it for another reason, and I think it's the better use case. Sometimes an agent's input just isn't there. If you do nothing, the whole system stops with a `MissingArgumentException` naming a step that looks unrelated. Mark the agent as optional and the planner skips it instead.
+During the talk, I presented `optional` as a way to skip an agent that fails. Mario Fusco, who builds the agentic module, was in the room and added a clarification: he introduced it for another reason, and I think it's the better use case. Sometimes an agent's input just isn't there. If you do nothing, the whole system stops with a `MissingArgumentException` naming a step that looks unrelated. Mark the agent as optional and the planner skips it instead.
 
 In the demo, Doc gives first aid when the rescue report says someone is hurt. Most days nobody is, so most runs never write the `Injuries` key:
 
@@ -165,7 +165,7 @@ Two traps here. Give `Injuries` a default value and Doc always has an input, so 
 
 ### Retries: when a call fails
 
-The error handler is for a call that fails: a dropped connection, a timeout, the model that returns broken JSON one time out of ten (if you ever asked a model for JSON, you know). Retrying is often the cheapest fix. But there's a trap I fell into: `retry()` runs the agent again, and if it fails again, you end up back in the same handler. A handler that always retries never stops.
+The error handler is for a call that fails: a dropped connection, a timeout, the model that returns broken JSON one time out of ten (if you ever asked a model for JSON, you know). Retrying is often the cheapest fix. But there's a trap: `retry()` runs the agent again, and if it fails again, you end up back in the same handler. A handler that always retries never stops.
 
 So keep a counter:
 
@@ -184,8 +184,7 @@ BadRadioDay rescue = AgenticServices.sequenceBuilder(BadRadioDay.class)
 
 Below the threshold, we retry. Above it, you choose: give up with `throwException()`, or land on your feet with a fallback value and let the rest of the workflow continue. Here the rescue goes on without a location rather than failing completely.
 
-
-To test this, I didn't wait for the network to misbehave. In the demo there's a `FlakyModel`, a `ChatModel` wrapper that throws on its first call and then delegates to the real model. A demo that waits for a real failure works perfectly on stage and teaches nothing. Please do the same in your tests.
+To test this, I didn't wait for the network to misbehave. In the demo there's a `FlakyModel`, a `ChatModel` wrapper that throws on its first call and then delegates to the real model. If you wait for a real failure, of course, it never happens during the demo. Please do the same in your tests: make the failure happen on purpose.
 
 ## Scale Out: Async Agents and the Parallel Mapper
 
@@ -240,7 +239,7 @@ List<String> found = search.search(ducklings);
 
 `itemsProvider` points at a collection in the scope. For each item, the mapper runs the sub-agent with that item bound to its first parameter, and gathers the results in the same order. The fan-out is decided by the data: add a ninth duckling and you get nine searches. On my laptop with a local model it took about thirty seconds, because Ollama doesn't love concurrent requests. On a real provider it's much faster.
 
-Good use cases: batch classification, extracting data from a pile of documents, or sending a batch of emails where each one is personalised for its recipient.
+Good use cases: batch classification, extracting data from a pile of documents, or sending a batch of emails where each one is personalized for its recipient.
 
 The caveats:
 
@@ -302,7 +301,7 @@ What I like about it: open the interface and you know right away what this agent
 
 ## Before You Ship
 
-A few last things that didn't fit anywhere else, but each of them cost me time at some point.
+A few last things that didn't fit anywhere else, but that I didn't want to leave out.
 
 ### Check your dependencies
 
@@ -335,7 +334,7 @@ If tomorrow your bank offers you an AI agent to manage your money, would you let
 
 ### Watch the docs
 
-This module moves fast. I prepared a three-hour talk, I thought I'd covered everything, and on the Friday before Devoxx Mario shipped something new. Right after my talk, he showed a router that asks a decision model which agent to call instead of using a lambda. The [agentic tutorial in the LangChain4j documentation](https://docs.langchain4j.dev/tutorials/agents/) is the page to check regularly. Two things I haven't dug into yet but you'll find there: an A2A integration to call agents running on other systems (if A2A is new to you, I wrote [an introduction to A2A](/posts/from-lonely-agents-to-talking-teams-an-introduction-to-a2a/)), and a recent agent registry to pick agents from.
+This module moves fast. I already told you in the [voting and debate article](/posts/agent-democracy-voting-and-debate-patterns-with-langchain4j/) about the release that landed right before my talk. And right after my talk, Mario showed a router that asks a decision model which agent to call instead of using a lambda. The [agentic tutorial in the LangChain4j documentation](https://docs.langchain4j.dev/tutorials/agents/) is the page to check regularly. Two things I haven't dug into yet but you'll find there: an A2A integration to call agents running on other systems (if A2A is new to you, I wrote [an introduction to A2A](/posts/from-lonely-agents-to-talking-teams-an-introduction-to-a2a/)), and a recent agent registry to pick agents from.
 
 <!-- TODO(Loïc): check whether the decision-model router and agent registry have doc pages worth linking. -->
 
