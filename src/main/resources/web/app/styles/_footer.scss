@@ -1,0 +1,75 @@
+// ============================================================================
+// Site footer.
+// ============================================================================
+@use 'mixins' as *;
+
+#footer {
+  // !important needed: the theme gives #footer its own background and padding.
+  background: var(--footer-bg) !important;
+  padding: 0 !important;
+  margin-top: var(--spacing-2xl);
+  border-top: 1px solid var(--footer-border);
+}
+
+.footer-copyright {
+  padding: var(--spacing-xl) var(--spacing-lg);
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-xl);
+  flex-wrap: wrap;
+}
+
+.footer-info {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+}
+
+.copyright-text {
+  color: var(--text-tertiary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.footer-tagline {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  margin: 0;
+
+  a {
+    color: var(--tint-text);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color var(--transition-base);
+
+    &:hover {
+      color: var(--color-primary);
+      text-decoration: underline;
+    }
+  }
+}
+
+@include mobile {
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--spacing-lg);
+  }
+
+  .footer-info {
+    align-items: center;
+    flex-direction: column;
+  }
+}

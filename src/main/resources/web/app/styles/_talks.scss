@@ -1,0 +1,438 @@
+// ============================================================================
+// Talks page (content/talks/index.html) and Conferences page (content/conferences.html).
+// Both share the same container, card and link styles.
+// ============================================================================
+@use 'mixins' as *;
+
+// --- Shared -----------------------------------------------------------------
+
+.talks-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem 1.5rem;
+}
+
+.talk-card,
+.event-card {
+  @include card;
+  padding: 1.25rem 1.5rem;
+  @include card-hover;
+
+  @include mobile {
+    padding: 1rem 1.125rem;
+  }
+}
+
+// !important on font-weight: the theme's prose styles set heading and link weights.
+.talk-card-title,
+.event-name {
+  font-size: 1.25rem;
+  font-weight: 700 !important;
+  color: var(--text-primary);
+}
+
+.talk-card-link,
+.event-name a {
+  font-weight: inherit !important;
+  @include title-link;
+}
+
+// --- Talks page -------------------------------------------------------------
+
+.talk-card {
+  margin-bottom: 1rem;
+
+  &.retired {
+    opacity: 0.6;
+  }
+}
+
+.talks-container.hide-retired .talk-card.retired {
+  display: none;
+}
+
+.talk-card-title {
+  margin: 0 0 0.75rem 0;
+  letter-spacing: -0.02em;
+}
+
+.appearance-count {
+  @include pill;
+  margin-left: 0.5rem;
+  background: var(--tint-bg);
+  border: 1px solid var(--tint-border);
+  color: var(--tint-text);
+  font-size: 0.75rem;
+}
+
+.badge-retired {
+  @include pill;
+  margin-left: 0.5rem;
+  background: var(--text-tertiary);
+  color: #fff;
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+.talks-filter {
+  display: flex;
+  justify-content: center;
+  width: fit-content;
+  margin: 0 auto 1.5rem;
+  padding: 0.25rem;
+  gap: 0.25rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-sm);
+
+  button {
+    padding: 0.4rem 1.1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: none;
+    border-radius: var(--radius-full);
+    background: transparent;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    transition: background var(--transition-fast), color var(--transition-fast);
+
+    &:hover {
+      color: var(--text-primary);
+    }
+
+    &.active {
+      background: var(--color-primary);
+      color: #fff;
+    }
+  }
+}
+
+.talk-abstract {
+  margin: 0.5rem 0 0.25rem 0;
+
+  summary {
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    list-style: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &::before {
+      content: "\25B6";
+      font-size: 0.6rem;
+      transition: transform var(--transition-fast);
+      display: inline-block;
+    }
+  }
+
+  &[open] summary::before {
+    transform: rotate(90deg);
+  }
+
+  p {
+    margin: 0.5rem 0 0 0;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+}
+
+// Compact, borderless table listing where a talk was given.
+// !important on box/border/background: overrides the global table styles and the theme's prose tables.
+.appearances-table {
+  box-shadow: none !important;
+  margin: 0.75rem 0 0 !important;
+  border-radius: 0 !important;
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  border-spacing: 0;
+  border-top: 1px solid var(--border-color);
+
+  &,
+  thead,
+  tbody,
+  th,
+  tr,
+  td {
+    border: none !important;
+    background: transparent !important;
+  }
+
+  tr {
+    transition: background var(--transition-fast);
+  }
+
+  tr:hover,
+  tr:hover td {
+    background: var(--hover-bg) !important;
+  }
+
+  td {
+    padding: 0.35rem 0.5rem;
+    font-size: 0.9rem;
+    line-height: 1.2;
+    vertical-align: middle;
+  }
+
+  col.col-event    { width: 35%; }
+  col.col-date     { width: 15%; }
+  col.col-location { width: 40%; }
+  col.col-links    { width: 10%; }
+
+  .col-event {
+    @include truncate;
+    font-weight: 600;
+    color: var(--text-primary);
+
+    a {
+      @include title-link;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .col-date {
+    color: var(--text-tertiary);
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+
+  .col-location {
+    @include truncate;
+    color: var(--text-tertiary);
+    font-size: 0.85rem;
+  }
+
+  .col-links {
+    white-space: nowrap;
+    text-align: right;
+  }
+
+  @include mobile {
+    .col-event {
+      white-space: normal;
+    }
+
+    .col-location {
+      display: none;
+    }
+  }
+}
+
+.appearance-link {
+  display: inline-block;
+  padding: 0 0.3rem;
+  background: none;
+  text-decoration: none;
+  border-radius: 4px;
+  line-height: 0;
+  vertical-align: middle;
+  @include lift-glow;
+
+  img {
+    width: 1rem;
+    height: 1rem;
+    vertical-align: middle;
+  }
+}
+
+// --- Conferences page -------------------------------------------------------
+
+.year-section {
+  margin-bottom: 2.5rem;
+}
+
+.year-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-top: 0 !important;
+  margin-bottom: 1.25rem;
+  color: var(--text-primary);
+  letter-spacing: -0.025em;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  // Hairline that fills the rest of the row after the year.
+  &::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border-color);
+  }
+
+  @include mobile {
+    font-size: 1.75rem;
+  }
+}
+
+.events-grid {
+  display: grid;
+  // minmax(0, 1fr): let cards shrink to the column instead of growing to their content (overflowed on mobile).
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.event-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+
+  @include mobile {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
+
+.event-name {
+  margin: 0;
+  flex: 1;
+  min-width: 200px;
+  overflow-wrap: break-word;
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  @include mobile {
+    min-width: unset;
+    width: 100%;
+    flex: none;
+  }
+}
+
+.event-meta {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  color: var(--text-tertiary);
+  font-size: 0.9rem;
+  margin: 0;
+  flex-shrink: 0;
+
+  @include mobile {
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+}
+
+.event-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+
+  @include mobile {
+    font-size: 0.85rem;
+    white-space: normal;
+  }
+}
+
+.talks-list {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.talk-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  margin-bottom: 0.35rem;
+  background: var(--card-bg);
+  border-radius: 6px;
+  transition: background var(--transition-fast);
+
+  &:hover {
+    background: var(--hover-bg);
+  }
+}
+
+.talk-bullet {
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  background: var(--gradient-brand);
+  border-radius: 50%;
+  margin-top: 0.45rem;
+
+  // Lines up with the first line of a wrapped title.
+  @include mobile {
+    margin-top: 0.55rem;
+  }
+}
+
+.talk-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+
+  @include mobile {
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
+
+.talk-title {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.4;
+  flex: 1;
+  min-width: 200px;
+
+  // Keep the bullet on the same line as the title.
+  @include mobile {
+    min-width: 0;
+  }
+}
+
+.talk-links {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.talk-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.65rem;
+  background: none;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  @include lift-glow;
+
+  &:hover {
+    color: #fff;
+  }
+}
+
+.no-talks {
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 0.75rem;
+  text-align: center;
+}

@@ -1,0 +1,154 @@
+// ============================================================================
+// Base element styles: typography, code, tables, focus, selection.
+// ============================================================================
+@use 'mixins' as *;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  // !important needed: Roq 2.1 theme's body { font-family: var(--font-body) } loads after this file in the bundle.
+  font-family: var(--font-sans) !important;
+  font-feature-settings: 'cv11', 'ss01';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.7;
+  font-size: 1.0625rem;
+  color: var(--text-primary);
+  background: var(--bg-page);
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  transition: background var(--transition-base), color var(--transition-base);
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-sans);
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+// !important needed: the theme's dark-mode prose colors headings and heading links on its own.
+h1, h2, h3 {
+  @include dark {
+    color: var(--text-primary) !important;
+
+    a {
+      color: var(--text-primary) !important;
+
+      &:hover {
+        color: var(--color-primary-light) !important;
+      }
+    }
+  }
+}
+
+// !important needed: theme and prose styles give <hr> a heavy, high-contrast rule.
+hr {
+  border: none !important;
+  border-top: 1px solid var(--border-color) !important;
+  margin: var(--spacing-2xl) 0;
+}
+
+::selection {
+  background: rgba(20, 184, 166, 0.3);
+  color: inherit;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+// --- Code -------------------------------------------------------------------
+
+.hljs {
+  background-color: var(--code-bg) !important;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg) !important;
+  border: 1px solid var(--border-color);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.65;
+
+  // The GitHub highlight.js theme is light-only: lift contrast in dark mode.
+  @include dark {
+    color: #e8e8e8 !important;
+
+    .hljs-keyword, .hljs-selector-tag, .hljs-literal, .hljs-section, .hljs-link {
+      color: var(--color-primary-light) !important;
+    }
+
+    .hljs-string, .hljs-title, .hljs-name, .hljs-type, .hljs-attribute, .hljs-symbol, .hljs-bullet,
+    .hljs-addition, .hljs-variable, .hljs-template-tag, .hljs-template-variable {
+      color: #67e8f9 !important;
+    }
+
+    .hljs-comment, .hljs-quote, .hljs-deletion, .hljs-meta {
+      color: #9ca3af !important;
+    }
+  }
+}
+
+pre {
+  margin: var(--spacing-xl) 0;
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+
+  code {
+    font-family: var(--font-mono);
+  }
+
+  &.mermaid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    border: none;
+    padding: var(--spacing-xl) 0;
+  }
+}
+
+// --- Tables -----------------------------------------------------------------
+// Note: with border-collapse: separate, borders on <tr> are not drawn, so rows are
+// separated by their hover background only.
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: var(--spacing-xl) 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+
+  thead {
+    background: var(--table-head-bg);
+
+    th {
+      padding: var(--spacing-md) var(--spacing-lg);
+      text-align: left;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 2px solid var(--table-head-border);
+    }
+  }
+
+  tbody tr {
+    background: var(--card-bg);
+    transition: background-color var(--transition-fast);
+
+    &:hover {
+      background: var(--table-row-hover);
+    }
+
+    td {
+      padding: var(--spacing-md) var(--spacing-lg);
+      color: var(--text-secondary);
+    }
+  }
+}

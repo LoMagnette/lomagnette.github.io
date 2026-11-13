@@ -1,0 +1,59 @@
+// ============================================================================
+// Roq 2.1 default theme overrides
+// Neutralizes theme selectors that clash with this site's design. Overrides of
+// selectors the site also styles itself (body, .wrapper, .page-content...) live
+// with those rules instead.
+// ============================================================================
+@use 'mixins' as *;
+
+// The theme sidebar is replaced by .top-nav, so hide it and don't reserve space for it.
+.sidebar.main {
+  display: none !important;
+}
+
+.main-content {
+  margin-left: 0 !important;
+}
+
+// Theme adds narrow prose containers (~720px) that clamp article width.
+// Let the outer .page-content govern instead.
+.content-main,
+.content-prose,
+.asciidoc-prose {
+  max-width: none !important;
+}
+
+.content-prose,
+.asciidoc-prose {
+  // Tailwind Typography colors links with its own greys (and white in dark mode).
+  // !important needed on the custom property: the theme's .content-prose rule sets
+  // it too and loads after this file.
+  --tw-prose-links: var(--color-accent-dark) !important;
+
+  @include dark {
+    --tw-prose-links: var(--color-primary-light) !important;
+  }
+
+  // Theme renders `details > summary` as a sky-blue (bg-pop-*) pill, e.g. the "Abstract"
+  // toggle on the talks page. Recolor it with the site's teal palette.
+  details > summary,
+  details[open] > summary {
+    background-color: var(--hover-bg) !important;
+    color: var(--color-primary-dark) !important;
+
+    &::before {
+      color: var(--color-primary) !important;
+    }
+
+    &:hover {
+      background-color: var(--summary-hover-bg) !important;
+    }
+
+    @include dark {
+      &,
+      &::before {
+        color: var(--color-primary-light) !important;
+      }
+    }
+  }
+}

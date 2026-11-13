@@ -1,0 +1,106 @@
+// ============================================================================
+// Shared mixins: reusable patterns that used to be copy-pasted across components.
+// ============================================================================
+@use 'tokens' as *;
+
+// --- Media queries ----------------------------------------------------------
+
+@mixin mobile {
+  @media (max-width: $bp-md) { @content; }
+}
+
+@mixin tablet-down {
+  @media (max-width: $bp-lg) { @content; }
+}
+
+@mixin desktop {
+  @media (min-width: $bp-lg) { @content; }
+}
+
+// Scope rules to dark mode from inside a component: `@include dark { ... }`.
+@mixin dark {
+  [data-theme="dark"] & { @content; }
+}
+
+// --- Visual patterns --------------------------------------------------------
+
+// Teal → cyan gradient applied to the text itself.
+@mixin gradient-text {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// Bordered surface used by every card on the site.
+@mixin card($shadow: var(--shadow-sm)) {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  box-shadow: $shadow;
+}
+
+// Lift + stronger shadow + teal border on hover.
+@mixin card-hover {
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--border-color-hover);
+  }
+}
+
+// Small lift with a teal glow (icon links on talks/conferences pages).
+@mixin lift-glow {
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow);
+  }
+}
+
+// Round, transparent icon button that tints on hover (navbar, theme toggle).
+@mixin icon-button($size: 38px) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: $size;
+  height: $size;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-tertiary);
+  transition: background var(--transition-fast), color var(--transition-fast);
+
+  &:hover {
+    background: var(--hover-bg);
+    color: var(--tint-text);
+  }
+}
+
+// Small rounded label next to a title.
+@mixin pill {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+// Card/list title link: plain text that turns teal on hover.
+@mixin title-link {
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+
+  &:hover {
+    color: var(--color-primary);
+  }
+}
+
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

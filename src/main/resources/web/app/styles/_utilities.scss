@@ -1,0 +1,9 @@
+// ============================================================================
+// Utility classes used directly in templates.
+// ============================================================================
+@use 'mixins' as *;
+
+// Navbar brand name.
+.text-gradient {
+  @include gradient-text;
+}
