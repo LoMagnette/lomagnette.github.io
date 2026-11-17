@@ -6,8 +6,6 @@ author: Loïc
 image: quarkus-4.0.jpg
 draft: true
 ---
-<!-- TODO(Loïc): add a header image (image: quarkus-4.png) -->
-<!-- TODO(Loïc): written against 4.0.0.Beta3 (Nov 4, 2026), updated with CR1 release notes (Nov 11). Snippets were compiled and run on Beta3 only; re-run on CR1/Final before publishing. -->
 
 ## A New Major, Finally
 
@@ -62,15 +60,16 @@ QUIC is quietly becoming the transport for a lot of things: HTTP/3, MQTT over QU
 </dependency>
 ```
 
-That's it, no property needed. HTTP/3 requires TLS (1.3), and that's where the nice part comes in: in dev and test mode, if you haven't configured any TLS, Quarkus generates a certificate for you. Here's what dev mode logged when I added the extension:
+That's it, no property needed. HTTP/3 requires TLS (1.3), and that's where the nice part comes in: in dev and test mode, if you haven't configured any TLS, Quarkus generates a certificate for you. Here's what dev mode logged on CR1 when I added the extension:
 
 ```text
-HTTP/3 (QUIC) support enabled
-HTTP/3: auto-generated self-signed TLS certificate (run 'quarkus tls generate-quarkus-ca --install' for browser-trusted certificates)
-HTTP/3: insecure HTTP requests will be redirected to HTTPS (set quarkus.http.insecure-requests=enabled to allow plain HTTP)
+INFO  [io.smallrye.certs.CertificateGenerator] ⭐  PKCS12 keystore and truststore generated successfully!
+INFO  [io.smallrye.certs.CertificateGenerator] 🔐  Key Store File: target/http3-dev-cert/http3-dev-keystore.p12
+INFO  [io.smallrye.certs.CertificateGenerator] 🔓  Trust Store File: target/http3-dev-cert/http3-dev-truststore.p12
+INFO  [io.quarkus.http3.deployment.Http3Processor] HTTP/3: insecure HTTP requests will be redirected to HTTPS (set quarkus.http.insecure-requests=enabled to allow plain HTTP)
 ```
 
-So once you add the extension, `http://localhost:8080` answers with a `301` to `https://localhost:8443`. That surprised me for a second. If you want to keep plain HTTP in dev, set `quarkus.http.insecure-requests=enabled`. And if you want your browser to trust the certificate, run the command from the log once: it creates a local Quarkus CA, and the next generated certificates will be signed by it.
+The keystore and truststore land in `target/http3-dev-cert/`, so they're thrown away with your next `clean`. Look at the last line, though: once you add the extension, `http://localhost:8080` answers with a `301` to `https://localhost:8443`. That surprised me for a second. If you want to keep plain HTTP in dev, set `quarkus.http.insecure-requests=enabled`. By default the certificate is self-signed, so expect a warning in your browser. If you want your browser to trust it, run `quarkus tls generate-quarkus-ca --install` once: it creates a local Quarkus Dev CA, and the next generated certificates will be signed by it.
 
 HTTP/1.1, HTTP/2 and HTTP/3 are all served on the same port, TCP for the first two, UDP for QUIC. If your `curl` was built with HTTP/3 support, you can check it with:
 
@@ -120,6 +119,7 @@ public class Book extends RecordEntity {
 You inject `Book.Repo` like any other bean. `@Find` and `@Query` come straight from Jakarta Data (`jakarta.data.repository`), and the implementation is generated at build time by an annotation processor you add to the compiler plugin:
 
 ```xml
+<annotationProcessorPathsUseDepMgmt>true</annotationProcessorPathsUseDepMgmt>
 <annotationProcessorPaths>
     <path>
         <groupId>io.quarkus</groupId>
@@ -128,13 +128,15 @@ You inject `Book.Repo` like any other bean. `@Find` and `@Query` come straight f
 </annotationProcessorPaths>
 ```
 
-My favorite part: **queries are checked at compile time**. I made a typo on purpose, `prcie` instead of `price`, and the build refused to compile:
+The `annotationProcessorPathsUseDepMgmt` flag lets Quarkus manage the processor version, so you don't have to set one.
 
-```text
-[ERROR] Book.java:[21,16] Could not interpret path expression 'prcie' [from Book where prcie < :maxPrice order by title]
-```
+My favorite part: **queries are checked before your app serves a single request**. I made a typo on purpose, `prcie` instead of `price`. The guide promises these queries are type-checked at build time, so I was hoping for a compile error. But on CR1 `mvn package` went through without a word. Dev mode, on the other hand, refused to start:
 
-No more finding out in production that you renamed a field and forgot a query.
+<!-- TODO(Loïc): paste the actual startup error from quarkus:dev on CR1 here. -->
+
+So it's not quite "compile time", but you still find out at startup, not in production the first time the query runs. Rename a field, forget a query, and your dev mode (or your CI) tells you right away.
+
+If you want to dig further, the [Quarkus Data with Hibernate guide](https://quarkus.io/guides/quarkus-data-hibernate/) covers the full API.
 
 Notice `RecordEntity`. Quarkus Data offers two models:
 
@@ -260,7 +262,7 @@ Jakarta REST 4 adds a `MediaType.APPLICATION_MERGE_PATCH_JSON` constant. It's ju
 
 ```java
 @PATCH
-@Path("\{id}")
+@Path("/\{id}")
 @Transactional
 @Consumes(MediaType.APPLICATION_MERGE_PATCH_JSON)
 public Book patch(@PathParam("id") long id, String mergePatch) {
@@ -331,7 +333,16 @@ If you also have `quarkus-micrometer-registry-prometheus`, you'll now collect me
 
 ### `@Observed`: One Annotation, Metrics and Traces
 
-The new `quarkus-observation` extension brings the **Micrometer Observation API**. You annotate a method once and get both a timer metric and a span:
+The new `quarkus-observation` extension brings the **Micrometer Observation API**. Add it to your project:
+
+```xml
+<dependency>
+    <groupId>io.quarkus</groupId>
+    <artifactId>quarkus-observation</artifactId>
+</dependency>
+```
+
+Then you annotate a method once and get both a timer metric and a span:
 
 ```java
 import io.micrometer.observation.annotation.Observed;
@@ -346,13 +357,19 @@ public class Things {
 }
 ```
 
-`name` becomes the metric name, `contextualName` the span name. After one call, my `/q/metrics` endpoint had `things_compute_*` series next to the usual HTTP ones. It works with synchronous methods, `Uni`, `Multi` and `CompletionStage`, and there's a programmatic API (`Observation.createNotStarted(...).observe(...)`) for when an annotation doesn't fit. You still need a backend: Prometheus, OpenTelemetry, or both.
+`name` becomes the metric name, `contextualName` the span name. After one call, my `/q/metrics` endpoint had `things_compute_*` series next to the usual HTTP ones. It works with synchronous methods, `Uni`, `Multi` and `CompletionStage`, and there's a programmatic API (`Observation.createNotStarted(...).observe(...)`) for when an annotation doesn't fit. On its own, though, `quarkus-observation` doesn't export anything: no spans, and the metrics go nowhere. You choose the backends. Add `quarkus-opentelemetry` for spans and a registry like `quarkus-micrometer-registry-prometheus` for metrics, or use `quarkus-micrometer-opentelemetry` to send both over OTLP.
 
 ### Observability in the Dev UI
 
-The Dev UI gets a built-in **Observability** page in dev mode. You pick the cards you want (metrics, OpenTelemetry traces...), arrange them, and you get live charts without wiring anything. There's even an **Export Grafana** button that downloads a dashboard you can import into Grafana. Combined with the Grafana LGTM Dev Service (which dev mode started on its own in my test project), you go from zero to a Grafana dashboard without writing a line of config.
+The Dev UI gets a built-in **Observability** page in dev mode. You pick the cards you want (metrics, OpenTelemetry traces...) from everything your app exposes, grouped by source:
 
-<!-- TODO(Loïc): a screenshot of the Dev UI Observability page would be great here. -->
+![The Dev UI Observability page on Quarkus 4.0.0.CR1: a picker listing OpenTelemetry Traces and the available metrics grouped by source (an @Observed getBooks timer, http, jvm and kafka), with five selected](quarkus-observability-1.webp)
+
+Then you arrange them, and you get live charts without wiring anything:
+
+![The resulting Dev UI dashboard: an OpenTelemetry Traces card listing recent books requests, and live charts for otel.sdk.log.created, otel.sdk.span.live and process.cpu.time, under Clear history, Export CSV, Export Grafana and Edit dashboard buttons](quarkus-observability-2.webp)
+
+There's even an **Export Grafana** button that downloads a dashboard you can import into Grafana. Combined with the Grafana LGTM Dev Service (which dev mode started on its own in my test project), you go from zero to a Grafana dashboard without writing a line of config.
 
 ### Defaults That Changed
 
@@ -485,7 +502,7 @@ And if you're on an LTS with no urgent need, waiting for 4.3 LTS in March is a p
 
 ## Wrap-Up
 
-Quarkus 4 isn't a flashy release, and it isn't trying to be. It's a new floor: Java 21, Vert.x 5, Hibernate 8, Jackson 3, CDI 5. It also gets rid of a lot of the compatibility baggage the 3.x line had to carry. The visible wins are real: observability that works out of the box, compile-time checked queries with Quarkus Data, exactly-once Kafka in one annotation, HTTP/3 to play with. But the bigger win is what this foundation makes possible over the next releases.
+Quarkus 4 isn't a flashy release, and it isn't trying to be. It's a new floor: Java 21, Vert.x 5, Hibernate 8, Jackson 3, CDI 5. It also gets rid of a lot of the compatibility baggage the 3.x line had to carry. The visible wins are real: observability that works out of the box, queries checked at startup with Quarkus Data, exactly-once Kafka in one annotation, HTTP/3 to play with. But the bigger win is what this foundation makes possible over the next releases.
 
 Some migrations will be smooth, others will spend an afternoon fighting Jackson. Either way, the direction is right, and I'm looking forward to seeing what 4.x becomes.
 
