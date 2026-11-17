@@ -498,8 +498,6 @@ Here's how I'd approach it:
 
 And if you're on an LTS with no urgent need, waiting for 4.3 LTS in March is a perfectly reasonable plan. Just don't wait until then to *read* the migration guide.
 
-<!-- TODO(Loïc): add your own migration story here (this blog? a demo project?): what broke, how long it took. That's the part readers will remember. -->
-
 ## Wrap-Up
 
 Quarkus 4 isn't a flashy release, and it isn't trying to be. It's a new floor: Java 21, Vert.x 5, Hibernate 8, Jackson 3, CDI 5. It also gets rid of a lot of the compatibility baggage the 3.x line had to carry. The visible wins are real: observability that works out of the box, queries checked at startup with Quarkus Data, exactly-once Kafka in one annotation, HTTP/3 to play with. But the bigger win is what this foundation makes possible over the next releases.
