@@ -79,6 +79,11 @@ curl --http3 -k https://localhost:8443/hello
 
 A few limitations to keep in mind: it relies on a native QUIC library (Maven picks the right one for your OS, Gradle needs you to add it), you need to expose the UDP port when running in a container, and there's no WebSocket over HTTP/3 yet. In other words: great to play with, not something I'd put in production on day one.
 
+<!-- TODO(Loïc): add a short "testing" note. Adding quarkus-http3 breaks existing RestAssured tests with "PKIX path building failed": plain HTTP is redirected to HTTPS and the JVM doesn't trust the auto-generated cert. RestAssured never speaks HTTP/3 anyway (HTTP/1.1 over TLS). Details and fixes in remarks.md. -->
+<!-- TODO(Loïc): verify the fix `%test.quarkus.http.insecure-requests=enabled` actually makes the RestAssured tests pass. -->
+<!-- TODO(Loïc): find the truststore password for target/http3-dev-cert/http3-dev-truststore.p12 (for RestAssured.trustStore(...)). -->
+<!-- TODO(Loïc): confirm whether Quarkus is supposed to set up RestAssured to trust the generated cert in test mode; if it should, open an issue. -->
+
 ### gRPC Moves In With HTTP
 
 One more change on the networking front, and this one *will* bite you if you use gRPC: **the separate gRPC server is gone**. gRPC now runs on the main HTTP server, so port 9000 no longer exists. Update your clients:
