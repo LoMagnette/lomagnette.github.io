@@ -1,3 +1,19 @@
+- year: "2027"
+  events:
+    - name: "Javaland"
+      url: "https://www.javaland.eu/en/home/"
+      date: "Mar 2027"
+      location: "Rust, Germany"
+      flag: "🇩🇪"
+      talks:
+        - talkId: 5
+    - name: "Voxxed Days Ticino"
+      url: "https://ticino.voxxeddays.com/"
+      date: "Feb 2027"
+      location: "Lugano, Switzerland"
+      flag: "🇨🇭"
+      talks:
+        - talkId: 4
 - year: "2026"
   events:
     - name: "DevDay"
@@ -7,6 +23,13 @@
       flag: "🇧🇪"
       talks:
         - talkId: 18
+    - name: "DevFest Belgium"
+      url: "https://devfest-belgium.be/"
+      date: "Nov 2026"
+      location: "Dampremy, Belgium"
+      flag: "🇧🇪"
+      talks:
+        - talkId: 5
     - name: "Codeur en Seine"
       url: "https://www.codeursenseine.com/2026"
       date: "Nov 2026"
