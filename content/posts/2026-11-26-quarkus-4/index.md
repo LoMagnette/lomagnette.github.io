@@ -38,7 +38,7 @@ If you're on an LTS and you're not in a hurry, you have until spring before the 
 
 Let's start with the one that'll affect the most people: **Java 17 is gone**. Java 21 is the minimum, and Java 25 is the recommended version.
 
-Clement Escoffier [explained the reasoning](https://quarkus.io/blog/java21/) in a dedicated post, and the core argument is virtual threads. Java 21 is the first LTS that has them, and so far Quarkus had to support them "through reflection hacks" to keep running on 17. With 21 as the baseline: "No reflection, no conditional paths." For you, that means virtual thread support that no longer depends on tricks. For extension authors, it means a much simpler way to support them, so expect more extensions to play nicely with `@RunOnVirtualThread` over the 4.x releases.
+Clément Escoffier [explained the reasoning](https://quarkus.io/blog/java21/) in a dedicated post, and the core argument is virtual threads. Java 21 is the first LTS that has them, and so far Quarkus had to support them "through reflection hacks" to keep running on 17. With 21 as the baseline: "No reflection, no conditional paths." For you, that means virtual thread support that no longer depends on tricks. For extension authors, it means a much simpler way to support them, so expect more extensions to play nicely with `@RunOnVirtualThread` over the 4.x releases.
 
 If you're already on 21 or 25, nothing changes for you. If you're still on 17, you now have a very concrete reason to plan that upgrade. And my advice is to do it *before* touching Quarkus 4, on your current 3.x version. One migration at a time.
 
@@ -173,7 +173,7 @@ Both have reactive variants (`ManagedRepository.Reactive`, `RecordRepository.Rea
 
 One rule to remember: **you can't mix classic Panache and Quarkus Data in the same application**. The build fails with an explicit error. Pick one per project.
 
-One more thing I tripped over: my `RecordEntity` gets its id from a pooled sequence (`Book_SEQ` here), not from an identity column like my old Panache entity. My `data.sql` inserted rows without an id, and the result was an empty table with only a `WARN` at startup. I seeded explicit ids and moved the sequence away from them (H2 syntax):
+One more thing I tripped over: my `RecordEntity` gets its id from a pooled sequence (`Book_SEQ` here), not from an identity column like my old Panache entity. My `data.sql` (the new `import.sql`, more on that below) inserted rows without an id, and the result was an empty table with only a `WARN` at startup. I seeded explicit ids and moved the sequence away from them (H2 syntax):
 
 ```sql
 INSERT INTO Book(id, title, price) VALUES (1, 'Dune', 9.99);
@@ -452,8 +452,6 @@ The result is sent within a Kafka transaction, and the offset of the incoming re
 
 Current limitations: it works on methods that take and return payloads (not `Message`), and not yet with Kotlin suspend functions. For more advanced cases, `KafkaTransactions` is still there.
 
-A word on testing: the in-memory connector can't drive `@ExactlyOnce`. The invoker fails with `No Kafka record metadata found on incoming message`, because in-memory messages carry no Kafka metadata. I tested against a real broker with Dev Services and `quarkus-test-kafka-companion`, reading the output topic with a `read_committed` consumer. Also, the default Dev Services broker image is now `apache/kafka-native`. That native image didn't start in my arm64 sandbox VM (`Failed to create the main Isolate`), so I pinned Redpanda with `quarkus.kafka.devservices.provider=redpanda` plus an `image-name`. You probably won't need that on a regular machine.
-
 ### Signals Is Now Stable
 
 Quarkus Signals (`quarkus-signals`), the in-process messaging API, is stable as of 4.0. If you skipped it because of the experimental flag, now's a good time to look. It also plugs into the rest of the stack: OpenTelemetry traces, Micrometer counters and Security. You can turn the telemetry off with `quarkus.signals.telemetry.traces.enabled` and `quarkus.signals.telemetry.metrics.enabled`. And no, despite what some earlier progress updates suggested, it doesn't replace the Vert.x event bus: the team [clarified](https://quarkus.io/blog/quarkus-insights-261-quarkus-signals/) that CDI events and the event bus are not going away.
@@ -462,7 +460,7 @@ Quarkus Signals (`quarkus-signals`), the in-process messaging API, is stable as 
 
 A lot more landed than I can cover in detail. Here's what I'd check when migrating, in no particular order:
 
-- **SmallRye Config 4**: escaping changed, and `\$\{my.prop}` is now a literal value. This one won't fail your build, so grep your `application.properties` for `\$`. Spring Boot `@ConfigurationProperties` classes now bind like `@ConfigMapping`.
+- **SmallRye Config 4**: Spring Boot `@ConfigurationProperties` classes now bind like `@ConfigMapping`.
 - **Stricter HTTP**: malformed JSON and multipart bodies now return `400` instead of a server error.
 - **Jakarta REST 4 and RESTEasy 7**: `SseEventSink.close()` now throws `IOException`, and Quarkus REST endpoints can no longer return a REST Client `Response`.
 - **WebSockets Next**: pending messages are now capped per connection (256 by default). Tune it with `quarkus.websockets-next.server.max-pending-messages` and its client counterpart.
@@ -491,7 +489,7 @@ claude mcp add -s user quarkus-agent -- jbang quarkus-agent-mcp@quarkusio
 
 Then I asked my agent, "Hey, start the app, show me what you can do with it, and run the tests." It started the project in dev mode, found 34 Dev MCP tools on the running app (Kafka topics and messages, SQL on the H2 datasource, config, log levels, adding extensions, testing...), and ran my 20 tests through `devui-testing_runTests`: all green, without the agent ever typing a Maven command. It's a standalone server that runs `quarkus dev` for the agent, so it's still there when your app fails to start, which is exactly when you need it.
 
-The doc search is where it gets interesting, and also where I'd be careful. The first calls just answered "still warming up": on first use it downloads and indexes the docs for your Quarkus version, so give it a minute. After that, "run REST endpoints on virtual threads by default" came back with the 4.0.1 page and the exact `quarkus.rest.blocking.signatures.execution.mode=virtual-thread` property. Nice. But "replace `@DefaultBean`" returned the CDI guide section that still presents `@DefaultBean` as the way to go, with no word about `@Reserve`. And the SmallRye Config escaping change found nothing at all. The search only indexes the docs of the extensions your project uses, and the migration guide isn't part of it. The skills tell the same story: the ArC skill doesn't mention `@Reserve` either, and the list proposed the Panache skill while my project uses Quarkus Data.
+The doc search is where it gets interesting, and also where I'd be careful. The first calls just answered "still warming up": on first use it downloads and indexes the docs for your Quarkus version, so give it a minute. After that, "run REST endpoints on virtual threads by default" came back with the 4.0.1 page and the exact `quarkus.rest.blocking.signatures.execution.mode=virtual-thread` property. Nice. But "replace `@DefaultBean`" returned the CDI guide section that still presents `@DefaultBean` as the way to go, with no word about `@Reserve`. The search only indexes the docs of the extensions your project uses, and the migration guide isn't part of it. The skills tell the same story: the ArC skill doesn't mention `@Reserve` either, and the list proposed the Panache skill while my project uses Quarkus Data.
 
 One more thing to know: the first `quarkus_start` drops an `AGENTS.md` in your project, with rules for the agent ("search for an extension before writing code", "always write tests", "keep the README updated"...). It's a good file, but it's a file in your repo that you didn't write, so read it before you commit it.
 
@@ -503,7 +501,7 @@ Here's how I'd approach it:
 
 1. **Get to Java 21 (ideally 25) first**, on your current 3.x version.
 2. **Move to 3.40 LTS and clear your deprecation warnings.** Quarkus 4 removes properties deprecated before 3.33, so a clean 3.40 makes the jump smaller.
-3. **Run `quarkus update`.** It handles config renames and many of the mechanical changes for you:
+3. **Run `quarkus update`.** It handles most config renames and many of the mechanical changes for you (but not `database.generation`, see the takeaways below):
 
    ```bash
    quarkus update --stream=4.0
@@ -519,7 +517,7 @@ Here's how I'd approach it:
    |---|---|
    | Vert.x 5 | Direct Vert.x usage: `Future` only, no more callbacks |
    | Jackson 3 | Imports, custom serializers, `ObjectMapperCustomizer`, stricter defaults, `KubernetesClientObjectMapperCustomizer` |
-   | Config | Escaped `\$\{...}` values are now literals, Spring Boot properties bind like `@ConfigMapping` |
+   | Config | Spring Boot `@ConfigurationProperties` bind like `@ConfigMapping` |
    | Hibernate ORM 8 | `database.generation` → `schema-management.strategy`, `import.sql` → `schema.sql` / `data.sql`, database version, removed APIs (`Session.replicate()`, `QueryHints`...) |
    | CDI | `@DefaultBean` → `@Reserve` **+ `@Priority(0)`**, optionally `@Startup` → `@Eager` |
    | gRPC | Port 9000 is gone, TLS config moves to `quarkus.http.ssl.*`, Vert.x gRPC stack instead of grpc-java Netty |
@@ -530,7 +528,7 @@ Here's how I'd approach it:
 
 5. **Test with real payloads, please.** The stricter Jackson and HTTP defaults are exactly the kind of change that passes your unit tests and breaks a client in production. If you have contract tests or recorded traffic, now is the time to use them.
 
-Also, start from 4.0.1 rather than 4.0.0: it already fixes a handful of issues, like part of the HTTP/3 discovery (see the HTTP/3 section) and native executables answering HTTP/1.0 requests with a `501`.
+Also, start from 4.0.1 rather than 4.0.0: it already fixes a handful of issues, like part of the HTTP/3 discovery and native executables answering HTTP/1.0 requests with a `501`.
 
 And if you're on an LTS with no urgent need, waiting for the first 4.x LTS (proposed for March) is a perfectly reasonable plan. Just don't wait until then to *read* the migration guide.
 
