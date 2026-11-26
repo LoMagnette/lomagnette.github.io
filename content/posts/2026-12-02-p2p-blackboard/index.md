@@ -3,9 +3,8 @@ title: "When the State Is the Boss: Peer-to-Peer and Blackboard Agents with Lang
 description: "Two LangChain4j agentic patterns where nobody is in charge: peer-to-peer agents that wake up when the data they listen to changes, and a blackboard where specialists contribute one at a time. Real code, the traps I fell into, and when to use them."
 tags: [java, langchain4j, ai]
 author: Loïc
+image: p2p-cover.jpg
 ---
-<!-- TODO(Loïc): add a cover image (image: ...) -->
-
 At Devoxx Belgium this year, I had the Monday 9:30 slot for a three-hour deep dive on LangChain4j agents. Monday morning is not my most efficient moment of the week, so I brought the next best thing to my puppy: a team of rescue puppies on the screen, the Pawer Rangers, in every demo.
 
 Somewhere in the middle of those three hours, I showed a pattern that surprised me the first time I read about it. No agent was in charge: there was no sequence, no supervisor and no graph computed upfront. The agents just watched the shared state, and whenever something they cared about showed up, they jumped in.
@@ -24,7 +23,7 @@ If those don't ring a bell, the [previous article](/posts/langchain4j-agentic-wo
 
 Peer-to-peer and blackboard give a fourth answer: the state decides. Each agent declares what it needs as inputs. When those inputs are in the scope, the agent can run. When it runs, it writes its output to the scope, and that output might be exactly what another agent was waiting for. You never write the order anywhere; it comes from which agent reads which key.
 
-Both patterns live in a separate module, so you need two dependencies. The workflows only need the first one, so it's an easy one to forget:
+Both patterns live in a separate module, so you need two dependencies. The workflows only need the first one, so it's an easy one to forget. I wrote this against 1.22.0-beta32. The module is still in beta and moves fast, so check for the latest version:
 
 ```xml
 <dependency>
@@ -106,7 +105,7 @@ The rules are simple, and once you know them, you can predict every run:
 4. An agent is not re-triggered by its own output alone. It needs one of its inputs to be written again.
 5. It stops when the exit condition is true, when the invocation budget is spent, or when nobody can run anymore (a stable state).
 
-So in the maze, Sniff goes first and says the scent splits at the entrance. That writes `Scent`, which wakes up Zoom and Dig together. Dig finds a rabbit burrow, a dead end. Zoom finds hoof prints heading for the middle. Both reports wake Sniff again, who now says the trail leads to the middle. That wakes Zoom, who runs there and shouts "FOUND:". That order (Sniff, then Zoom and Dig together, then Sniff, then Zoom) is written nowhere in the code.
+So in the maze, once the scope is seeded (more on that in a minute), Sniff goes first and says the scent splits at the entrance. That writes `Scent`, which wakes up Zoom and Dig together. Dig finds a rabbit burrow, a dead end. Zoom finds hoof prints heading for the middle. Both reports wake Sniff again, who now says the trail leads to the middle. That wakes Zoom, who runs there and shouts "FOUND:". That order (Sniff, then Zoom and Dig together, then Sniff, then Zoom) is written nowhere in the code.
 
 Honestly, when I discovered this pattern, I was a bit surprised. I had never thought about letting the state drive the agents like that. It's fun to watch, with the scope updating at every step and puppies lighting up two at a time. It's also when you realize how little control you have over what happens.
 
@@ -134,7 +133,7 @@ static boolean goatFound(AgenticScope scope) {
 
 `found` is a small helper that looks for the `FOUND:` marker the prompts ask for. It doesn't matter which puppy finds the goat. Please check your exit predicate in both directions: one that can never be true runs until the budget is gone, and one that is always true ends silently after the first step. Neither of them throws an exception.
 
-One more detail that matters: when `P2PPlanner` reaches its maximum invocations, it just stops. You get whatever is in the scope at that moment. So check the result instead of assuming the goal was reached. In the demo, I get a `ResultWithAgenticScope` back and look at the scope before claiming victory.
+One more detail that matters: when `P2PPlanner` reaches its maximum invocations, it just stops. You get whatever is in the scope at that moment. So check the result instead of assuming the goal was reached. In the demo, I get a `ResultWithAgenticScope` back and look at the scope before claiming victory. It matters even more here because the planner's output key is `Scent`. When Zoom shouts "FOUND:", it lands in `Clearing`, so the value you get back is Sniff's last scent, and the goat is only in the scope.
 
 ### When to Use Peer-to-Peer
 
@@ -211,7 +210,7 @@ Investigation investigation = AgenticServices.plannerBuilder(Investigation.class
 
 I registered the agents backwards on purpose, Zao first. If that list were the order, Zao would rule on an empty board. It isn't. Zao can't act until both clues are there, so the list is only used as a tie-break among the agents that are able to act at that moment.
 
-Here, `hasState(Culprit.class)` is the right goal: the only agent that writes `Culprit` is the one who reads all the evidence. It's the same check that bit me in the maze, but this time it's the content I want. If you don't pass a goal predicate at all, `BlackboardPlanner` uses exactly that by default: stop when the planner's output key is in the scope.
+Here, `hasState(Culprit.class)` is the right goal: the only agent that writes `Culprit` is the one who reads all the evidence. Same check that bit me in the maze, but here the key existing *is* the answer. If you don't pass a goal predicate at all, `BlackboardPlanner` uses exactly that by default: stop when the planner's output key is in the scope.
 
 ### The Conflict Resolution Strategy
 
