@@ -1,0 +1,16 @@
+{! schema.org Person for the site owner, embedded in JSON-LD on the home, about and post pages.
+   Social profiles come from the site data in content/index.html. !}
+{
+      "@type": "Person",
+      "@id": "{site.url.absolute}#person",
+      "name": {author.name.jsonLd},
+      "jobTitle": {author.job.jsonLd},
+      "image": {author.avatar.jsonLd},
+      "url": {site.url('/about/').absolute.jsonLd},
+      "sameAs": [
+        "https://github.com/{site.data.getString('social-github')}",
+        "https://www.linkedin.com/in/{site.data.getString('social-linkedin')}",
+        "https://bsky.app/profile/{site.data.getString('social-bluesky')}",
+        "https://x.com/{site.data.getString('social-twitter')}"
+      ]
+    }

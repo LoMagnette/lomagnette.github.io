@@ -11,23 +11,23 @@ layout: page
   <div class="author-header">
     <img src="{author.avatar}" alt="{author.name}" class="author-avatar-large" />
     <div class="author-info">
-      <h1 class="author-name-large">{author.name}</h1>
+      <p class="author-name-large">{author.name}</p>
       <p class="author-job">{author.job}</p>
       <div class="author-social-links">
         <a href="https://github.com/lomagnette" target="_blank" rel="noopener noreferrer" class="author-social-link" aria-label="GitHub">
-          <i class="fa-brands fa-github"></i>
+          <i class="fa-brands fa-github" aria-hidden="true"></i>
           <span>GitHub</span>
         </a>
         <a href="https://linkedin.com/in/lomagnette" target="_blank" rel="noopener noreferrer" class="author-social-link" aria-label="LinkedIn">
-          <i class="fa-brands fa-linkedin"></i>
+          <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
           <span>LinkedIn</span>
         </a>
         <a href="https://bsky.app/profile/lomagnette.bsky.social" target="_blank" rel="noopener noreferrer" class="author-social-link" aria-label="Bluesky">
-          <i class="fa-brands fa-bluesky"></i>
+          <i class="fa-brands fa-bluesky" aria-hidden="true"></i>
           <span>Bluesky</span>
         </a>
         <a href="https://twitter.com/lomagnette" target="_blank" rel="noopener noreferrer" class="author-social-link" aria-label="Twitter">
-              <i class="fa-brands fa-twitter"></i>
+              <i class="fa-brands fa-twitter" aria-hidden="true"></i>
               <span>Twitter</span>
         </a>
       </div>
@@ -41,21 +41,30 @@ layout: page
 
   <div class="author-highlights">
     <div class="highlight-card">
-      <i class="fa-solid fa-code"></i>
+      <i class="fa-solid fa-code" aria-hidden="true"></i>
       <h3>Expertise</h3>
       <p>Java & Angular specialist with a focus on delivering innovative solutions</p>
     </div>
     <div class="highlight-card">
-      <i class="fa-solid fa-users"></i>
+      <i class="fa-solid fa-users" aria-hidden="true"></i>
       <h3>Community</h3>
       <p>Co-organizer of <a href="https://bejug.github.io">BeJUG (Belgian Java User Group)</a></p>
     </div>
     <div class="highlight-card">
-      <i class="fa-solid fa-microphone"></i>
+      <i class="fa-solid fa-microphone" aria-hidden="true"></i>
       <h3>Speaker</h3>
       <p>Sharing knowledge through talks and presentations</p>
     </div>
   </div>
 </div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  "url": {site.url('/about/').absolute.jsonLd},
+  "mainEntity": {#include partials/person-jsonld /}
+}
+</script>
 
 {/let}

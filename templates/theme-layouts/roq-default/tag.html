@@ -1,0 +1,25 @@
+---
+layout: page
+paginate: true
+tagging: posts
+bodyClass: tag-page
+page-class: page-alt page-wide
+# Added to the theme's tag layout (quarkus-roq-theme-default 2.1.9): tag listings only repeat post
+# cards with the home page description, so keep them out of search indexes and the sitemap.
+robots: noindex, follow
+sitemap: false
+---
+
+{@io.quarkiverse.roq.frontmatter.runtime.model.NormalPage page}
+
+{#page-header}
+{#roq/pageHeader title=page.data.tag /}
+{/page-header}
+
+<div class="posts-list">
+{#for post in site.collections.get(page.data.tagCollection).paginated(page.paginator)}
+{#roq/postCard post /}
+{/for}
+</div>
+
+{#include partials/roq-default/pagination.html/}

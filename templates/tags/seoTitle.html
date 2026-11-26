@@ -1,0 +1,15 @@
+{! Override of Roq's seoTitle tag (quarkus-roq-frontmatter 2.1.9).
+   Pages are suffixed with the short site name ("simple-name" in content/index.html) instead of the
+   long home page title (passed in by the seo.html override), so post titles stay under ~60 characters in search results. !}
+{@java.lang.String pageTitle}
+{@java.lang.String siteTitle}
+{@java.lang.String siteName}
+{#let brand=(siteName ?: siteTitle)}
+{#if pageTitle || siteTitle}
+  <!-- SEO TITLE -->
+  <title>{#if pageTitle && pageTitle ne siteTitle}{pageTitle} | {brand}{#else}{siteTitle}{/if}</title>
+  <meta property="og:title" content="{pageTitle ?: siteTitle}" />
+  <meta name="twitter:title" content="{pageTitle ?: siteTitle}">
+{/if}
+  <meta property="og:site_name" content="{brand}">
+{/let}

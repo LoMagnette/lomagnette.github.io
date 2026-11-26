@@ -350,6 +350,6 @@ By doing so, we can automatically fill the form without the user having to do an
 
 When using this approach, we still need to be careful about the potential risk of using an unknown file. We also need to pay attention to the context window size of our model, since the user could provide us with a very large file, and it would overflow the size of the context window.
 
-# Wrap up
+## Wrap up
 
 Transforming traditional forms into a conversational experience revolutionizes user interfaces. Using AI tools like LangChain4j and Quarkus, developers can build dynamic assistants that simplify data entry. These assistants guide users step-by-step and validate input in real time. They can also provide more information on how to fill a form and where to find the information by harnessing the strength of RAG. Multimodal capabilities further enhance user confidence and ease by allowing them to let an LLM find the right information simply. This approach makes the user experience richer and helps improve the data quality by providing 24/7 support to the user. The AI-powered form represents a shift towards more intuitive digital experiences. It paves the way for advanced AI integration in everyday applications.
