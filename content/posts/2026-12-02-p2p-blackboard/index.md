@@ -3,7 +3,6 @@ title: "When the State Is the Boss: Peer-to-Peer and Blackboard Agents with Lang
 description: "Two LangChain4j agentic patterns where nobody is in charge: peer-to-peer agents that wake up when the data they listen to changes, and a blackboard where specialists contribute one at a time. Real code, the traps I fell into, and when to use them."
 tags: [java, langchain4j, ai]
 author: Loïc
-draft: true
 ---
 <!-- TODO(Loïc): add a cover image (image: ...) -->
 
