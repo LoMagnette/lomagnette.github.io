@@ -5,7 +5,7 @@ tags: [java, langchain4j, ai]
 author: Loïc
 image: p2p-cover.jpg
 ---
-At Devoxx Belgium this year, I had the Monday 9:30 slot for a three-hour deep dive on LangChain4j agents. Monday morning is not my most efficient moment of the week, so I brought the next best thing to my puppy: a team of rescue puppies on the screen, the Pawer Rangers, in every demo.
+At Devoxx Belgium this year, I had the Monday 9:30 slot for a three-hour deep dive on LangChain4j agents. Monday morning is not my most efficient moment of the week, and I couldn't bring my puppy, so I brought the next best thing: a team of rescue puppies on the screen, the Pawer Rangers, in every demo.
 
 Somewhere in the middle of those three hours, I showed a pattern that surprised me the first time I read about it. No agent was in charge: there was no sequence, no supervisor and no graph computed upfront. The agents just watched the shared state, and whenever something they cared about showed up, they jumped in.
 
@@ -239,7 +239,7 @@ So treat "the planner stopped" and "the goal was reached" as two different thing
 
 This pattern is a good fit when a problem is solved by specialists adding pieces to a shared picture: technical diagnosis, incident response ("you look at the logs first, then you check the database"), investigations like our sausage heist. It's also often presented for constraint-solving workflows. You can do some of that with it, but if you have a real constraint-solving problem, look at a tool built for it, like [Timefold](https://timefold.ai/). It's still AI, just not an LLM.
 
-The catch is that your strategy becomes your bottleneck. The whole system's behavior depends on who you pick, and a bad strategy can make you go around in circles or never call on the agent holding the clue that matters. It's also slower than peer-to-peer, since one agent at a time means no parallelism: you trade speed for control. And as the dry run showed, a stable state is not an answer.
+The catch is that your strategy becomes your bottleneck. The whole system's behavior depends on who you pick, and a bad strategy can make you go around in circles or never call on the agent holding the clue that matters. It's also slower than peer-to-peer, since one agent at a time means no parallelism: you trade speed for control.
 
 ## Peer-to-Peer or Blackboard?
 
