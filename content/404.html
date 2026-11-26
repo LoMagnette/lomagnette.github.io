@@ -1,4 +1,12 @@
 ---
-layout: '404'
+title: Page not found
+layout: main
+bodyClass: page-not-found
+link: 404.html
+robots: noindex
+sitemap: false
+search: false
 image: lomagnette.jpg
 ---
+{! Uses the site layout (navbar, <main>, footer) instead of the theme's bare 404 layout. !}
+{#include partials/roq-default/404 /}

@@ -3,7 +3,7 @@ title: "From Lonely Agents to Talking Teams: An introduction to A2A"
 description: "This article introduces A2A, a protocol that lets AI agents stop working in isolation and start collaborating as real “teams.” You’ll learn how agents can discover each other via agent cards, exchange tasks and multimodal artifacts, handle errors and auth, and how A2A compares to MCP. With a practical Java + LangChain4j + Quarkus example (superhero-themed, of course), it shows how to build both an A2A server and client so your agents can coordinate, delegate, and actually work together."
 tags: [ai, chatbot, A2A, java, langchain4j]
 author: Loïc
-image: 2025-11-28-A2A-cover.png
+image: 2025-11-28-A2A-cover.jpg
 ---
 
 ## Why agents need friends?
@@ -238,7 +238,7 @@ You can find more info on the different states in the [specification](https://a2
 ### States summary
 
 Here you'll find a summary of the states supported by the protocol and how can transition from one state to another.
-![image](A2A-states.svg)
+![State diagram of an A2A task: Submitted, Working, Input Required, Auth Required, and the final states Completed, Failed, Cancelled and Rejected](A2A-states.svg)
 
 
 ## What about MCP?

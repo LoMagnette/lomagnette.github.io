@@ -144,7 +144,7 @@ The next step is to take look at your classical Java. You have 3 main parts:
 - your Java backend (src/main/java)
 - your resources (src/main/resources).
 
-![image](webbundler.webp)
+![Project layout with the Web Bundler: pom.xml declares front-end dependencies from WebJars and mvnpm, Java code lives in src/main/java, and src/main/resources holds web/app (JS and CSS files) plus templates/index.html](webbundler.webp)
 
 
 When you're using the web bundler you will add all your Node.js dependencies as Java dependencies using nvmpn. That way all your dependencies are in one and only one place.
@@ -168,7 +168,7 @@ You don't need to change anything to your backend code.
 
 Finally, your front-end will be placed in your resources in a specific directory (web/app) and you will add an index.html that will look like this:
 
-![image](webbundler-html.png)
+![index.html for a todo app: a head with a title and the \{#bundle /} tag, and a body with a noscript message and an empty div with id root](webbundler-html.png)
 
 If you look closely at the index.html, you can spot a strange element the  `\{#bundle /}`. At build time, Quarkus will replace the bundle with your own front-end and all of your application's front-end dependencies. The web-bundler will invoke [esbuild](https://esbuild.github.io/) while your application is being built with all your front-end files (js, jsx, ts, tsx, css, etc.), Esbuild will perform the standard tree shaking, minification, and source mapping tasks for you. Then the ouput will be included in the index.html file.
 

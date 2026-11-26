@@ -3,7 +3,7 @@ title: "JavaScript Strikes Back (No, Still Not That One): More Adventures in Jav
 description: "A follow-up on modern Java scripting: why JBang swapped Picocli for Æsh, what Quarkus's dev loop brings back to CLI tools, building a terminal UI with TamboUI, GraalVM's experimental Crema launcher, and why portable Java scripts fit AI agent skills."
 tags: [java, jbang, quarkus, aesh, graalvm, ai]
 author: Loïc
-image: java-script-revisited.png
+image: java-script-revisited.jpg
 ---
 ## Picking Up Where We Left Off
 
@@ -186,7 +186,8 @@ Terminal UIs are having a moment. Go has Bubble Tea, Python has Textual, Rust ha
 
 I used it to build a small, entirely unnecessary take on the Chrome dinosaur game, starring Duke: [Duke Runner](https://github.com/LoMagnette/DukeRunner). You jump over obstacles, and every hundred points the game reskins itself with a bit of platform history, cycling the accent and ground colors through Java 1 → 5 → 11 → 21+. It's only a little wink, handled by an `enum`.
 
-![Duke Runner in a terminal window, mid-jump over a cactus.](duke-runner.gif)
+<video src="duke-runner.mp4" width="600" height="428" autoplay loop muted playsinline controls preload="metadata"
+       aria-label="Duke Runner in a terminal window, mid-jump over a cactus."></video>
 
 No need to clone anything. JBang can run the released jar straight from its URL:
 
